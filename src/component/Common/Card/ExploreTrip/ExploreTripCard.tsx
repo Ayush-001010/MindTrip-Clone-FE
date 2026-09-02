@@ -24,7 +24,7 @@ const ExploreTripCard: React.FC<IExploreTripCard> = ({ data }) => {
                 </div>
 
                 <Button className="!h-11 !w-full !rounded-full !border-0 !bg-white/95 !font-medium !text-slate-900 !shadow-none transition hover:!bg-white group-hover:!translate-y-0">
-                    Create Itenary
+                    Create Itinerary
                 </Button>
             </div>
         </div>

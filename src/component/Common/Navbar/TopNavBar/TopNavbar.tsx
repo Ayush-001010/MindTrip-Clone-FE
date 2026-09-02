@@ -1,7 +1,7 @@
 import React from "react";
 import type ITopNavBar from "./ITopNavBar";
 import { WiStars } from "react-icons/wi";
-import CommonConfig from "../../../config/CommonConfig";
+import CommonConfig from "../../../../config/CommonConfig";
 import { Button } from "antd";
 
 const TopNavbar: React.FC<ITopNavBar> = () => {

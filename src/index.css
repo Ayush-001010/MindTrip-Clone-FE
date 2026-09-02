@@ -1,1 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Eater&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-bubblegum: "Bubblegum Sans", sans-serif;
+  --font-eater: "Eater", cursive;
+}

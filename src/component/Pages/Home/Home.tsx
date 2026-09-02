@@ -5,6 +5,7 @@ import ImageAnimation from "../../Common/ImageAnimation/ImageAnimation";
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 import HorizontalCardList from "../../Common/HorizontalCardList/HorizontalCardList";
+import { Link } from "react-router-dom";
 
 const Home: React.FC<IHome> = () => {
     return (
@@ -33,10 +34,12 @@ const Home: React.FC<IHome> = () => {
                         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                         transition={{ duration: 1.35, delay: 1.3 }}
                     >
-                        <button type="button" className="inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-full bg-gradient-to-br from-[#E7F1EC] to-[#DDEAE2] px-6 py-3.5 text-[#335C4D] shadow-[0_16px_30px_rgba(135,160,149,0.24)] transition duration-200 hover:-translate-y-0.5">
-                            Create my trip
-                            <FiArrowRight />
-                        </button>
+                        <Link to="/chat">
+                            <button type="button" className="inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-full bg-gradient-to-br from-[#E7F1EC] to-[#DDEAE2] px-6 py-3.5 text-[#335C4D] shadow-[0_16px_30px_rgba(135,160,149,0.24)] transition duration-200 hover:-translate-y-0.5">
+                                Create my trip
+                                <FiArrowRight />
+                            </button>
+                        </Link>
                     </motion.div>
 
                 </div>
