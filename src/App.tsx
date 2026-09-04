@@ -4,6 +4,8 @@ import TopNavbar from './component/Common/Navbar/TopNavBar/TopNavbar';
 import SideNavBar from './component/Common/Navbar/SideNavBar/SideNavBar';
 import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import Chat from './component/Pages/Chat/Chat';
+import SignIn from './Features/Auth/SignIn/SignIn';
+import SignUp from './Features/Auth/SignUp/SignUp';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -16,6 +18,9 @@ const AppContent: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/auth/signin" element={<SignIn />} />
+        <Route path="/auth/signup" element={<SignUp />} />
+
       </Routes>
     </div>
   );
