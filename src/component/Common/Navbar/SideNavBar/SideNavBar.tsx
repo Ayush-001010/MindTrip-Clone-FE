@@ -9,7 +9,7 @@ import Footer from "./Footer/Footer";
 
 const SideNavBar: React.FC<ISideNavBar> = () => {
     return (
-        <div className="border-r border-[#6c757d] shadow-lg p-3 flex flex-col justify-between">
+        <div className="h-full border-r border-[#6c757d] shadow-lg p-3 flex flex-col justify-between">
             <div>
                 {/* Title */}
                 <Header />
