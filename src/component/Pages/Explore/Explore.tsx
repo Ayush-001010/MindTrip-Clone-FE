@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Map from "../../Common/Map/Map";
 import LocationSelector from "./components/LocationSelector/LocationSelector";
+import useExploreHotels from "../../../Services/Hotel/useExploreHotels";
+import HotelCard from "./components/HotelCard/HotelCard";
+import type IHotel from "../../../Interface/DataInterface/IHotel";
+import HotelDetails from "./components/HotelDetails/HotelDetails";
 
 const Explore: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState({
@@ -10,6 +14,12 @@ const Explore: React.FC = () => {
   });
 
   const [activeTab, setActiveTab] = useState("For you");
+  const [selectedHotel, setSelectedHotel] = useState<IHotel | null>(null);
+  const {
+    data: hotels,
+    loading,
+    error,
+  } = useExploreHotels(activeTab === "Stays" ? selectedLocation.name : "");
 
   const tabs = [
     "For you",
@@ -23,10 +33,8 @@ const Explore: React.FC = () => {
   return (
     <main className="h-screen w-full bg-[#1f2327] text-white">
       <div className="grid h-full grid-cols-2">
-
         {/* LEFT SIDE */}
         <section className="overflow-y-auto p-6">
-
           {/* LOCATION */}
           <LocationSelector
             onLocationSelect={(location) => {
@@ -37,9 +45,7 @@ const Explore: React.FC = () => {
           {/* SEARCH + FILTERS */}
           <div className="mt-6 flex items-center gap-3">
             <div className="flex min-w-0 flex-1 items-center rounded-full border border-white/10 bg-[#272c31] px-4 py-3">
-              <span className="mr-3 text-lg text-white/50">
-                ⌕
-              </span>
+              <span className="mr-3 text-lg text-white/50">⌕</span>
 
               <input
                 type="text"
@@ -75,18 +81,48 @@ const Explore: React.FC = () => {
             ))}
           </div>
 
-          {/* TEMPORARY CONTENT */}
+          {/* CONTENT */}
           <div className="mt-8">
             <h2 className="text-xl font-semibold">
-              {activeTab}
+              {activeTab === "Stays" ? "Stays" : activeTab}
             </h2>
 
             <p className="mt-2 text-sm text-white/50">
-              Explore {activeTab.toLowerCase()} around{" "}
-              {selectedLocation.name}.
+              {activeTab === "Stays"
+                ? `Hotels around ${selectedLocation.name}.`
+                : `Explore ${activeTab.toLowerCase()} around ${
+                    selectedLocation.name
+                  }.`}
             </p>
-          </div>
 
+            {/* HOTEL RESULTS */}
+            {activeTab === "Stays" && (
+              <div className="mt-6">
+                {loading && (
+                  <p className="text-sm text-white/50">Loading hotels...</p>
+                )}
+
+                {error && <p className="text-sm text-red-400">{error}</p>}
+
+                {!loading && !error && hotels.length === 0 && (
+                  <p className="text-sm text-white/50">No hotels found.</p>
+                )}
+
+                {!loading && !error && hotels.length > 0 && (
+                  <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                    {hotels.map((hotel) => (
+                      <HotelCard
+                        key={hotel.id}
+                        hotel={hotel}
+                        selected={selectedHotel?.id === hotel.id}
+                        onClick={() => setSelectedHotel(hotel)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </section>
 
         {/* RIGHT SIDE */}
@@ -94,10 +130,18 @@ const Explore: React.FC = () => {
           <Map
             latitude={selectedLocation.latitude}
             longitude={selectedLocation.longitude}
+            hotels={activeTab === "Stays" ? hotels : []}
+            selectedHotel={selectedHotel}
+            onHotelSelect={(hotel) => setSelectedHotel(hotel)}
           />
         </section>
-
       </div>
+      {selectedHotel && (
+        <HotelDetails
+          hotel={selectedHotel}
+          onClose={() => setSelectedHotel(null)}
+        />
+      )}
     </main>
   );
 };

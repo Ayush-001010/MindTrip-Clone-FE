@@ -6,11 +6,17 @@ import type IMap from "./IMap";
 const Map: React.FC<IMap> = ({
   latitude,
   longitude,
+  hotels,
+  selectedHotel,
+  onHotelSelect,
 }) => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
+
   const mapInstance = useRef<maptilersdk.Map | null>(null);
 
-  // Create the map once
+  const markers = useRef<maptilersdk.Marker[]>([]);
+
+  // Create map once
   useEffect(() => {
     if (!mapContainer.current || mapInstance.current) {
       return;
@@ -35,12 +41,18 @@ const Map: React.FC<IMap> = ({
     mapInstance.current = map;
 
     return () => {
+      markers.current.forEach((marker) => {
+        marker.remove();
+      });
+
+      markers.current = [];
+
       map.remove();
       mapInstance.current = null;
     };
   }, []);
 
-  // Move the existing map when location changes
+  // Move map when selected location changes
   useEffect(() => {
     if (!mapInstance.current) {
       return;
@@ -53,12 +65,63 @@ const Map: React.FC<IMap> = ({
     });
   }, [latitude, longitude]);
 
+  // Add hotel markers
+ // Add hotel markers
+useEffect(() => {
+  if (!mapInstance.current) {
+    return;
+  }
+
+  // Remove previous markers
+  markers.current.forEach((marker) => {
+    marker.remove();
+  });
+
+  markers.current = [];
+
+  // Add new markers
+  hotels.forEach((hotel) => {
+    const isSelected = selectedHotel?.id === hotel.id;
+  
+    const marker = new maptilersdk.Marker({
+      color: isSelected ? "#22C55E" : "#3FB1CE",
+    })
+      .setLngLat([
+        hotel.longitude,
+        hotel.latitude,
+      ])
+      .addTo(mapInstance.current!);
+  
+    marker.getElement().style.cursor = "pointer";
+  
+    if (isSelected) {
+      marker.getElement().style.transform = "scale(1.4)";
+      marker.getElement().style.zIndex = "10";
+    }
+  
+    marker.getElement().addEventListener("click", () => {
+      onHotelSelect?.(hotel);
+    });
+  
+    markers.current.push(marker);
+  });
+}, [hotels, selectedHotel, onHotelSelect]);
+
+  useEffect(() => {
+    if (!mapInstance.current || !selectedHotel) {
+      return;
+    }
+
+    mapInstance.current.flyTo({
+      center: [selectedHotel.longitude, selectedHotel.latitude],
+      zoom: 14,
+      essential: true,
+    });
+  }, [selectedHotel]);
+
   return (
     <div className="h-full w-full">
-      <div
-        ref={mapContainer}
-        className="h-full w-full"
-      />
+      <div ref={mapContainer} className="h-full w-full" />
     </div>
   );
 };
