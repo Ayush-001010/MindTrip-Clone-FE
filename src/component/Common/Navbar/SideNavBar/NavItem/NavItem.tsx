@@ -25,11 +25,11 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
         }
     }
     return (
-        <div className="flex flex-col gap-2 my-4 hover:bg-[#495057] hover:rounded-xl p-2">
+        <div className="my-3 flex flex-col gap-2 rounded-2xl p-2 transition hover:bg-sky-100/80 hover:shadow-[inset_0_0_0_1px_rgba(125,211,252,0.55)]">
             <Link to={link}>
-                <p className="flex gap-2 justify-start items-center text-[#f8f9fa]">
-                    <span className="text-md font-thin">{fetchIcon(icon)}</span>
-                    <span className="text-lg font-medium">{title}</span>
+                <p className="flex items-center justify-start gap-3 text-slate-800">
+                    <span className="text-md font-thin text-white">{fetchIcon(icon)}</span>
+                    <span className="text-lg font-medium text-white">{title}</span>
                 </p>
             </Link>
         </div>

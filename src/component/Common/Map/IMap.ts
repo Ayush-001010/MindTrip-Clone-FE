@@ -3,7 +3,8 @@ import type IHotel from "../../../Interface/DataInterface/IHotel";
 export default interface IMap {
     latitude: number;
     longitude: number;
-    hotels:IHotel[];
+    hotels?:IHotel[];
     selectedHotel?: IHotel | null;
     onHotelSelect?: (hotel: IHotel) => void;
+    markerPoints? : Array<[number, number]>;
   }

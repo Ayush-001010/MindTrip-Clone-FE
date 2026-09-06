@@ -15,34 +15,24 @@ const AppContent: React.FC = () => {
   const isExploreLink = location.pathname === "/explore";
   const isDarkPage = isChatLink || isExploreLink;
 
-  if (isDarkPage) {
-    return (
-      <div className="flex min-h-screen bg-[#1f2327] text-white">
-        {/* SIDEBAR */}
-        <aside className="flex h-screen w-[234px] shrink-0 flex-col border-r border-white/10 bg-[#1f2327]">
-          <SideNavBar />
-        </aside>
-
-        {/* MAIN APPLICATION AREA */}
-        <div className="min-w-0 flex-1">
-          <Routes>
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/explore" element={<Explore />} />
-          </Routes>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen">
-      <TopNavbar />
+    <div className={` ${isDarkPage ? "flex min-h-screen bg-[#121113] text-white" : "min-h-screen bg-white text-black"}`}>
+      {/* SIDEBAR */}
+      {isDarkPage && <aside className="flex h-screen w-[234px] shrink-0 flex-col border-r border-white/10 bg-[#1f2327]">
+        <SideNavBar />
+      </aside>}
+      {!isDarkPage && <TopNavbar />}
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/auth/signin" element={<SignIn />} />
-        <Route path="/auth/signup" element={<SignUp />} />
-      </Routes>
+      {/* MAIN APPLICATION AREA */}
+      <div className="min-w-0 flex-1">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/auth/signin" element={<SignIn />} />
+          <Route path="/auth/signup" element={<SignUp />} />
+        </Routes>
+      </div>
     </div>
   );
 };

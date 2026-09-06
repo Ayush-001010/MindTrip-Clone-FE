@@ -10,11 +10,11 @@ const Header: React.FC<IHeader> = () => {
     return (
         <div className="my-2">
             <motion.p
-                className="flex items-center justify-center gap-3 text-center text-xl font-bubblegum tracking-[0.02em] text-slate-50 drop-shadow-[0_3px_12px_rgba(148,163,184,0.28)]"
+                className="flex items-center justify-center gap-3 text-center text-xl font-bubblegum tracking-[0.02em] text-[#fff] drop-shadow-[0_3px_12px_rgba(148,163,184,0.18)]"
                 initial="hidden"
                 animate="visible"
             >
-                <span className="inline-flex h-10  w-10 items-center justify-center rounded-2xl border border-white/15 bg-gradient-to-br from-sky-400/30 via-cyan-300/20 to-emerald-300/20 text-4xl text-white shadow-[0_10px_24px_rgba(56,189,248,0.18)]">
+                <span className="inline-flex h-10  w-10 items-center justify-center rounded-2xl border border-sky-200/80 bg-[#fff] text-4xl text-[#000] shadow-xl">
                     <WiStars />
                 </span>
                 <span>
