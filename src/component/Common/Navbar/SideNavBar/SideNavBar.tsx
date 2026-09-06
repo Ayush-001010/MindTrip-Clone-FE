@@ -16,7 +16,7 @@ const SideNavBar: React.FC<ISideNavBar> = () => {
                 {/* Nav Items */}
                 <div className="flex flex-col gap-2 justify-between p-2">
                     {SideNavBarConfig.sideNavItems.map((item: SideNavItemInterface) => (
-                        <NavItem isCollapsed={false} title={item.title} icon={item.icon} link={item.link} />
+                        <NavItem key={item.link || item.title} isCollapsed={false} title={item.title} icon={item.icon} link={item.link} />
                     ))}
                 </div>
             </div>

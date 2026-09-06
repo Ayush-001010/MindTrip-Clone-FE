@@ -20,4 +20,13 @@ export default class APIService {
         return { success: false, error: "Something went wrong" };
     }
   }
+  postRequest = async <T>(endPoint : string , body?: Record<string, any>) : Promise<IAPIServicesResponse<T>> => {
+    try{
+        const response = await this.api.post<T>(endPoint, body);
+        return response.data as IAPIServicesResponse<T>;
+    } catch(error){
+        console.log("Error in postRequest:", error);
+        return { success: false, error: "Something went wrong" };
+    }
+  }
 }

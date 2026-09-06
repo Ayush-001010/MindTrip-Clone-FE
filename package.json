@@ -21,6 +21,7 @@
     "framer-motion": "^13.2.0",
     "jsonwebtoken": "^9.0.3",
     "maplibre-gl": "^6.7.0",
+    "moment": "^2.30.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-icons": "^5.7.0",
