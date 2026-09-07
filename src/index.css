@@ -27,3 +27,12 @@
 .transparent-modal .ant-modal-close {
   color: #fff !important;
 }
+
+.itinerary-collapse.ant-collapse {
+  background: transparent !important;
+  border: none !important;
+}
+
+.itinerary-collapse.ant-collapse > .ant-collapse-item {
+  border-bottom: none !important;
+}

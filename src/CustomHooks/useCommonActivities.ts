@@ -13,7 +13,20 @@ const useCommonActivities = () => {
             return null;
         }
     }
-    return { getActivitiesImage }
+
+    const getEmptyChatBoxImage = async () => {
+        const basePathURL = `/common/someRandomImages?type=emptyChatBox`;
+        
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.getRequest<string>(basePathURL);
+        if (response.success && response.data) {
+            return response.data;
+        } else {
+            console.error("Error fetching empty chat box image:", response.error);
+            return null;
+        }
+    }
+    return { getActivitiesImage, getEmptyChatBoxImage }
 };
 
 export default useCommonActivities;

@@ -6,8 +6,10 @@ import { FaPlusSquare } from "react-icons/fa";
 import { BsChat } from "react-icons/bs";
 import { MdOutlineTravelExplore } from "react-icons/md";
 import { IoCameraOutline } from "react-icons/io5";
+import { useSideNavBarContext } from "../../SideNavBar";
 
 const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
+    const { isCollapsed } = useSideNavBarContext();
     const fetchIcon = (icon: string) => {
         switch(icon) {
             case "create":
@@ -25,11 +27,11 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
         }
     }
     return (
-        <div className="my-3 flex flex-col gap-2 rounded-2xl p-2 transition hover:bg-sky-100/80 hover:shadow-[inset_0_0_0_1px_rgba(125,211,252,0.55)]">
+        <div className="my-3 flex flex-col items-start gap-2 rounded-2xl p-2 transition ">
             <Link to={link}>
-                <p className="flex items-center justify-start gap-3 text-slate-800">
-                    <span className="text-md font-thin text-white">{fetchIcon(icon)}</span>
-                    <span className="text-lg font-medium text-white">{title}</span>
+                <p className={` transition cursor-pointer ${isCollapsed ? "bg-white p-2 text-[#000] shadow-lg rounded-full font-bold " : "flex items-center justify-start gap-3 text-white hover:bg-white hover:text-black rounded-2xl p-2"}`}>
+                    <span className="text-md font-thin">{fetchIcon(icon)}</span>
+                    { !isCollapsed && <span className="text-lg font-medium">{title}</span> }
                 </p>
             </Link>
         </div>
