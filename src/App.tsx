@@ -16,7 +16,7 @@ const AppContent: React.FC = () => {
   const isDarkPage = isChatLink || isExploreLink;
 
   return (
-    <div className={` ${isDarkPage ? "flex min-h-screen bg-[#121113] text-white" : "min-h-screen bg-white text-black"}`}>
+    <div className={` ${isDarkPage ? "flex min-h-screen bg-[#04080f] text-white" : "min-h-screen bg-white text-black"}`}>
       {/* SIDEBAR */}
       {isDarkPage && <aside className="flex h-screen w-[234px] shrink-0 flex-col border-r border-white/10 bg-[#1f2327]">
         <SideNavBar />

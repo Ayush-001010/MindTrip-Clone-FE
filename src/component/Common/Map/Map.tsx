@@ -40,7 +40,15 @@ const Map: React.FC<IMap> = ({
 
     mapInstance.current = map;
 
+    const resizeObserver = new ResizeObserver(() => {
+      map.resize();
+    });
+
+    resizeObserver.observe(mapContainer.current);
+
     return () => {
+      resizeObserver.disconnect();
+
       hotelMarkers.current.forEach((marker) => marker.remove());
       pointMarkers.current.forEach((marker) => marker.remove());
 
@@ -55,6 +63,7 @@ const Map: React.FC<IMap> = ({
   useEffect(() => {
     if (!mapInstance.current) return;
 
+    mapInstance.current.resize();
     mapInstance.current.flyTo({
       center: [longitude, latitude],
       zoom: 11,

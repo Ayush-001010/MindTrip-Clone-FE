@@ -7,7 +7,6 @@ const useTripChat = () => {
     const [messages , setMessages] = useState<IMessageTrip[]>([]);
 
     const chatWithCopilotHandler = async (message : string) => {
-        console.log("Sending message to copilot: ", message);
         setMessages(prevMessages => [...prevMessages, {
             ID: (prevMessages.length + 1).toString(),
             userID: "1234",

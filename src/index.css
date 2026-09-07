@@ -6,3 +6,24 @@
   --font-bubblegum: "Bubblegum Sans", sans-serif;
   --font-eater: "Eater", cursive;
 }
+
+/* Transparent modal overrides for ShowInfoModel */
+.transparent-modal .ant-modal-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.transparent-modal .ant-modal-header,
+.transparent-modal .ant-modal-footer {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.transparent-modal .ant-modal-body {
+  padding: 0 !important;
+  background: transparent !important;
+}
+.transparent-modal .ant-modal-close {
+  color: #fff !important;
+}

@@ -12,7 +12,6 @@ const ChatBox: React.FC<IChatBox> = () => {
         setValue(event.target.value);
     }
     const sendHandler = () => {
-        console.log("Sending message: ", value);
         chatWithCopilotHandler(value);
         setValue("");
     }

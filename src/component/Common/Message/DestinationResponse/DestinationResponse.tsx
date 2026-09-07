@@ -6,13 +6,13 @@ const DestinationResponse: React.FC<IDestinationResponse> = ({ data }) => {
     const { setIsSelectedLocation, setLocationLongitude, setLocationLatitude , setDestination } = useChatContext();
     const { description, suggestedDestination } = data;
 
-    const selectLocation = (longitude: number, latitude: number) => {
+    const selectLocation = (longitude: number, latitude: number , suggestedDestination: any) => {
         if (setIsSelectedLocation && setLocationLongitude && setLocationLatitude) {
             setIsSelectedLocation(true);
             setLocationLongitude(longitude);
             setLocationLatitude(latitude);
             if (setDestination) {
-                setDestination(data);
+                setDestination(suggestedDestination);
             }
         }
     }
@@ -26,7 +26,7 @@ const DestinationResponse: React.FC<IDestinationResponse> = ({ data }) => {
                 {suggestedDestination.map(({ name, reason, bestTimeToVisit , activities , popularAttractions , crowded , isCrowded , cordinates}) => (
                     <div key={name} className="rounded-[1.3rem] border border-slate-200/90 bg-white/88 p-4 shadow-[0_16px_32px_rgba(148,163,184,0.12)]">
                         <p className="flex flex-wrap items-start gap-2 text-slate-600">
-                            <span className="cursor-pointer rounded-full border border-sky-200/90 bg-sky-50 px-3 py-1 text-sm font-semibold text-sky-700 transition hover:bg-sky-100" onClick={()=>selectLocation(cordinates.longitude, cordinates.latitude)}>{name}</span>
+                            <span className="cursor-pointer rounded-full border border-sky-200/90 bg-sky-50 px-3 py-1 text-sm font-semibold text-sky-700 transition hover:bg-sky-100" onClick={()=>selectLocation(cordinates.longitude, cordinates.latitude, { name, reason, bestTimeToVisit , activities , popularAttractions , crowded , isCrowded , cordinates })}>{name}</span>
                             <span className="pt-1 text-sm leading-6 text-slate-600">{reason}</span>
                         </p>
                         <p className="mt-3 text-sm text-slate-500">Best Time To Visit:

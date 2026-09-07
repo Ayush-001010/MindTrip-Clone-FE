@@ -14,7 +14,6 @@ const useHorizontalCardList = (endPoint: string, type: "explore-trip") => {
           endPoint,
           { pageNo: pageNo.toString() },
         );
-        console.log("Response from explore-trip:", response);
         const { success, data } = response;
         if (success && data) {
             if (pageNo === 1) {
