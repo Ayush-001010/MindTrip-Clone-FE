@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Map from "../../Common/Map/Map";
 import LocationSelector from "./components/LocationSelector/LocationSelector";
 import useExploreHotels from "../../../Services/Hotel/useExploreHotels";
@@ -27,29 +27,80 @@ const Explore: React.FC = () => {
   const {
     data: hotels,
     loading,
+    loadingMore: hotelsLoadingMore,
     error,
+    hasMore: hotelsHasMore,
+    loadMore: loadMoreHotels,
   } = useExploreHotels(activeTab === "Stays" ? selectedLocation.name : "");
-
   // PLACE DATA
   const {
     data: places,
     loading: placesLoading,
+    loadingMore: placesLoadingMore,
     error: placesError,
+    hasMore: placesHasMore,
+    loadMore: loadMorePlaces,
   } = useExplorePlaces(
     selectedLocation.name,
     activeTab === "Restaurants"
       ? "restaurants"
       : activeTab === "Things to do"
       ? "things-to-do"
+      : activeTab === "Activities"
+      ? "activities"
       : ""
   );
   const tabs = ["Things to do", "Restaurants", "Stays", "Activities", "Guides"];
+  const exploreContentRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const container = exploreContentRef.current;
 
+    if (!container) {
+      return;
+    }
+
+    const handleScroll = () => {
+      const scrollPosition = container.scrollTop + container.clientHeight;
+
+      const scrollThreshold = container.scrollHeight - 200;
+
+      const shouldLoadPlaces =
+        activeTab === "Restaurants" ||
+        activeTab === "Things to do" ||
+        activeTab === "Activities";
+
+      const shouldLoadHotels = activeTab === "Stays";
+
+      if (scrollPosition >= scrollThreshold) {
+        if (shouldLoadPlaces && placesHasMore && !placesLoadingMore) {
+          loadMorePlaces();
+        }
+
+        if (shouldLoadHotels && hotelsHasMore && !hotelsLoadingMore) {
+          loadMoreHotels();
+        }
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [
+    activeTab,
+    placesHasMore,
+    placesLoadingMore,
+    loadMorePlaces,
+    hotelsHasMore,
+    hotelsLoadingMore,
+    loadMoreHotels,
+  ]);
   return (
     <main className="h-screen w-full bg-[#1f2327] text-white">
       <div className="grid h-full grid-cols-2">
         {/* LEFT SIDE */}
-        <section className="overflow-y-auto p-6">
+        <section ref={exploreContentRef} className="overflow-y-auto p-6">
           {/* LOCATION */}
           <LocationSelector
             onLocationSelect={(location) => {
@@ -139,8 +190,15 @@ const Explore: React.FC = () => {
                     ))}
                   </div>
                 )}
+                  {hotelsLoadingMore && (
+                <p className="mt-6 text-center text-sm text-white/50">
+                  Loading more hotels...
+                </p>
+              )}
               </div>
+             
             )}
+           
 
             {/* RESTAURANT RESULTS */}
             {activeTab === "Restaurants" && (
@@ -202,6 +260,35 @@ const Explore: React.FC = () => {
                 )}
               </div>
             )}
+            {/* ACTIVITIES RESULTS */}
+            {activeTab === "Activities" && (
+              <div className="mt-6">
+                {placesLoading && (
+                  <p className="text-sm text-white/50">Loading activities...</p>
+                )}
+
+                {placesError && (
+                  <p className="text-sm text-red-400">{placesError}</p>
+                )}
+
+                {!placesLoading && !placesError && places.length === 0 && (
+                  <p className="text-sm text-white/50">No activities found.</p>
+                )}
+
+                {!placesLoading && !placesError && places.length > 0 && (
+                  <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                    {places.map((place) => (
+                      <PlaceCard
+                        key={place.id}
+                        place={place}
+                        selected={selectedPlace?.id === place.id}
+                        onClick={() => setSelectedPlace(place)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
 
@@ -214,7 +301,9 @@ const Explore: React.FC = () => {
             selectedHotel={selectedHotel}
             onHotelSelect={(hotel) => setSelectedHotel(hotel)}
             places={
-              activeTab === "Restaurants" || activeTab === "Things to do"
+              activeTab === "Restaurants" ||
+              activeTab === "Things to do" ||
+              activeTab === "Activities"
                 ? places
                 : []
             }

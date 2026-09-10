@@ -1,9 +1,15 @@
 import axios from "axios";
 
 interface IAPIServicesResponse<T> {
-    success : boolean;
-    data?: T;
-    error?: string;
+  success: boolean;
+  data?: T;
+  error?: string;
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
 }
 
 export default class APIService {
@@ -11,22 +17,39 @@ export default class APIService {
     baseURL: "http://localhost:3000",
   });
 
-  getRequest = async <T>(endPoint : string , queryParams?: Record<string, string>) : Promise<IAPIServicesResponse<T>> => {
-    try{
-        const response = await this.api.get<T>(endPoint, { params: queryParams });
-        return response.data as IAPIServicesResponse<T>;
-    } catch(error){
-        console.log("Error in getRequest:", error);
-        return { success: false, error: "Something went wrong" };
+  getRequest = async <T>(
+    endPoint: string,
+    queryParams?: Record<string, string | number>
+  ): Promise<IAPIServicesResponse<T>> => {
+    try {
+      const response = await this.api.get<T>(endPoint, {
+        params: queryParams,
+      });
+
+      return response.data as IAPIServicesResponse<T>;
+    } catch (error) {
+      console.log("Error in getRequest:", error);
+      return {
+        success: false,
+        error: "Something went wrong",
+      };
     }
-  }
-  postRequest = async <T>(endPoint : string , body?: Record<string, any>) : Promise<IAPIServicesResponse<T>> => {
-    try{
-        const response = await this.api.post<T>(endPoint, body);
-        return response.data as IAPIServicesResponse<T>;
-    } catch(error){
-        console.log("Error in postRequest:", error);
-        return { success: false, error: "Something went wrong" };
+  };
+
+  postRequest = async <T>(
+    endPoint: string,
+    body?: Record<string, any>
+  ): Promise<IAPIServicesResponse<T>> => {
+    try {
+      const response = await this.api.post<T>(endPoint, body);
+
+      return response.data as IAPIServicesResponse<T>;
+    } catch (error) {
+      console.log("Error in postRequest:", error);
+      return {
+        success: false,
+        error: "Something went wrong",
+      };
     }
-  }
+  };
 }
