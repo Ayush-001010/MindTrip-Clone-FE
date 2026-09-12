@@ -17,7 +17,8 @@ interface Pagination {
 
 const useExplorePlaces = (
   city: string,
-  type: PlaceType
+  type: PlaceType,
+  minRating?: number
 ) => {
   const [data, setData] = useState<IExplorePlace[]>([]);
   const [loading, setLoading] = useState(false);
@@ -55,6 +56,9 @@ const useExplorePlaces = (
               type,
               page: pageNumber,
               limit: 4,
+              ...(minRating !== undefined && {
+                minRating,
+              }),
             }
           );
 
@@ -110,7 +114,7 @@ const useExplorePlaces = (
     }
 
     fetchPlaces(1, false);
-  }, [city, type, fetchPlaces]);
+  }, [city, type,minRating, fetchPlaces]);
 
   const loadMore = useCallback(() => {
     if (

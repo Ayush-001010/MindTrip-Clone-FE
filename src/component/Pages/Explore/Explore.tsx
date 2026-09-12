@@ -9,7 +9,7 @@ import useExplorePlaces from "../../../Services/Place/useExplorePlaces";
 import PlaceCard from "./components/PlaceCard/PlaceCard";
 import type IPlace from "../../../Interface/DataInterface/IExplorePlace";
 import PlaceDetails from "./components/PlaceDetails/PlaceDetails";
-
+import Filters from "./components/Filters/Filters";
 const Explore: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState({
     name: "Pune",
@@ -22,6 +22,8 @@ const Explore: React.FC = () => {
   const [selectedHotel, setSelectedHotel] = useState<IHotel | null>(null);
 
   const [selectedPlace, setSelectedPlace] = useState<IPlace | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [minRating, setMinRating] = useState<number | undefined>(undefined);
 
   // HOTEL DATA
   const {
@@ -31,7 +33,10 @@ const Explore: React.FC = () => {
     error,
     hasMore: hotelsHasMore,
     loadMore: loadMoreHotels,
-  } = useExploreHotels(activeTab === "Stays" ? selectedLocation.name : "");
+  } = useExploreHotels(
+    activeTab === "Stays" ? selectedLocation.name : "",
+    minRating
+  );
   // PLACE DATA
   const {
     data: places,
@@ -48,7 +53,8 @@ const Explore: React.FC = () => {
       ? "things-to-do"
       : activeTab === "Activities"
       ? "activities"
-      : ""
+      : "",
+    minRating
   );
   const tabs = ["Things to do", "Restaurants", "Stays", "Activities", "Guides"];
   const exploreContentRef = useRef<HTMLElement | null>(null);
@@ -106,6 +112,8 @@ const Explore: React.FC = () => {
             onLocationSelect={(location) => {
               setSelectedHotel(null);
               setSelectedPlace(null);
+              setMinRating(undefined);
+              setShowFilters(false);
               setSelectedLocation(location);
             }}
           />
@@ -122,13 +130,26 @@ const Explore: React.FC = () => {
               />
             </div>
 
-            <button
-              type="button"
-              className="flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-[#272c31] px-5 py-3 text-sm text-white transition hover:bg-[#30363c]"
-            >
-              <span>☷</span>
-              Filters
-            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowFilters((previous) => !previous)}
+                className="flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-[#272c31] px-5 py-3 text-sm text-white transition hover:bg-[#30363c]"
+              >
+                <span>☷</span>
+                Filters
+              </button>
+
+              {showFilters && (
+                <Filters
+                  minRating={minRating}
+                  onRatingChange={(rating) => {
+                    setMinRating(rating);
+                    setShowFilters(false);
+                  }}
+                />
+              )}
+            </div>
           </div>
 
           {/* CATEGORY TABS */}
@@ -140,6 +161,8 @@ const Explore: React.FC = () => {
                 onClick={() => {
                   setSelectedHotel(null);
                   setSelectedPlace(null);
+                  setMinRating(undefined);
+                  setShowFilters(false);
                   setActiveTab(tab);
                 }}
                 className={`shrink-0 rounded-full px-5 py-2.5 text-sm transition ${
@@ -190,15 +213,13 @@ const Explore: React.FC = () => {
                     ))}
                   </div>
                 )}
-                  {hotelsLoadingMore && (
-                <p className="mt-6 text-center text-sm text-white/50">
-                  Loading more hotels...
-                </p>
-              )}
+                {hotelsLoadingMore && (
+                  <p className="mt-6 text-center text-sm text-white/50">
+                    Loading more hotels...
+                  </p>
+                )}
               </div>
-             
             )}
-           
 
             {/* RESTAURANT RESULTS */}
             {activeTab === "Restaurants" && (

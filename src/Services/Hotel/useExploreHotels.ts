@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import APIService from "../APIService";
 import type IHotel from "../../Interface/DataInterface/IHotel";
 
-const useExploreHotels = (city: string) => {
+const useExploreHotels = (city: string,  minRating?: number) => {
   const [data, setData] = useState<IHotel[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -38,6 +38,9 @@ const useExploreHotels = (city: string) => {
               city,
               page: pageNumber,
               limit: 4,
+              ...(minRating !== undefined && {
+                minRating,
+              }),
             }
           );
 
@@ -78,7 +81,7 @@ const useExploreHotels = (city: string) => {
         setLoadingMore(false);
       }
     },
-    [city]
+    [city,minRating]
   );
 
   useEffect(() => {
@@ -92,7 +95,7 @@ const useExploreHotels = (city: string) => {
     }
 
     fetchHotels(1, false);
-  }, [city, fetchHotels]);
+  }, [city,minRating, fetchHotels]);
 
   const loadMore = useCallback(() => {
     if (
