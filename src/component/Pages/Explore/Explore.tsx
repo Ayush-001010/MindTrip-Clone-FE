@@ -24,6 +24,7 @@ const Explore: React.FC = () => {
   const [selectedPlace, setSelectedPlace] = useState<IPlace | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [minRating, setMinRating] = useState<number | undefined>(undefined);
+  const [activityType, setActivityType] = useState<string>("all");
 
   // HOTEL DATA
   const {
@@ -54,7 +55,8 @@ const Explore: React.FC = () => {
       : activeTab === "Activities"
       ? "activities"
       : "",
-    minRating
+    minRating,
+    activityType
   );
   const tabs = ["Things to do", "Restaurants", "Stays", "Activities", "Guides"];
   const exploreContentRef = useRef<HTMLElement | null>(null);
@@ -103,10 +105,13 @@ const Explore: React.FC = () => {
     loadMoreHotels,
   ]);
   return (
-    <main className="h-screen w-full bg-[#1f2327] text-white">
-      <div className="grid h-full grid-cols-2">
+    <main className="min-h-screen w-full bg-[#1f2327] text-white lg:h-screen">
+      <div className="grid min-h-screen grid-cols-1 lg:h-full lg:grid-cols-2">
         {/* LEFT SIDE */}
-        <section ref={exploreContentRef} className="overflow-y-auto p-6">
+        <section
+          ref={exploreContentRef}
+          className="min-h-0 overflow-y-auto p-4 sm:p-6 lg:h-full"
+        >
           {/* LOCATION */}
           <LocationSelector
             onLocationSelect={(location) => {
@@ -118,8 +123,7 @@ const Explore: React.FC = () => {
             }}
           />
 
-          {/* SEARCH + FILTERS */}
-          <div className="mt-6 flex items-center gap-3">
+<div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="flex min-w-0 flex-1 items-center rounded-full border border-white/10 bg-[#272c31] px-4 py-3">
               <span className="mr-3 text-lg text-white/50">⌕</span>
 
@@ -147,6 +151,12 @@ const Explore: React.FC = () => {
                     setMinRating(rating);
                     setShowFilters(false);
                   }}
+                  activityType={activityType}
+                  onActivityTypeChange={(type) => {
+                    setActivityType(type);
+                    setShowFilters(false);
+                  }}
+                  showActivityType={activeTab === "Activities"}
                 />
               )}
             </div>
@@ -164,6 +174,7 @@ const Explore: React.FC = () => {
                   setMinRating(undefined);
                   setShowFilters(false);
                   setActiveTab(tab);
+                  setActivityType("all");
                 }}
                 className={`shrink-0 rounded-full px-5 py-2.5 text-sm transition ${
                   activeTab === tab
@@ -202,7 +213,7 @@ const Explore: React.FC = () => {
                 )}
 
                 {!loading && !error && hotels.length > 0 && (
-                  <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     {hotels.map((hotel) => (
                       <HotelCard
                         key={hotel.id}
@@ -239,7 +250,7 @@ const Explore: React.FC = () => {
                 )}
 
                 {!placesLoading && !placesError && places.length > 0 && (
-                  <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     {places.map((place) => (
                       <PlaceCard
                         key={place.id}
@@ -268,7 +279,7 @@ const Explore: React.FC = () => {
                 )}
 
                 {!placesLoading && !placesError && places.length > 0 && (
-                  <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     {places.map((place) => (
                       <PlaceCard
                         key={place.id}
@@ -297,7 +308,7 @@ const Explore: React.FC = () => {
                 )}
 
                 {!placesLoading && !placesError && places.length > 0 && (
-                  <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     {places.map((place) => (
                       <PlaceCard
                         key={place.id}
@@ -314,7 +325,7 @@ const Explore: React.FC = () => {
         </section>
 
         {/* RIGHT SIDE */}
-        <section className="h-full overflow-hidden">
+        <section className="h-[350px] overflow-hidden sm:h-[450px] lg:h-full">
           <Map
             latitude={selectedLocation.latitude}
             longitude={selectedLocation.longitude}

@@ -8,17 +8,13 @@ type PlaceType =
   | "activities"
   | "";
 
-interface Pagination {
-  page: number;
-  limit: number;
-  total: number;
-  hasMore: boolean;
-}
+
 
 const useExplorePlaces = (
   city: string,
   type: PlaceType,
-  minRating?: number
+  minRating?: number,
+  activityType?: string
 ) => {
   const [data, setData] = useState<IExplorePlace[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,6 +55,9 @@ const useExplorePlaces = (
               ...(minRating !== undefined && {
                 minRating,
               }),
+              ...(activityType && {
+                activityType,
+              })
             }
           );
 
@@ -99,10 +98,8 @@ const useExplorePlaces = (
         setLoadingMore(false);
       }
     },
-    [city, type]
+    [city, type,minRating,activityType]
   );
-
-  // Reset and load first page when city/type changes
   useEffect(() => {
     setData([]);
     setPage(1);
@@ -114,7 +111,7 @@ const useExplorePlaces = (
     }
 
     fetchPlaces(1, false);
-  }, [city, type,minRating, fetchPlaces]);
+  }, [city, type,minRating,activityType, fetchPlaces]);
 
   const loadMore = useCallback(() => {
     if (
