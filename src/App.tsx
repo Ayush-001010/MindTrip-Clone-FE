@@ -28,7 +28,7 @@ const AppContent: React.FC = () => {
       className={
         isDarkPage
           ? "flex min-h-screen w-full min-w-0 overflow-x-hidden bg-[#04080f] text-white"
-          : "min-h-screen w-full overflow-x-hidden bg-white text-black"
+          : "min-h-screen w-full overflow-x-hidden bg-[#f7fbfa] text-black"
       }
     >
       {/* MOBILE MENU BUTTON */}
