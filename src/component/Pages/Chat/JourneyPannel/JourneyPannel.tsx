@@ -4,9 +4,10 @@ import ToggleSwitch from "./ToggleSwitch/ToggleSwitch";
 import LocationPannel from "./LocationPannel/LocationPannel";
 import { useChatContext } from "../Chat";
 import ItineraryPannel from "./ItineraryPannel/ItineraryPannel";
+import EmptyPannel from "./EmptyPannel/EmptyPannel";
 
 const JourneyPannel: React.FC<IJourneyPannel> = () => {
-    const [pannelType, setPannelType] = useState<"location" | "trip">("location");
+    const [pannelType, setPannelType] = useState<"location" | "trip" >("location");
     const { isSelectedLocation, locationLatitude, locationLongitude } = useChatContext();
     const hasSelectedCoordinates = locationLatitude !== 0 || locationLongitude !== 0;
 
@@ -27,6 +28,9 @@ const JourneyPannel: React.FC<IJourneyPannel> = () => {
                 )}
                 {(pannelType === "location" && (isSelectedLocation || hasSelectedCoordinates)) && (
                     <LocationPannel />
+                )}
+                {(pannelType === "location" && !(isSelectedLocation || hasSelectedCoordinates)) && (
+                    <EmptyPannel />
                 )}
             </div>
         </div>
