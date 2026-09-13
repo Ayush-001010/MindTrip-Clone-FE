@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Map from "../../Common/Map/Map";
 import LocationSelector from "./components/LocationSelector/LocationSelector";
-
 import useExploreHotels from "../../../Services/Hotel/useExploreHotels";
 import HotelCard from "./components/HotelCard/HotelCard";
 import type IHotel from "../../../Interface/DataInterface/IHotel";
 import HotelDetails from "./components/HotelDetails/HotelDetails";
-
 import useExplorePlaces from "../../../Services/Place/useExplorePlaces";
 import PlaceCard from "./components/PlaceCard/PlaceCard";
 import type IPlace from "../../../Interface/DataInterface/IExplorePlace";
-
+import PlaceDetails from "./components/PlaceDetails/PlaceDetails";
+import Filters from "./components/Filters/Filters";
 
 const Explore: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState({
@@ -21,65 +20,124 @@ const Explore: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState("Things to do");
 
-  const [selectedHotel, setSelectedHotel] =
-    useState<IHotel | null>(null);
+  const [selectedHotel, setSelectedHotel] = useState<IHotel | null>(null);
 
-  const [selectedPlace, setSelectedPlace] =
-    useState<IPlace | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<IPlace | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [minRating, setMinRating] = useState<number | undefined>(undefined);
+  const [activityType, setActivityType] = useState<string>("all");
 
   // HOTEL DATA
   const {
     data: hotels,
     loading,
+    loadingMore: hotelsLoadingMore,
     error,
+    hasMore: hotelsHasMore,
+    loadMore: loadMoreHotels,
   } = useExploreHotels(
-    activeTab === "Stays"
-      ? selectedLocation.name
-      : ""
+    activeTab === "Stays" ? selectedLocation.name : "",
+    minRating
   );
 
   // PLACE DATA
   const {
     data: places,
     loading: placesLoading,
+    loadingMore: placesLoadingMore,
     error: placesError,
+    hasMore: placesHasMore,
+    loadMore: loadMorePlaces,
   } = useExplorePlaces(
     selectedLocation.name,
     activeTab === "Restaurants"
       ? "restaurants"
-      : ""
+      : activeTab === "Things to do"
+      ? "things-to-do"
+      : activeTab === "Activities"
+      ? "activities"
+      : "",
+    minRating,
+    activityType
   );
 
-  const tabs = [
-    "Things to do",
-    "Restaurants",
-    "Stays",
-    "Activities",
-    "Guides",
-  ];
+  const tabs = ["Things to do", "Restaurants", "Stays", "Activities", "Guides"];
+
+  const exploreContentRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const container = exploreContentRef.current;
+
+    if (!container) {
+      return;
+    }
+
+    console.log("Explore scroll values:", {
+      scrollLeft: container.scrollLeft,
+      scrollWidth: container.scrollWidth,
+      clientWidth: container.clientWidth,
+    });
+
+    const handleScroll = () => {
+      const scrollPosition = container.scrollTop + container.clientHeight;
+
+      const scrollThreshold = container.scrollHeight - 200;
+
+      const shouldLoadPlaces =
+        activeTab === "Restaurants" ||
+        activeTab === "Things to do" ||
+        activeTab === "Activities";
+
+      const shouldLoadHotels = activeTab === "Stays";
+
+      if (scrollPosition >= scrollThreshold) {
+        if (shouldLoadPlaces && placesHasMore && !placesLoadingMore) {
+          loadMorePlaces();
+        }
+
+        if (shouldLoadHotels && hotelsHasMore && !hotelsLoadingMore) {
+          loadMoreHotels();
+        }
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [
+    activeTab,
+    placesHasMore,
+    placesLoadingMore,
+    loadMorePlaces,
+    hotelsHasMore,
+    hotelsLoadingMore,
+    loadMoreHotels,
+  ]);
 
   return (
-    <main className="h-screen w-full bg-[#1f2327] text-white">
-      <div className="grid h-full grid-cols-2">
-
+    <main className="min-h-screen min-w-0 w-full overflow-x-hidden bg-[#1f2327] text-white lg:h-screen">
+      <div className="grid min-h-screen min-w-0 grid-cols-1 lg:h-full lg:grid-cols-2">
         {/* LEFT SIDE */}
-        <section className="overflow-y-auto p-6">
-
+        <section
+          ref={exploreContentRef}
+          className="min-w-0 min-h-0 overflow-x-clip overflow-y-auto p-4 sm:p-6 lg:h-full"
+        >
           {/* LOCATION */}
           <LocationSelector
             onLocationSelect={(location) => {
               setSelectedHotel(null);
               setSelectedPlace(null);
+              setMinRating(undefined);
+              setShowFilters(false);
               setSelectedLocation(location);
             }}
           />
 
-          {/* SEARCH + FILTERS */}
-          <div className="mt-6 flex items-center gap-3">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="flex min-w-0 flex-1 items-center rounded-full border border-white/10 bg-[#272c31] px-4 py-3">
-              <span className="mr-3 text-lg text-white/50">
-                ⌕
-              </span>
+              <span className="mr-3 text-lg text-white/50">⌕</span>
 
               <input
                 type="text"
@@ -88,13 +146,32 @@ const Explore: React.FC = () => {
               />
             </div>
 
-            <button
-              type="button"
-              className="flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-[#272c31] px-5 py-3 text-sm text-white transition hover:bg-[#30363c]"
-            >
-              <span>☷</span>
-              Filters
-            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowFilters((previous) => !previous)}
+                className="flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-[#272c31] px-5 py-3 text-sm text-white transition hover:bg-[#30363c]"
+              >
+                <span>☷</span>
+                Filters
+              </button>
+
+              {showFilters && (
+                <Filters
+                  minRating={minRating}
+                  onRatingChange={(rating) => {
+                    setMinRating(rating);
+                    setShowFilters(false);
+                  }}
+                  activityType={activityType}
+                  onActivityTypeChange={(type) => {
+                    setActivityType(type);
+                    setShowFilters(false);
+                  }}
+                  showActivityType={activeTab === "Activities"}
+                />
+              )}
+            </div>
           </div>
 
           {/* CATEGORY TABS */}
@@ -106,7 +183,10 @@ const Explore: React.FC = () => {
                 onClick={() => {
                   setSelectedHotel(null);
                   setSelectedPlace(null);
+                  setMinRating(undefined);
+                  setShowFilters(false);
                   setActiveTab(tab);
+                  setActivityType("all");
                 }}
                 className={`shrink-0 rounded-full px-5 py-2.5 text-sm transition ${
                   activeTab === tab
@@ -121,10 +201,7 @@ const Explore: React.FC = () => {
 
           {/* CONTENT */}
           <div className="mt-8">
-
-            <h2 className="text-xl font-semibold">
-              {activeTab}
-            </h2>
+            <h2 className="text-xl font-semibold">{activeTab}</h2>
 
             <p className="mt-2 text-sm text-white/50">
               {activeTab === "Stays"
@@ -137,53 +214,40 @@ const Explore: React.FC = () => {
             {/* HOTEL RESULTS */}
             {activeTab === "Stays" && (
               <div className="mt-6">
-
                 {loading && (
-                  <p className="text-sm text-white/50">
-                    Loading hotels...
-                  </p>
+                  <p className="text-sm text-white/50">Loading hotels...</p>
                 )}
 
-                {error && (
-                  <p className="text-sm text-red-400">
-                    {error}
-                  </p>
+                {error && <p className="text-sm text-red-400">{error}</p>}
+
+                {!loading && !error && hotels.length === 0 && (
+                  <p className="text-sm text-white/50">No hotels found.</p>
                 )}
 
-                {!loading &&
-                  !error &&
-                  hotels.length === 0 && (
-                    <p className="text-sm text-white/50">
-                      No hotels found.
-                    </p>
-                  )}
+                {!loading && !error && hotels.length > 0 && (
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    {hotels.map((hotel) => (
+                      <HotelCard
+                        key={hotel.id}
+                        hotel={hotel}
+                        selected={selectedHotel?.id === hotel.id}
+                        onClick={() => setSelectedHotel(hotel)}
+                      />
+                    ))}
+                  </div>
+                )}
 
-                {!loading &&
-                  !error &&
-                  hotels.length > 0 && (
-                    <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                      {hotels.map((hotel) => (
-                        <HotelCard
-                          key={hotel.id}
-                          hotel={hotel}
-                          selected={
-                            selectedHotel?.id ===
-                            hotel.id
-                          }
-                          onClick={() =>
-                            setSelectedHotel(hotel)
-                          }
-                        />
-                      ))}
-                    </div>
-                  )}
+                {hotelsLoadingMore && (
+                  <p className="mt-6 text-center text-sm text-white/50">
+                    Loading more hotels...
+                  </p>
+                )}
               </div>
             )}
 
             {/* RESTAURANT RESULTS */}
             {activeTab === "Restaurants" && (
               <div className="mt-6">
-
                 {placesLoading && (
                   <p className="text-sm text-white/50">
                     Loading restaurants...
@@ -191,58 +255,109 @@ const Explore: React.FC = () => {
                 )}
 
                 {placesError && (
-                  <p className="text-sm text-red-400">
-                    {placesError}
+                  <p className="text-sm text-red-400">{placesError}</p>
+                )}
+
+                {!placesLoading && !placesError && places.length === 0 && (
+                  <p className="text-sm text-white/50">
+                    No restaurants found.
                   </p>
                 )}
 
-                {!placesLoading &&
-                  !placesError &&
-                  places.length === 0 && (
-                    <p className="text-sm text-white/50">
-                      No restaurants found.
-                    </p>
-                  )}
-
-                {!placesLoading &&
-                  !placesError &&
-                  places.length > 0 && (
-                    <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                      {places.map((place) => (
-                        <PlaceCard
-                          key={place.id}
-                          place={place}
-                          selected={
-                            selectedPlace?.id ===
-                            place.id
-                          }
-                          onClick={() =>
-                            setSelectedPlace(place)
-                          }
-                        />
-                      ))}
-                    </div>
-                  )}
+                {!placesLoading && !placesError && places.length > 0 && (
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    {places.map((place) => (
+                      <PlaceCard
+                        key={place.id}
+                        place={place}
+                        selected={selectedPlace?.id === place.id}
+                        onClick={() => setSelectedPlace(place)}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
+            {/* THINGS TO DO RESULTS */}
+            {activeTab === "Things to do" && (
+              <div className="mt-6">
+                {placesLoading && (
+                  <p className="text-sm text-white/50">Loading places...</p>
+                )}
+
+                {placesError && (
+                  <p className="text-sm text-red-400">{placesError}</p>
+                )}
+
+                {!placesLoading && !placesError && places.length === 0 && (
+                  <p className="text-sm text-white/50">No places found.</p>
+                )}
+
+                {!placesLoading && !placesError && places.length > 0 && (
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    {places.map((place) => (
+                      <PlaceCard
+                        key={place.id}
+                        place={place}
+                        selected={selectedPlace?.id === place.id}
+                        onClick={() => setSelectedPlace(place)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ACTIVITIES RESULTS */}
+            {activeTab === "Activities" && (
+              <div className="mt-6">
+                {placesLoading && (
+                  <p className="text-sm text-white/50">Loading activities...</p>
+                )}
+
+                {placesError && (
+                  <p className="text-sm text-red-400">{placesError}</p>
+                )}
+
+                {!placesLoading && !placesError && places.length === 0 && (
+                  <p className="text-sm text-white/50">No activities found.</p>
+                )}
+
+                {!placesLoading && !placesError && places.length > 0 && (
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    {places.map((place) => (
+                      <PlaceCard
+                        key={place.id}
+                        place={place}
+                        selected={selectedPlace?.id === place.id}
+                        onClick={() => setSelectedPlace(place)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
 
         {/* RIGHT SIDE */}
-        <section className="h-full overflow-hidden">
+        <section className="min-w-0 h-[350px] overflow-hidden sm:h-[450px] lg:h-full">
           <Map
             latitude={selectedLocation.latitude}
             longitude={selectedLocation.longitude}
-            hotels={
-              activeTab === "Stays"
-                ? hotels
+            hotels={activeTab === "Stays" ? hotels : []}
+            selectedHotel={selectedHotel}
+            onHotelSelect={(hotel) => setSelectedHotel(hotel)}
+            places={
+              activeTab === "Restaurants" ||
+              activeTab === "Things to do" ||
+              activeTab === "Activities"
+                ? places
                 : []
             }
-            selectedHotel={selectedHotel}
-            onHotelSelect={(hotel) =>
-              setSelectedHotel(hotel)
-            }
+            selectedPlace={selectedPlace}
+            onPlaceSelect={(place) => setSelectedPlace(place)}
           />
         </section>
       </div>
@@ -251,9 +366,14 @@ const Explore: React.FC = () => {
       {selectedHotel && (
         <HotelDetails
           hotel={selectedHotel}
-          onClose={() =>
-            setSelectedHotel(null)
-          }
+          onClose={() => setSelectedHotel(null)}
+        />
+      )}
+
+      {selectedPlace && (
+        <PlaceDetails
+          place={selectedPlace}
+          onClose={() => setSelectedPlace(null)}
         />
       )}
     </main>

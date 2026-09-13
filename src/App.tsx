@@ -7,6 +7,8 @@ import Chat from "./component/Pages/Chat/Chat";
 import SignIn from "./Features/Auth/SignIn/SignIn";
 import SignUp from "./Features/Auth/SignUp/SignUp";
 import Explore from "./component/Pages/Explore/Explore";
+import ProtectedRoute from "./Features/Auth/ProtectedRoute/ProtectedRoute";
+import AuthCallback from "./Features/Auth/AuthCallback/AuthCallback";
 import { useDispatch } from "react-redux";
 import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 
@@ -18,6 +20,11 @@ const AppContent: React.FC = () => {
   const isExploreLink = location.pathname === "/explore";
   const isDarkPage = isChatLink || isExploreLink;
 
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
   useEffect(() => {
     const getItem = localStorage.getItem("userDetails");
     if (getItem) {
@@ -27,7 +34,35 @@ const AppContent: React.FC = () => {
   }, []);
 
   return (
-    <div className={` ${isDarkPage ? "flex min-h-screen bg-[#04080f] text-white" : "min-h-screen bg-white text-black"}`}>
+    <div
+      className={
+        isDarkPage
+          ? "flex min-h-screen w-full min-w-0 overflow-x-hidden bg-[#04080f] text-white"
+          : "min-h-screen w-full overflow-x-hidden bg-[#f7fbfa] text-black"
+      }
+    >
+      {/* MOBILE MENU BUTTON */}
+      {isDarkPage && (
+        <button
+          type="button"
+          onClick={() => setIsSidebarOpen(true)}
+          className="fixed right-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[#272c31] text-white shadow-lg md:hidden"
+          aria-label="Open navigation"
+        >
+          ☰
+        </button>
+      )}
+
+      {/* MOBILE BACKDROP */}
+      {isDarkPage && isSidebarOpen && (
+        <button
+          type="button"
+          onClick={() => setIsSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-black/60 md:hidden"
+          aria-label="Close navigation"
+        />
+      )}
+
       {/* SIDEBAR */}
       {isDarkPage && <aside className="flex shrink-0 flex-col border-r border-white/10 bg-[#1f2327]">
         <SideNavBar />
@@ -37,11 +72,19 @@ const AppContent: React.FC = () => {
       {/* MAIN APPLICATION AREA */}
       <div className="min-w-0 flex-1">
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/chat/:tripId" element={<Chat />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/explore" element={<Explore />} />
+          </Route>
         </Routes>
       </div>
     </div>

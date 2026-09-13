@@ -12,12 +12,15 @@ const Map: React.FC<IMap> = ({
   selectedHotel,
   onHotelSelect,
   markerPoints,
+  places,
+  selectedPlace,
+  onPlaceSelect,
 }) => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<maptilersdk.Map | null>(null);
-
   const hotelMarkers = useRef<maptilersdk.Marker[]>([]);
   const pointMarkers = useRef<maptilersdk.Marker[]>([]);
+  const placeMarkers =useRef<maptilersdk.Marker[]>([]);
 
   useEffect(() => {
     if (!mapContainer.current || mapInstance.current) return;
@@ -75,14 +78,19 @@ const Map: React.FC<IMap> = ({
     if (!mapInstance.current) return;
 
     hotelMarkers.current.forEach((marker) => marker.remove());
+    placeMarkers.current.forEach((marker) => {
+      marker.remove();
+    });
     hotelMarkers.current = [];
-
+    placeMarkers.current = [];
     if (hotels) {
       hotels.forEach((hotel) => {
         const isSelected = selectedHotel?.id === hotel.id;
 
         const marker = new maptilersdk.Marker({
-          color: isSelected ? "#22C55E" : "#3FB1CE",
+          color: isSelected
+          ? "#FACC15"
+          : "#3FB1CE",
         })
           .setLngLat([hotel.longitude, hotel.latitude])
           .addTo(mapInstance.current!);
@@ -137,7 +145,60 @@ const Map: React.FC<IMap> = ({
       essential: true,
     });
   }, [selectedHotel]);
-
+ 
+  useEffect(() => {
+    if (!mapInstance.current) return;
+  
+    placeMarkers.current.forEach((marker) => {
+      marker.remove();
+    });
+  
+    placeMarkers.current = [];
+  
+    if (!places) return;
+  
+    places.forEach((place) => {
+      const isSelected =
+        selectedPlace?.id === place.id;
+  
+      const marker = new maptilersdk.Marker({
+        color: isSelected
+        ? "#FACC15"
+        : "#3FB1CE",
+      })
+        .setLngLat([
+          place.longitude,
+          place.latitude,
+        ])
+        .addTo(mapInstance.current!);
+  
+      marker.getElement().style.cursor = "pointer";
+  
+      if (isSelected) {
+        marker.getElement().style.transform =
+          "scale(1.4)";
+        marker.getElement().style.zIndex = "10";
+      }
+  
+      marker.getElement().addEventListener("click", () => {
+        onPlaceSelect?.(place);
+      });
+  
+      placeMarkers.current.push(marker);
+    });
+  }, [places, selectedPlace, onPlaceSelect]);
+  useEffect(() => {
+    if (!mapInstance.current || !selectedPlace) return;
+  
+    mapInstance.current.flyTo({
+      center: [
+        selectedPlace.longitude,
+        selectedPlace.latitude,
+      ],
+      zoom: 14,
+      essential: true,
+    });
+  }, [selectedPlace]);
   return (
     <div className="h-full w-full">
       <div ref={mapContainer} className="h-full w-full" />
