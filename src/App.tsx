@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Home from "./component/Pages/Home/Home";
 import TopNavbar from "./component/Common/Navbar/TopNavBar/TopNavbar";
 import SideNavBar from "./component/Common/Navbar/SideNavBar/SideNavBar";
@@ -7,13 +7,24 @@ import Chat from "./component/Pages/Chat/Chat";
 import SignIn from "./Features/Auth/SignIn/SignIn";
 import SignUp from "./Features/Auth/SignUp/SignUp";
 import Explore from "./component/Pages/Explore/Explore";
+import { useDispatch } from "react-redux";
+import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
 
-  const isChatLink = location.pathname === "/chat";
+  const isChatLink = location.pathname.includes("/chat");
   const isExploreLink = location.pathname === "/explore";
   const isDarkPage = isChatLink || isExploreLink;
+
+  useEffect(() => {
+    const getItem = localStorage.getItem("userDetails");
+    if (getItem) {
+      const userDetails = JSON.parse(getItem);
+      dispatch(setUserDetailsData(userDetails));
+    }
+  }, []);
 
   return (
     <div className={` ${isDarkPage ? "flex min-h-screen bg-[#04080f] text-white" : "min-h-screen bg-white text-black"}`}>
@@ -27,7 +38,7 @@ const AppContent: React.FC = () => {
       <div className="min-w-0 flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/chat/:tripId" element={<Chat />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />

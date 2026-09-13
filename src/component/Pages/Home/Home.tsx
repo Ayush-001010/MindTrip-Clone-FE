@@ -1,15 +1,33 @@
 import React from "react";
+import useTripAction from "../../../customHooks/useTripAction";
 import type IHome from "./IHome";
 import HomeConfig from "../../../config/component/HomeConfig";
 import ImageAnimation from "../../Common/ImageAnimation/ImageAnimation";
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 import HorizontalCardList from "../../Common/HorizontalCardList/HorizontalCardList";
-import { Link } from "react-router-dom";
+import useMessage from "antd/es/message/useMessage";
+import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC<IHome> = () => {
+    const { createNewTrip } = useTripAction();
+    const [messageAPI , contextHandler] = useMessage();
+    const navigate = useNavigate();
+
+
+    const handleCreateNewTrip = async () => {
+        const response = await createNewTrip();
+        console.log(response);
+        if(response.success){
+            navigate(`/chat/${response.data?.url}`);
+        } else {
+            messageAPI.error("Something went wrong");
+        }
+    };
+
     return (
         <main className="pt-7 px-4">
+            {contextHandler}
             <section className="flex items-center">
                 <div className="pr-10">
                     <motion.h1
@@ -34,12 +52,10 @@ const Home: React.FC<IHome> = () => {
                         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                         transition={{ duration: 1.35, delay: 1.3 }}
                     >
-                        <Link to="/chat">
-                            <button type="button" className="inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-full bg-gradient-to-br from-[#E7F1EC] to-[#DDEAE2] px-6 py-3.5 text-[#335C4D] shadow-[0_16px_30px_rgba(135,160,149,0.24)] transition duration-200 hover:-translate-y-0.5">
-                                Create my trip
-                                <FiArrowRight />
-                            </button>
-                        </Link>
+                        <button onClick={handleCreateNewTrip} type="button" className="inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-full bg-gradient-to-br from-[#E7F1EC] to-[#DDEAE2] px-6 py-3.5 text-[#335C4D] shadow-[0_16px_30px_rgba(135,160,149,0.24)] transition duration-200 hover:-translate-y-0.5">
+                            Create my trip
+                            <FiArrowRight />
+                        </button>
                     </motion.div>
 
                 </div>

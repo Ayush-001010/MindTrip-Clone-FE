@@ -1,12 +1,12 @@
 import React from "react";
 import type INavItem from "./INavItem";
+import { BsChatFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { IoSearch} from "react-icons/io5";
+import { BiWorld } from "react-icons/bi";
 import { FaPlusSquare } from "react-icons/fa";
-import { BsChat } from "react-icons/bs";
-import { MdOutlineTravelExplore } from "react-icons/md";
 import { IoCameraOutline } from "react-icons/io5";
 import { useSideNavBarContext } from "../../SideNavBar";
+import { FaSearch } from "react-icons/fa";
 
 const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
     const { isCollapsed } = useSideNavBarContext();
@@ -15,11 +15,11 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
             case "create":
                 return <FaPlusSquare />
             case "explore":
-                return <IoSearch />
+                return <FaSearch />
             case "chat":
-                return <BsChat />;
+                return <BsChatFill />;
             case "trip":
-                return <MdOutlineTravelExplore />
+                return <BiWorld />
             case "camera":
                 return <IoCameraOutline />;
             default:
@@ -27,10 +27,10 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
         }
     }
     return (
-        <div className="my-3 flex flex-col items-start gap-2 rounded-2xl p-2 transition ">
-            <Link to={link}>
-                <p className={` transition cursor-pointer ${isCollapsed ? "bg-white p-2 text-[#000] shadow-lg rounded-full font-bold " : "flex items-center justify-start gap-3 text-white hover:bg-white hover:text-black rounded-2xl p-2"}`}>
-                    <span className="text-md font-thin">{fetchIcon(icon)}</span>
+        <div className="my-3 flex flex-col items-start gap-2 rounded-2xl p-2 transition w-full">
+            <Link to={link} className="w-full">
+                <p className={`w-full transition cursor-pointer  hover:bg-[#212529] text-[#fff] ${isCollapsed ? "p-3 flex justify-center items-center shadow-lg rounded-full font-bold " : "flex items-center justify-start gap-3  rounded-4xl p-3"}`}>
+                    <span className="text-lg font-thin">{fetchIcon(icon)}</span>
                     { !isCollapsed && <span className="text-lg font-medium">{title}</span> }
                 </p>
             </Link>
