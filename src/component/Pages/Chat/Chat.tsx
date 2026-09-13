@@ -6,6 +6,7 @@ import JourneyPannel from './JourneyPannel/JourneyPannel';
 import ChatBox from './ChatBox/ChatBox';
 import type { ISuggestedDestination } from '../../../Interface/DataInterface/ITripAPIResponse';
 import useNotification from '../../../customHookWithUI/useNotification';
+import type IMessageTrip from '../../../Interface/DataInterface/IMessageTrip';
 
 export interface IChatContext {
     isSelectedLocation: boolean;
@@ -16,13 +17,17 @@ export interface IChatContext {
     setLocationLatitude?: React.Dispatch<React.SetStateAction<number>>;
     destination:ISuggestedDestination | null;
     setDestination?: React.Dispatch<React.SetStateAction<ISuggestedDestination | null>>;
+    sendMessageHandler : (message: string) => Promise<void>;
+    messages:Array<IMessageTrip>
 }
 
 const ChatContext = createContext<IChatContext>({
     isSelectedLocation: false,
     locationLongitude: 0,
     locationLatitude: 0,
-    destination:null
+    destination:null,
+    sendMessageHandler: async (_: string) => {},
+    messages: []
 });
 
 export const useChatContext = () => {
@@ -34,24 +39,15 @@ export const useChatContext = () => {
 }
 
 const Chat : React.FC<IChat> = () => {
+    const { notificationConfig, sendMessageHandler, messages } = useTripSocketAction();
     const [isSelectedLocation, setIsSelectedLocation] = useState<boolean>(false);
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
     const [destination, setDestination] = useState<ISuggestedDestination | null>(null);
-    const { notificationConfig } = useTripSocketAction();
     const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
 
     return (
-        <ChatContext.Provider value={{
-            isSelectedLocation,
-            locationLongitude,
-            locationLatitude,
-            setIsSelectedLocation,
-            setLocationLongitude,
-            setLocationLatitude,
-            destination,
-            setDestination
-        }}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages}}>
             <div className="w-full ">
                 {notification}
                 <Header/>

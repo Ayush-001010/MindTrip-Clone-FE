@@ -7,7 +7,7 @@ import ItineraryPannel from "./ItineraryPannel/ItineraryPannel";
 import EmptyPannel from "./EmptyPannel/EmptyPannel";
 
 const JourneyPannel: React.FC<IJourneyPannel> = () => {
-    const [pannelType, setPannelType] = useState<"location" | "trip" >("location");
+    const [pannelType, setPannelType] = useState<"location" | "trip" >("trip");
     const { isSelectedLocation, locationLatitude, locationLongitude } = useChatContext();
     const hasSelectedCoordinates = locationLatitude !== 0 || locationLongitude !== 0;
 
