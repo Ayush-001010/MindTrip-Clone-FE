@@ -10,7 +10,6 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
 
   const submitHandler = async (values: Record<string, any>) => {
     try {
-      console.log("Sign Up Values:", values);
 
       const response = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",

@@ -1,4 +1,5 @@
 import React from "react";
+import useTripAction from "../../../customHooks/useTripAction";
 import type IHome from "./IHome";
 import HomeConfig from "../../../config/component/HomeConfig";
 import ImageAnimation from "../../Common/ImageAnimation/ImageAnimation";

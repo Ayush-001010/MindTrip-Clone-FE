@@ -11,7 +11,6 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
 
   const submitHandler = async (values: Record<string, any>) => {
     try {
-      console.log("Sign In Values:", values);
 
       const response = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
@@ -30,7 +29,6 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
         throw new Error(data.message || "Login failed");
       }
 
-      console.log("Login successful:", data);
 
       localStorage.setItem("token", data.token);
 

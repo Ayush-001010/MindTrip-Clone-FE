@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
+import useTripSocketAction from '../../../customHooks/useTripSocketAction';
 import type IChat from './IChat';
 import Header from './Header/Header';
 import JourneyPannel from './JourneyPannel/JourneyPannel';
 import ChatBox from './ChatBox/ChatBox';
 import type { ISuggestedDestination } from '../../../Interface/DataInterface/ITripAPIResponse';
+import useNotification from '../../../customHookWithUI/useNotification';
 
 export interface IChatContext {
     isSelectedLocation: boolean;
@@ -36,6 +38,8 @@ const Chat : React.FC<IChat> = () => {
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
     const [destination, setDestination] = useState<ISuggestedDestination | null>(null);
+    const { notificationConfig } = useTripSocketAction();
+    const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
 
     return (
         <ChatContext.Provider value={{
@@ -49,6 +53,7 @@ const Chat : React.FC<IChat> = () => {
             setDestination
         }}>
             <div className="w-full ">
+                {notification}
                 <Header/>
                 <div className="flex w-full">
                     <ChatBox/>

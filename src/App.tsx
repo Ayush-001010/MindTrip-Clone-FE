@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Home from "./component/Pages/Home/Home";
 import TopNavbar from "./component/Common/Navbar/TopNavBar/TopNavbar";
 import SideNavBar from "./component/Common/Navbar/SideNavBar/SideNavBar";
@@ -9,11 +9,14 @@ import SignUp from "./Features/Auth/SignUp/SignUp";
 import Explore from "./component/Pages/Explore/Explore";
 import ProtectedRoute from "./Features/Auth/ProtectedRoute/ProtectedRoute";
 import AuthCallback from "./Features/Auth/AuthCallback/AuthCallback";
+import { useDispatch } from "react-redux";
+import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
 
-  const isChatLink = location.pathname === "/chat";
+  const isChatLink = location.pathname.includes("/chat");
   const isExploreLink = location.pathname === "/explore";
   const isDarkPage = isChatLink || isExploreLink;
 
@@ -22,6 +25,13 @@ const AppContent: React.FC = () => {
   React.useEffect(() => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
+  useEffect(() => {
+    const getItem = localStorage.getItem("userDetails");
+    if (getItem) {
+      const userDetails = JSON.parse(getItem);
+      dispatch(setUserDetailsData(userDetails));
+    }
+  }, []);
 
   return (
     <div
@@ -54,17 +64,9 @@ const AppContent: React.FC = () => {
       )}
 
       {/* SIDEBAR */}
-      {isDarkPage && (
-        <aside
-          className={`fixed inset-y-0 left-0 z-50 w-[234px] shrink-0 border-r border-white/10 bg-[#1f2327] transition-transform duration-300 md:static md:flex md:h-screen md:translate-x-0 ${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <SideNavBar />
-        </aside>
-      )}
-
-      {/* TOP NAVBAR */}
+      {isDarkPage && <aside className="flex shrink-0 flex-col border-r border-white/10 bg-[#1f2327]">
+        <SideNavBar />
+      </aside>}
       {!isDarkPage && <TopNavbar />}
 
       {/* MAIN APPLICATION AREA */}
@@ -72,6 +74,8 @@ const AppContent: React.FC = () => {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
+          <Route path="/chat/:tripId" element={<Chat />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
