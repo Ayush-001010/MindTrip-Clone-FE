@@ -12,28 +12,31 @@ import AuthCallback from "./Features/Auth/AuthCallback/AuthCallback";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+
   const isChatLink = location.pathname === "/chat";
   const isExploreLink = location.pathname === "/explore";
   const isDarkPage = isChatLink || isExploreLink;
+
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
   React.useEffect(() => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
 
   return (
     <div
-      className={`${
+      className={
         isDarkPage
-          ? "flex min-h-screen bg-[#04080f] text-white"
-          : "min-h-screen bg-white text-black"
-      }`}
+          ? "flex min-h-screen w-full min-w-0 overflow-x-hidden bg-[#04080f] text-white"
+          : "min-h-screen w-full overflow-x-hidden bg-white text-black"
+      }
     >
       {/* MOBILE MENU BUTTON */}
       {isDarkPage && (
         <button
           type="button"
           onClick={() => setIsSidebarOpen(true)}
-          className="fixed right-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[#272c31] text-white shadow-lg lg:hidden"
+          className="fixed right-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[#272c31] text-white shadow-lg md:hidden"
           aria-label="Open navigation"
         >
           ☰
@@ -45,7 +48,7 @@ const AppContent: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/60 md:hidden"
           aria-label="Close navigation"
         />
       )}
@@ -53,7 +56,7 @@ const AppContent: React.FC = () => {
       {/* SIDEBAR */}
       {isDarkPage && (
         <aside
-          className={`fixed inset-y-0 left-0 z-50 w-[234px] shrink-0 border-r border-white/10 bg-[#1f2327] transition-transform duration-300 lg:static lg:flex lg:h-screen lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-50 w-[234px] shrink-0 border-r border-white/10 bg-[#1f2327] transition-transform duration-300 md:static md:flex md:h-screen md:translate-x-0 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -61,15 +64,19 @@ const AppContent: React.FC = () => {
         </aside>
       )}
 
+      {/* TOP NAVBAR */}
       {!isDarkPage && <TopNavbar />}
 
+      {/* MAIN APPLICATION AREA */}
       <div className="min-w-0 flex-1">
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
 
+          {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/chat" element={<Chat />} />
             <Route path="/explore" element={<Explore />} />

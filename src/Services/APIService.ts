@@ -17,6 +17,16 @@ export default class APIService {
     baseURL: "http://localhost:3000",
   });
 
+  getAuthHeaders = () => {
+    const token = localStorage.getItem("token");
+
+    return token
+      ? {
+          Authorization: `Bearer ${token}`,
+        }
+      : {};
+  };
+
   getRequest = async <T>(
     endPoint: string,
     queryParams?: Record<string, string | number>
@@ -24,6 +34,7 @@ export default class APIService {
     try {
       const response = await this.api.get<T>(endPoint, {
         params: queryParams,
+        headers: this.getAuthHeaders(),
       });
 
       return response.data as IAPIServicesResponse<T>;
@@ -41,7 +52,9 @@ export default class APIService {
     body?: Record<string, any>
   ): Promise<IAPIServicesResponse<T>> => {
     try {
-      const response = await this.api.post<T>(endPoint, body);
+      const response = await this.api.post<T>(endPoint, body, {
+        headers: this.getAuthHeaders(),
+      });
 
       return response.data as IAPIServicesResponse<T>;
     } catch (error) {

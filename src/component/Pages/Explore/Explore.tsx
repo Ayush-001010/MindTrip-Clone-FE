@@ -10,6 +10,7 @@ import PlaceCard from "./components/PlaceCard/PlaceCard";
 import type IPlace from "../../../Interface/DataInterface/IExplorePlace";
 import PlaceDetails from "./components/PlaceDetails/PlaceDetails";
 import Filters from "./components/Filters/Filters";
+
 const Explore: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState({
     name: "Pune",
@@ -38,6 +39,7 @@ const Explore: React.FC = () => {
     activeTab === "Stays" ? selectedLocation.name : "",
     minRating
   );
+
   // PLACE DATA
   const {
     data: places,
@@ -58,14 +60,23 @@ const Explore: React.FC = () => {
     minRating,
     activityType
   );
+
   const tabs = ["Things to do", "Restaurants", "Stays", "Activities", "Guides"];
+
   const exploreContentRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     const container = exploreContentRef.current;
 
     if (!container) {
       return;
     }
+
+    console.log("Explore scroll values:", {
+      scrollLeft: container.scrollLeft,
+      scrollWidth: container.scrollWidth,
+      clientWidth: container.clientWidth,
+    });
 
     const handleScroll = () => {
       const scrollPosition = container.scrollTop + container.clientHeight;
@@ -104,13 +115,14 @@ const Explore: React.FC = () => {
     hotelsLoadingMore,
     loadMoreHotels,
   ]);
+
   return (
-    <main className="min-h-screen w-full bg-[#1f2327] text-white lg:h-screen">
-      <div className="grid min-h-screen grid-cols-1 lg:h-full lg:grid-cols-2">
+    <main className="min-h-screen min-w-0 w-full overflow-x-hidden bg-[#1f2327] text-white lg:h-screen">
+      <div className="grid min-h-screen min-w-0 grid-cols-1 lg:h-full lg:grid-cols-2">
         {/* LEFT SIDE */}
         <section
           ref={exploreContentRef}
-          className="min-h-0 overflow-y-auto p-4 sm:p-6 lg:h-full"
+          className="min-w-0 min-h-0 overflow-x-clip overflow-y-auto p-4 sm:p-6 lg:h-full"
         >
           {/* LOCATION */}
           <LocationSelector
@@ -123,7 +135,7 @@ const Explore: React.FC = () => {
             }}
           />
 
-<div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="flex min-w-0 flex-1 items-center rounded-full border border-white/10 bg-[#272c31] px-4 py-3">
               <span className="mr-3 text-lg text-white/50">⌕</span>
 
@@ -224,6 +236,7 @@ const Explore: React.FC = () => {
                     ))}
                   </div>
                 )}
+
                 {hotelsLoadingMore && (
                   <p className="mt-6 text-center text-sm text-white/50">
                     Loading more hotels...
@@ -246,7 +259,9 @@ const Explore: React.FC = () => {
                 )}
 
                 {!placesLoading && !placesError && places.length === 0 && (
-                  <p className="text-sm text-white/50">No restaurants found.</p>
+                  <p className="text-sm text-white/50">
+                    No restaurants found.
+                  </p>
                 )}
 
                 {!placesLoading && !placesError && places.length > 0 && (
@@ -263,6 +278,7 @@ const Explore: React.FC = () => {
                 )}
               </div>
             )}
+
             {/* THINGS TO DO RESULTS */}
             {activeTab === "Things to do" && (
               <div className="mt-6">
@@ -292,6 +308,7 @@ const Explore: React.FC = () => {
                 )}
               </div>
             )}
+
             {/* ACTIVITIES RESULTS */}
             {activeTab === "Activities" && (
               <div className="mt-6">
@@ -325,7 +342,7 @@ const Explore: React.FC = () => {
         </section>
 
         {/* RIGHT SIDE */}
-        <section className="h-[350px] overflow-hidden sm:h-[450px] lg:h-full">
+        <section className="min-w-0 h-[350px] overflow-hidden sm:h-[450px] lg:h-full">
           <Map
             latitude={selectedLocation.latitude}
             longitude={selectedLocation.longitude}
@@ -352,6 +369,7 @@ const Explore: React.FC = () => {
           onClose={() => setSelectedHotel(null)}
         />
       )}
+
       {selectedPlace && (
         <PlaceDetails
           place={selectedPlace}
