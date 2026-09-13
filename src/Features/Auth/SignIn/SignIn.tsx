@@ -5,8 +5,10 @@ import Form from "../../../Components/UI/Forms/Form";
 import type ISignIn from "./ISignIn";
 import signInFields from "./signInFields";
 
+
 const SignIn: React.FunctionComponent<ISignIn> = () => {
   const navigate = useNavigate();
+
   const submitHandler = async (values: Record<string, any>) => {
     try {
       console.log("Sign In Values:", values);
@@ -29,13 +31,17 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
       }
 
       console.log("Login successful:", data);
+
       localStorage.setItem("token", data.token);
+
       console.log("Token stored successfully");
+
       navigate("/chat", { replace: true });
     } catch (error) {
       console.error("Login error:", error);
     }
   };
+
   const handleGoogleSignIn = () => {
     window.location.href = "http://localhost:3000/api/auth/google";
   };
@@ -43,27 +49,39 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
   return (
     <AuthLayout>
       <div className="w-full">
-        <h1 className="text-center text-4xl font-bold text-slate-900">
-          Sign In
+        <p className="mb-3 text-center text-sm font-semibold uppercase tracking-[0.16em] text-[#6e9f9f]">
+          Welcome back
+        </p>
+
+        <h1 className="text-center text-4xl font-bold tracking-[-0.04em] text-[#2f3e46]">
+          Sign in to MindTrip
         </h1>
+
+        <p className="mt-3 text-center text-sm leading-6 text-[#6f7f79]">
+          Your next adventure is waiting.
+        </p>
         <button
           type="button"
           onClick={handleGoogleSignIn}
-          className="mt-6 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+          className="mt-7 flex w-full items-center justify-center rounded-xl border border-[#dcebe5] bg-white px-4 py-3.5 text-sm font-medium text-[#4a625a] shadow-sm transition hover:border-[#bfd9d0] hover:bg-[#f7fbfa]"
         >
-          <span className="mr-3 font-semibold">G</span>
+          <span className="mr-3 font-semibold text-[#335c4d]">G</span>
           Sign in with Google
         </button>
 
-        <div className="my-10 flex items-center gap-4">
-          <div className="h-px flex-1 bg-gray-200" />
+        <div className="my-9 flex items-center gap-4">
+          <div className="h-px flex-1 bg-[#dcebe5]" />
 
-          <span className="text-sm text-gray-400">OR</span>
+          <span className="text-xs font-medium uppercase tracking-[0.14em] text-[#9aaaA3]">
+            or
+          </span>
 
-          <div className="h-px flex-1 bg-gray-200" />
+          <div className="h-px flex-1 bg-[#dcebe5]" />
         </div>
 
-        <h2 className="mb-6 text-2xl font-bold text-slate-900">Sign In</h2>
+        <h2 className="mb-5 text-2xl font-bold tracking-[-0.03em] text-[#2f3e46]">
+          Sign in with email
+        </h2>
 
         <Form
           fieldsDetails={signInFields}
@@ -71,13 +89,13 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
           buttonText="Sign In"
         />
 
-        <p className="mt-6 text-center text-sm text-gray-500">
+        <p className="mt-7 text-center text-sm text-[#6f7f79]">
           Don't have an account?{" "}
           <Link
             to="/auth/signup"
-            className="font-medium text-[#4d9fa3] hover:underline"
+            className="font-semibold text-[#4f8175] hover:text-[#335c4d] hover:underline"
           >
-            Sign Up
+            Create one
           </Link>
         </p>
       </div>
