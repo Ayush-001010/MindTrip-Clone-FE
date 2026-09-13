@@ -3,9 +3,20 @@ import type ITopNavBar from "./ITopNavBar";
 import { WiStars } from "react-icons/wi";
 import CommonConfig from "../../../../config/CommonConfig";
 import { Button } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const TopNavbar: React.FC<ITopNavBar> = () => {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = React.useState(
+    () => !!localStorage.getItem("token")
+  );
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/", { replace: true });
+  };
+
   return (
     <header className="flex flex-wrap items-center justify-between bg-transparent px-2 py-2">
       <div>
@@ -20,14 +31,24 @@ const TopNavbar: React.FC<ITopNavBar> = () => {
       </div>
 
       <div>
-        <Link to="/auth/signin">
+        {isLoggedIn ? (
           <Button
             type="text"
+            onClick={handleLogout}
             className="rounded-lg! font-medium! text-[#7B8F87]! hover:bg-gradient-to-br! hover:from-[#E7F1EC]! hover:to-[#F5F8F2]! hover:text-[#476A5B]!"
           >
-            Sign Up/Sign In
+            Logout
           </Button>
-        </Link>
+        ) : (
+          <Link to="/auth/signin">
+            <Button
+              type="text"
+              className="rounded-lg! font-medium! text-[#7B8F87]! hover:bg-gradient-to-br! hover:from-[#E7F1EC]! hover:to-[#F5F8F2]! hover:text-[#476A5B]!"
+            >
+              Sign Up/Sign In
+            </Button>
+          </Link>
+        )}
       </div>
     </header>
   );

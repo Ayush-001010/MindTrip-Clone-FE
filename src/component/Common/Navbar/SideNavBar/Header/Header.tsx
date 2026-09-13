@@ -3,12 +3,14 @@ import type IHeader from "./IHeader";
 import CommonConfig from "../../../../../config/CommonConfig";
 import { WiStars } from "react-icons/wi";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const Header: React.FC<IHeader> = () => {
     const titleWords = CommonConfig.companyName.split(" ");
 
     return (
         <div className="my-2">
+             <Link to="/">
             <motion.p
                 className="flex items-center justify-center gap-3 text-center text-xl font-bubblegum tracking-[0.02em] text-[#fff] drop-shadow-[0_3px_12px_rgba(148,163,184,0.18)]"
                 initial="hidden"
@@ -56,6 +58,7 @@ const Header: React.FC<IHeader> = () => {
                     })}
                 </span>
             </motion.p>
+            </Link>
         </div>
     );
 };

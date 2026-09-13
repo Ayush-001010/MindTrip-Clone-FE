@@ -7,6 +7,8 @@ import Chat from "./component/Pages/Chat/Chat";
 import SignIn from "./Features/Auth/SignIn/SignIn";
 import SignUp from "./Features/Auth/SignUp/SignUp";
 import Explore from "./component/Pages/Explore/Explore";
+import ProtectedRoute from "./Features/Auth/ProtectedRoute/ProtectedRoute";
+import AuthCallback from "./Features/Auth/AuthCallback/AuthCallback";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -52,9 +54,7 @@ const AppContent: React.FC = () => {
       {isDarkPage && (
         <aside
           className={`fixed inset-y-0 left-0 z-50 w-[234px] shrink-0 border-r border-white/10 bg-[#1f2327] transition-transform duration-300 lg:static lg:flex lg:h-screen lg:translate-x-0 ${
-            isSidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full"
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <SideNavBar />
@@ -63,14 +63,17 @@ const AppContent: React.FC = () => {
 
       {!isDarkPage && <TopNavbar />}
 
-      {/* MAIN APPLICATION AREA */}
       <div className="min-w-0 flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/explore" element={<Explore />} />
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/explore" element={<Explore />} />
+          </Route>
         </Routes>
       </div>
     </div>

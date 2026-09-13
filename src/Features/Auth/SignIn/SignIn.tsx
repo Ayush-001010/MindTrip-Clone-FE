@@ -1,13 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../AuthLayout/AuthLayout";
 import Form from "../../../Components/UI/Forms/Form";
-
 import type ISignIn from "./ISignIn";
 import signInFields from "./signInFields";
 
 const SignIn: React.FunctionComponent<ISignIn> = () => {
+  const navigate = useNavigate();
   const submitHandler = async (values: Record<string, any>) => {
     try {
       console.log("Sign In Values:", values);
@@ -30,10 +29,9 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
       }
 
       console.log("Login successful:", data);
-
       localStorage.setItem("token", data.token);
-
       console.log("Token stored successfully");
+      navigate("/chat", { replace: true });
     } catch (error) {
       console.error("Login error:", error);
     }

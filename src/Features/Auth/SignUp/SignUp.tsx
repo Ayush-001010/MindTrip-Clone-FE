@@ -2,9 +2,10 @@ import React from "react";
 import Form from "../../../Components/UI/Forms/Form";
 import type ISignUp from "./ISignUp";
 import signUpFields from "./SignUpFields";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp: React.FunctionComponent<ISignUp> = () => {
+  const navigate = useNavigate();
   const submitHandler = async (values: Record<string, any>) => {
     try {
       console.log("Sign Up Values:", values);
@@ -22,8 +23,10 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
       if (!response.ok) {
         throw new Error(data.message || "Registration failed");
       }
-
       console.log("Registration successful:", data);
+      localStorage.setItem("token", data.token);
+      console.log("Token stored successfully");
+      navigate("/chat", { replace: true });
     } catch (error) {
       console.error("Registration error:", error);
     }
