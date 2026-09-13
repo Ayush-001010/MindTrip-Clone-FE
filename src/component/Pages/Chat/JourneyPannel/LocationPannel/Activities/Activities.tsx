@@ -49,7 +49,6 @@ const Activities: React.FC<IActivities> = ({ activities }) => {
         fetchActivityImages();
     }, [activities]);
 
-    console.log("Activities state:", activity);
     return (
         <section>
             {activities.length > 0 && (

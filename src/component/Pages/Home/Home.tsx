@@ -17,7 +17,6 @@ const Home: React.FC<IHome> = () => {
 
     const handleCreateNewTrip = async () => {
         const response = await createNewTrip();
-        console.log(response);
         if(response.success){
             navigate(`/chat/${response.data?.url}`);
         } else {

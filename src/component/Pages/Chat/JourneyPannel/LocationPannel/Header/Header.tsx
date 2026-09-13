@@ -7,7 +7,6 @@ const Header: React.FC<IHeader> = ({ destinationName , longitude , latitude }) =
     const {setIsSelectedLocation , setLocationLongitude , setLocationLatitude} = useChatContext();
 
     const locationClickHandler = () => {
-        console.log("Location icon clicked. Longitude:", longitude, "Latitude:", latitude);
         if (setIsSelectedLocation && setLocationLongitude && setLocationLatitude) {
             setLocationLongitude(longitude);
             setLocationLatitude(latitude);

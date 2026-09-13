@@ -9,7 +9,6 @@ import type IUserInterface from "../../../../../Interface/DataInterface/IUserDet
 const UserPannel: React.FC<IUserPannel> = () => {
     const { isCollapsed } = useSideNavBarContext();
     const userDetails = useSelector((state: any) => state.userDetails as IUserInterface);
-    console.log("user Details:", userDetails);
     const [userName, setUserName] = useState("");
 
 

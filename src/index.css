@@ -36,3 +36,7 @@
 .itinerary-collapse.ant-collapse > .ant-collapse-item {
   border-bottom: none !important;
 }
+
+.ant-modal-container{
+  padding:0 !important;
+}

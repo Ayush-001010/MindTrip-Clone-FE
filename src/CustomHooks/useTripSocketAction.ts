@@ -21,7 +21,6 @@ const useTripSocketAction = () => {
 
   socket.on("room:joined", (data : {userName: string}) => {
     const {userName}=data;
-    console.log("User joined:", userName);
     if(userName !== userDetails.userName){
       setNotificationConfig({
         open: true,
@@ -34,7 +33,6 @@ const useTripSocketAction = () => {
 
   useEffect(()=>{
     if(userDetails.userName){
-      console.log("Joining room with tripId:", tripId , " and userName:", userDetails.userName);
       socket.emit("room:join", { tripID: tripId, userID: "123", userName: userDetails.userName });
     }
   },[userDetails.userName])

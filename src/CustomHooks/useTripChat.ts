@@ -19,7 +19,6 @@ const useTripChat = () => {
             userMessage: message,
             tripID:"1234"
         });
-        console.log("Response from copilot: ", response);
         if(response.success){
             setMessages(prevMessages =>{
                 const lastIndex = prevMessages.length - 1;
@@ -39,9 +38,7 @@ const useTripChat = () => {
             tripID:"1234",
             userID:"123"
         });
-        console.log("Fetch messages response: ", response);
         if(response.success && response.data && response.data.length > 0){
-            console.log("Fetched messages: ", JSON.parse(response.data[0].response as unknown as string));
             setMessages(response.data);
         }
     }

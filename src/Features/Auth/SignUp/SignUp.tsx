@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 const SignUp: React.FunctionComponent<ISignUp> = () => {
   const submitHandler = async (values: Record<string, any>) => {
     try {
-      console.log("Sign Up Values:", values);
 
       const response = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
@@ -23,7 +22,6 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
         throw new Error(data.message || "Registration failed");
       }
 
-      console.log("Registration successful:", data);
     } catch (error) {
       console.error("Registration error:", error);
     }

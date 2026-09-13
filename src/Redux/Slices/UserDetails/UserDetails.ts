@@ -11,9 +11,7 @@ const UserDetailsSlice = createSlice({
   reducers: {
     setUserDetailsData: (state, action) => {
       action.payload = JSON.parse(JSON.stringify(action.payload));
-      console.log("Setting user details with payload:", action.payload);
       state.userName = action.payload.userName;
-      console.log("Updated state userName to:", state.userName);
     },
   },
 });
