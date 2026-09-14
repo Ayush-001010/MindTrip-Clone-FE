@@ -1,8 +1,10 @@
 import React from "react";
 import type IInputBox from "./IInputBox";
 import { IoIosSend } from "react-icons/io";
+import { useChatContext } from "../../Chat";
 
 const InputBox: React.FC<IInputBox> = ({ sendHandler, changeHandler, value }) => {
+    const {messages} = useChatContext();
     return (
         <form onSubmit={(e) => { e.preventDefault(); sendHandler(); }}>
             <div className="flex w-full items-end gap-3 p-2">
@@ -14,7 +16,7 @@ const InputBox: React.FC<IInputBox> = ({ sendHandler, changeHandler, value }) =>
                 />
                 {/* Add Send Button Here */}
                 <div className="flex flex-col justify-center">
-                    <button className="flex h-12 w-12 items-center justify-center rounded-2xl transition duration-300 bg-[#ced4da] text-[#343a40] shadow-[0_16px_32px_rgba(14,165,233,0.18)] hover:scale-[1.02] hover:bg-[#343a40] hover:text-white cursor-pointer" type="submit" >
+                    <button disabled={messages[messages.length-1]?.response?.type === "question-gather"} className={`flex h-12 w-12 items-center justify-center rounded-2xl transition duration-300 bg-[#ced4da] text-[#343a40] shadow-[0_16px_32px_rgba(14,165,233,0.18)] hover:scale-[1.02] hover:bg-[#343a40] hover:text-white ` + (messages[messages.length-1]?.response?.type === "question-gather" ? "cursor-not-allowed" : "cursor-pointer")} type="submit" >
                         <IoIosSend />
                     </button>
                 </div>

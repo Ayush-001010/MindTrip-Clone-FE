@@ -1,5 +1,6 @@
 import type ITripAPIResponse from "./ITripAPIResponse";
 import type IQuestionGatherResponse from "./IQuestionGatherResponse";
+import type IItineraryOptions from "./IItineraryOptions";
 
 export default interface IMessageTrip {
     ID: string;
@@ -7,5 +8,5 @@ export default interface IMessageTrip {
     tripID: string;
     message: string;
     timestamp: Date;
-    response?: ITripAPIResponse | IQuestionGatherResponse;
+    response?: ITripAPIResponse | IQuestionGatherResponse | IItineraryOptions;
 }

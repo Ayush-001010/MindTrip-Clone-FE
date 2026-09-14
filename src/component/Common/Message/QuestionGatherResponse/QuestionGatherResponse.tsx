@@ -2,10 +2,18 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import type IQuestionGatherResponseInterface from "./IQuestionGatherResponse";
 import QuestionGatherForm from "./QuestionGatherForm/QuestionGatherForm";
+import { useChatContext } from "../../../Pages/Chat/Chat";
 
 const QuestionGatherResponse: React.FC<IQuestionGatherResponseInterface> = ({ data }) => {
     const { questionDescription } = data;
+    const {sendMessageHandler} = useChatContext();
     const [loading, setLoading] = useState(false);
+
+    const sendMessageHandlerFormForm = (formValues: Record<string, any>) => {
+        // Implement the message sending logic here
+        console.log(formValues);
+        sendMessageHandler(JSON.stringify({answerType:"question-gather" , ...formValues}));
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -23,7 +31,7 @@ const QuestionGatherResponse: React.FC<IQuestionGatherResponseInterface> = ({ da
                 ))}
             </motion.p>
 
-            <section className="mt-3  border border-gray-700 p-4 rounded-lg">
+            <section className="mt-3 border border-gray-700 p-4 rounded-lg">
                 {loading ? (
                     <div className="mt-3 flex items-center gap-3 text-sm text-gray-300" aria-live="polite">
                         <svg className="h-5 w-5 text-sky-400 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -33,15 +41,7 @@ const QuestionGatherResponse: React.FC<IQuestionGatherResponseInterface> = ({ da
                         <span className="text-gray-300">Generating form…</span>
                     </div>
                 ) : (
-                    <QuestionGatherForm questions={data.questions} />
-                )}
-
-                {!loading && (
-                    <div className="mt-3 flex justify-end">
-                        <button className="px-4 py-2 bg-[#003566] shadow-lg text-white rounded-lg hover:bg-[#002244] transition-colors">
-                            Submit
-                        </button>
-                    </div>
+                    <QuestionGatherForm questions={data.questions} sendMessageHandler={sendMessageHandlerFormForm} />
                 )}
             </section>
         </section>

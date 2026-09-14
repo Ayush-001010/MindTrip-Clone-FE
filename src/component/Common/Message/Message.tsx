@@ -9,18 +9,21 @@ import DestinationResponse from "./DestinationResponse/DestinationResponse";
 import type IQuestionGatherResponse from "../../../Interface/DataInterface/IQuestionGatherResponse";
 import UserMessage from "./UserMessage/UserMessage";
 import Loader from "./Loader/Loader";
+import type IItineraryOptions from "../../../Interface/DataInterface/IItineraryOptions";
+import ItineraryOptions from "./ItineraryOptions/ItineraryOptions";
 
 const Message: React.FC<IIMessage> = ({ data }) => {
     const { message, timestamp, response } = data;
     const formattedTimestamp = moment(timestamp).format("HH:mm DD/MM/YY");
 
-    const generateAssistantResponse = (response: ITripAPIResponse | IQuestionGatherResponse) => {
+    const generateAssistantResponse = (response: ITripAPIResponse | IQuestionGatherResponse | IItineraryOptions) => {
         if (typeof response === "string") {
             response = JSON.parse(response as unknown as string) as ITripAPIResponse;
         }
         switch (response.type) {
             case "destination": return <DestinationResponse data={response} />;
             case "question-gather": return <QuestionGatherResponse data={response} />;
+            case "itinerary-options": return <ItineraryOptions itineraryOptions={response} />;
             default: return null;
         }
     }

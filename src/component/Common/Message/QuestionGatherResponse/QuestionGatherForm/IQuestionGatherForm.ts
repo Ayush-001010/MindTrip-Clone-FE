@@ -2,4 +2,5 @@ import type { IQuestion } from "../../../../../Interface/DataInterface/IQuestion
 
 export default interface IQuestionGatherForm {
     questions:IQuestion[];
+    sendMessageHandler: (formValues: Record<string, any>) => void;
 }
