@@ -32,7 +32,6 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
 
       localStorage.setItem("token", data.token);
 
-      console.log("Token stored successfully");
 
       navigate("/chat", { replace: true });
     } catch (error) {

@@ -17,7 +17,7 @@ const LocationPannel: React.FC<ILocationPannel> = () => {
         <section className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto">
             <Header destinationName={selectedDestinationName} longitude={destLongitude} latitude={destLatitude} />
             <section className="h-[40vh] min-h-[16rem] shrink-0 overflow-hidden rounded-[1.1rem] border border-slate-200 bg-white shadow-[0_12px_24px_rgba(148,163,184,0.14)]">
-                <Map latitude={locationLatitude} longitude={locationLongitude} hotels={[]} markerPoints={[[locationLatitude, locationLongitude]]} />
+                <Map latitude={locationLatitude} longitude={locationLongitude} hotels={[]} markerPoints={[{ longitude: locationLongitude, latitude: locationLatitude, markerLabel: "L" }]} />
             </section>
             <section className="shrink-0 flex justify-between">
                 <BestTimeToVisit bestTimeToVisit={destination?.bestTimeToVisit || null} />

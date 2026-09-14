@@ -10,7 +10,8 @@ export interface IItineraryActivity {
     crowded:{
         level: "Low" | "Medium" | "High";
         description: string;
-    }
+    },
+    cityType:"town"|"village"
 }
 
 export interface IItineraryDayByDay {

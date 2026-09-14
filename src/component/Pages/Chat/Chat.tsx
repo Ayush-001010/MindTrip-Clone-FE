@@ -7,6 +7,7 @@ import ChatBox from './ChatBox/ChatBox';
 import type { ISuggestedDestination } from '../../../Interface/DataInterface/ITripAPIResponse';
 import useNotification from '../../../customHookWithUI/useNotification';
 import type IMessageTrip from '../../../Interface/DataInterface/IMessageTrip';
+import type { IItineraryPlan } from '../../../Interface/DataInterface/IItineraryOptions';
 
 export interface IChatContext {
     isSelectedLocation: boolean;
@@ -19,6 +20,10 @@ export interface IChatContext {
     setDestination?: React.Dispatch<React.SetStateAction<ISuggestedDestination | null>>;
     sendMessageHandler : (message: string) => Promise<void>;
     messages:Array<IMessageTrip>
+    itineraryPlan: IItineraryPlan | null;
+    setItineraryPlan?: React.Dispatch<React.SetStateAction<IItineraryPlan | null>>;
+    isSelectedItineraryPlan: boolean;
+    setIsSelectedItineraryPlan?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -27,7 +32,9 @@ const ChatContext = createContext<IChatContext>({
     locationLatitude: 0,
     destination:null,
     sendMessageHandler: async (_: string) => {},
-    messages: []
+    messages: [],
+    itineraryPlan: null,
+    isSelectedItineraryPlan: false,
 });
 
 export const useChatContext = () => {
@@ -44,10 +51,12 @@ const Chat : React.FC<IChat> = () => {
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
     const [destination, setDestination] = useState<ISuggestedDestination | null>(null);
+    const [itineraryPlan , setItineraryPlan] = useState<IItineraryPlan | null>(null);
+    const [isSelectedItineraryPlan, setIsSelectedItineraryPlan] = useState<boolean>(false);
     const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
 
     return (
-        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages}}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan}}>
             <div className="w-full ">
                 {notification}
                 <Header/>

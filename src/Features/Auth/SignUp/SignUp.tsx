@@ -24,13 +24,7 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
       if (!response.ok) {
         throw new Error(data.message || "Registration failed");
       }
-
-      console.log("Registration successful:", data);
-
       localStorage.setItem("token", data.token);
-
-      console.log("Token stored successfully");
-
       navigate("/chat", { replace: true });
     } catch (error) {
       console.error("Registration error:", error);

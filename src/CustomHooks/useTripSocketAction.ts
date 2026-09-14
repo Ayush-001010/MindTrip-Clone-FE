@@ -32,8 +32,6 @@ const useTripSocketAction = () => {
   });
   socket.on("room:oldChatDetails", (oldMessages: any) => {
       // setMessages(oldMessages);
-      console.log(oldMessages.response.data)
-      console.log("Old Messages:", JSON.parse(oldMessages.response.data[0].response));
       const {response} = oldMessages;
       response.data.forEach((message:any) =>{
         const obj: IMessageTrip = {
@@ -47,9 +45,13 @@ const useTripSocketAction = () => {
         setMessages(prevMessages => [...prevMessages, obj]);
       })
   });
+  socket.on("room:chat-response",(response) => {
+    const {data} = response;
+    console.log(data);
+    setMessages(prevMessages => [...prevMessages, data]);
+  })
 
   const sendMessageHandler = async (userPrompt: string) => {
-    console.log("User Message:", userPrompt);
     // room:chat
     socket.emit("room:chat", { tripID: tripId , userPrompt });
   }
@@ -63,7 +65,6 @@ const useTripSocketAction = () => {
   useEffect(() => {
     setTimeout(() => {
       socket.emit("room:fetchOldChat", { tripID: tripId, userID: "123" });
-      console.log("Fetching old chat for trip:", tripId);
     }, 3000);
   },[])
 

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import type IItineraryPlanInterface from "./IItineraryPlan";
+import { useChatContext } from "../../../../Pages/Chat/Chat";
 
 const ItineraryPlan: React.FC<IItineraryPlanInterface> = ({ plan }) => {
     const [uniquePlaces , setUniquePlaces] = useState<string[]>([]);
     const [uniqueActivities, setUniqueActivities] = useState<string[]>([]);
+    const {setIsSelectedItineraryPlan,setItineraryPlan} = useChatContext();
 
     const planTypeGenration = (planType:string) => {
         if(planType === 'A') return "Plan A";
@@ -54,7 +56,9 @@ const ItineraryPlan: React.FC<IItineraryPlanInterface> = ({ plan }) => {
             </section>
             {/* See More Button */}
             <section>
-                <button className="m-1 rounded-full bg-[#f8f9fa] cursor-pointer p-1 text-xs font-semibold text-[#000] shadow transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#adb5bd] hover:shadow-md">See More</button>
+                <button onClick={() => {
+                    if(setIsSelectedItineraryPlan) setIsSelectedItineraryPlan(true), setItineraryPlan && setItineraryPlan(plan);
+                }} className="m-1 rounded-full bg-[#f8f9fa] cursor-pointer p-1 text-xs font-semibold text-[#000] shadow transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#adb5bd] hover:shadow-md">See More</button>
             </section>
         </section>
     );

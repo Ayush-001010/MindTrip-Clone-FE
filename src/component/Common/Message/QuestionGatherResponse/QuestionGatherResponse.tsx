@@ -11,7 +11,6 @@ const QuestionGatherResponse: React.FC<IQuestionGatherResponseInterface> = ({ da
 
     const sendMessageHandlerFormForm = (formValues: Record<string, any>) => {
         // Implement the message sending logic here
-        console.log(formValues);
         sendMessageHandler(JSON.stringify({answerType:"question-gather" , ...formValues}));
     };
 

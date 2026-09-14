@@ -16,7 +16,6 @@ const ChatBox: React.FC<IChatBox> = () => {
         sendMessageHandler(value);
         setValue("");
     }
-    console.log(messages);
     return (
         <div className="w-1/2 flex flex-col justify-between h-185">
             { messages.length !== 0 && (

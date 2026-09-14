@@ -72,11 +72,6 @@ const Explore: React.FC = () => {
       return;
     }
 
-    console.log("Explore scroll values:", {
-      scrollLeft: container.scrollLeft,
-      scrollWidth: container.scrollWidth,
-      clientWidth: container.clientWidth,
-    });
 
     const handleScroll = () => {
       const scrollPosition = container.scrollTop + container.clientHeight;
