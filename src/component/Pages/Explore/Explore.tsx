@@ -19,6 +19,7 @@ const Explore: React.FC = () => {
   });
 
   const [activeTab, setActiveTab] = useState("Things to do");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [selectedHotel, setSelectedHotel] = useState<IHotel | null>(null);
 
@@ -62,6 +63,26 @@ const Explore: React.FC = () => {
   );
 
   const tabs = ["Things to do", "Restaurants", "Stays", "Activities", "Guides"];
+  const normalizedSearch = searchQuery.trim().toLowerCase();
+
+  const filteredPlaces = places.filter((place) => {
+    if (!normalizedSearch) return true;
+
+    return (
+      place.name?.toLowerCase().includes(normalizedSearch) ||
+      place.address?.toLowerCase().includes(normalizedSearch) ||
+      place.description?.toLowerCase().includes(normalizedSearch)
+    );
+  });
+
+  const filteredHotels = hotels.filter((hotel) => {
+    if (!normalizedSearch) return true;
+
+    return (
+      hotel.name?.toLowerCase().includes(normalizedSearch) ||
+      hotel.description?.toLowerCase().includes(normalizedSearch)
+    );
+  });
 
   const exploreContentRef = useRef<HTMLElement | null>(null);
 
@@ -131,6 +152,7 @@ const Explore: React.FC = () => {
               setSelectedPlace(null);
               setMinRating(undefined);
               setShowFilters(false);
+              setSearchQuery("");
               setSelectedLocation(location);
             }}
           />
@@ -141,6 +163,8 @@ const Explore: React.FC = () => {
 
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
                 placeholder="Search destinations, places or experiences"
                 className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/40"
               />
@@ -185,6 +209,7 @@ const Explore: React.FC = () => {
                   setSelectedPlace(null);
                   setMinRating(undefined);
                   setShowFilters(false);
+                  setSearchQuery("");
                   setActiveTab(tab);
                   setActivityType("all");
                 }}
@@ -220,13 +245,13 @@ const Explore: React.FC = () => {
 
                 {error && <p className="text-sm text-red-400">{error}</p>}
 
-                {!loading && !error && hotels.length === 0 && (
+                {!loading && !error && filteredHotels.length === 0 && (
                   <p className="text-sm text-white/50">No hotels found.</p>
                 )}
 
-                {!loading && !error && hotels.length > 0 && (
+                {!loading && !error && filteredHotels.length > 0 && (
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    {hotels.map((hotel) => (
+                    {filteredHotels.map((hotel) => (
                       <HotelCard
                         key={hotel.id}
                         hotel={hotel}
@@ -258,15 +283,13 @@ const Explore: React.FC = () => {
                   <p className="text-sm text-red-400">{placesError}</p>
                 )}
 
-                {!placesLoading && !placesError && places.length === 0 && (
-                  <p className="text-sm text-white/50">
-                    No restaurants found.
-                  </p>
+                {!placesLoading && !placesError && filteredPlaces.length === 0 && (
+                  <p className="text-sm text-white/50">No restaurants found.</p>
                 )}
 
-                {!placesLoading && !placesError && places.length > 0 && (
+                {!placesLoading && !placesError && filteredPlaces.length > 0 && (
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    {places.map((place) => (
+                    {filteredPlaces.map((place) => (
                       <PlaceCard
                         key={place.id}
                         place={place}
@@ -290,13 +313,13 @@ const Explore: React.FC = () => {
                   <p className="text-sm text-red-400">{placesError}</p>
                 )}
 
-                {!placesLoading && !placesError && places.length === 0 && (
+                {!placesLoading && !placesError && filteredPlaces.length === 0 && (
                   <p className="text-sm text-white/50">No places found.</p>
                 )}
 
-                {!placesLoading && !placesError && places.length > 0 && (
+                {!placesLoading && !placesError && filteredPlaces.length > 0 && (
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    {places.map((place) => (
+                    {filteredPlaces.map((place) => (
                       <PlaceCard
                         key={place.id}
                         place={place}
@@ -320,13 +343,13 @@ const Explore: React.FC = () => {
                   <p className="text-sm text-red-400">{placesError}</p>
                 )}
 
-                {!placesLoading && !placesError && places.length === 0 && (
+                {!placesLoading && !placesError && filteredPlaces.length === 0 && (
                   <p className="text-sm text-white/50">No activities found.</p>
                 )}
 
-                {!placesLoading && !placesError && places.length > 0 && (
+                {!placesLoading && !placesError && filteredPlaces.length > 0 && (
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    {places.map((place) => (
+                    {filteredPlaces.map((place) => (
                       <PlaceCard
                         key={place.id}
                         place={place}

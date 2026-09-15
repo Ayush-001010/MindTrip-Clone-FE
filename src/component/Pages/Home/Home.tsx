@@ -1,8 +1,8 @@
 import React from "react";
-import useTripAction from "../../../customHooks/useTripAction";
+
 import type IHome from "./IHome";
 import HomeConfig from "../../../config/component/HomeConfig";
-import ImageAnimation from "../../Common/ImageAnimation/ImageAnimation";
+
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 import HorizontalCardList from "../../Common/HorizontalCardList/HorizontalCardList";
@@ -11,21 +11,35 @@ import HowItWorks from "./components/HowItWorks/HowItWorks";
 import CommonConfig from "../../../config/CommonConfig";
 import TripPlannerCTA from "./components/TripPlannerCTA/TripPlannerCTA";
 import { useNavigate } from "react-router-dom";
+import { FaLinkedinIn, FaGithub } from "react-icons/fa6";
+import { SiLeetcode } from "react-icons/si";
+import HomeStoryCarousel from "./components/HomeStoryCarousel/HomeStoryCarousel";
 const Home: React.FC<IHome> = () => {
   const [showAuthModal, setShowAuthModal] = React.useState(false);
   const navigate = useNavigate();
   const handleCreateTrip = () => {
     const token = localStorage.getItem("token");
-  
+
     if (token) {
       navigate("/chat");
       return;
     }
-  
+
     setShowAuthModal(true);
   };
+  const generateIcon = (icon: string) => {
+    switch (icon) {
+      case "linkedin":
+        return <FaLinkedinIn />;
+      case "github":
+        return <FaGithub />;
+      case "leetcode":
+        return <SiLeetcode />;
+      default:
+        return null;
+    }
+  };
   return (
-
     <main className="min-h-screen bg-[#f7fbfa] text-[#2f3e46]">
       {/* ================= HERO ================= */}
       <section className="px-4 pt-7 sm:px-6 lg:px-8">
@@ -74,7 +88,7 @@ const Home: React.FC<IHome> = () => {
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 1.45, delay: 1.9 }}
           >
-            <ImageAnimation />
+            <HomeStoryCarousel />
           </motion.div>
         </div>
       </section>
@@ -83,7 +97,7 @@ const Home: React.FC<IHome> = () => {
       <HowItWorks />
 
       {/* ================= EXPLORE TRIPS ================= */}
-      <section className="px-4 pb-8 pt-16 sm:px-6 lg:px-8">
+      {/* <section className="px-4 pb-8 pt-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -106,27 +120,47 @@ const Home: React.FC<IHome> = () => {
             type="explore-trip"
           />
         </motion.div>
-      </section>
+      </section> */}
       <TripPlannerCTA onCreateTrip={handleCreateTrip} />
       {/* ================= FOOTER ================= */}
-      <footer className="border-t border-[#dfeae5] bg-[#f7fbfa] px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xl font-semibold tracking-[-0.03em] text-[#335C4D]">
-              {CommonConfig.companyName}
-            </p>
+     {/* ================= FOOTER ================= */}
+<footer className="border-t border-[#dfeae5] bg-[#f7fbfa] px-4 py-10 sm:px-6 lg:px-8">
+  <div className="mx-auto flex max-w-7xl flex-col gap-8 md:flex-row md:items-end md:justify-between">
+    
+    {/* LEFT */}
+    <div>
+      <p className="text-xl font-semibold tracking-[-0.03em] text-[#335C4D]">
+        {CommonConfig.companyName}
+      </p>
 
-            <p className="mt-1 text-sm text-[#6F7F79]">
-              Plan less. Travel better.
-            </p>
-          </div>
+      <p className="mt-1 text-sm text-[#6F7F79]">
+        Plan less. Travel better.
+      </p>
 
-          <p className="text-sm text-[#8A9993]">
-            © {new Date().getFullYear()} {CommonConfig.companyName}. All rights
-            reserved.
-          </p>
-        </div>
-      </footer>
+      {/* SOCIAL LINKS */}
+      <div className="mt-5 flex items-center gap-3">
+        {CommonConfig.footerTextArr.map(({ icon, label, link }) => (
+          <a
+            key={label}
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#eef2f3] text-lg text-[#335C4D] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:bg-[#e3ebe8]"
+          >
+            {generateIcon(icon)}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    {/* COPYRIGHT */}
+    <p className="text-sm text-[#8A9993]">
+      © {new Date().getFullYear()} {CommonConfig.companyName}. All rights
+      reserved.
+    </p>
+  </div>
+</footer>
 
       {/* ================= AUTH MODAL ================= */}
       {showAuthModal && (

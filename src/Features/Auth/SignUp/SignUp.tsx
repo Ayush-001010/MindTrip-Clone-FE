@@ -4,13 +4,14 @@ import type ISignUp from "./ISignUp";
 import signUpFields from "./SignUpFields";
 import { Link, useNavigate } from "react-router-dom";
 
-
 const SignUp: React.FunctionComponent<ISignUp> = () => {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const submitHandler = async (values: Record<string, any>) => {
-    try {
+    setErrorMessage("");
 
+    try {
       const response = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
         headers: {
@@ -22,10 +23,27 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
+        if (response.status === 409) {
+          setErrorMessage(
+            "This email is already registered. Please sign in instead."
+          );
+        } else {
+          setErrorMessage(
+            data.message || "Unable to create your account. Please try again."
+          );
+        }
+
+        return;
       }
 
       console.log("Registration successful:", data);
+
+      if (!data.token) {
+        setErrorMessage(
+          "Account created, but authentication token was not received."
+        );
+        return;
+      }
 
       localStorage.setItem("token", data.token);
 
@@ -34,6 +52,10 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
       navigate("/chat", { replace: true });
     } catch (error) {
       console.error("Registration error:", error);
+
+      setErrorMessage(
+        "Something went wrong while creating your account. Please try again."
+      );
     }
   };
 
@@ -120,7 +142,7 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
             <p className="mt-3 text-center text-sm leading-6 text-[#6f7f79]">
               One account. A whole world to explore.
             </p>
-              
+
             <button
               type="button"
               onClick={handleGoogleSignUp}
@@ -140,7 +162,15 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
               <div className="h-px flex-1 bg-[#dcebe5]" />
             </div>
 
-            
+            {errorMessage && (
+              <div
+                role="alert"
+                className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-600"
+              >
+                {errorMessage}
+              </div>
+            )}
+
             <Form
               fieldsDetails={signUpFields}
               submitHandler={submitHandler}
