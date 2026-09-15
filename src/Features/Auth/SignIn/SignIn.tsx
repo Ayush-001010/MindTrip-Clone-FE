@@ -5,13 +5,14 @@ import Form from "../../../Components/UI/Forms/Form";
 import type ISignIn from "./ISignIn";
 import signInFields from "./signInFields";
 
-
 const SignIn: React.FunctionComponent<ISignIn> = () => {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const submitHandler = async (values: Record<string, any>) => {
-    try {
+    setErrorMessage("");
 
+    try {
       const response = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
         headers: {
@@ -26,9 +27,16 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+        setErrorMessage(
+          data.message || "Unable to sign in. Please try again."
+        );
+        return;
       }
 
+      if (!data.token) {
+        setErrorMessage("Sign in failed. Authentication token not received.");
+        return;
+      }
 
       localStorage.setItem("token", data.token);
 
@@ -36,6 +44,10 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
       navigate("/chat", { replace: true });
     } catch (error) {
       console.error("Login error:", error);
+
+      setErrorMessage(
+        "Something went wrong while signing you in. Please try again."
+      );
     }
   };
 
@@ -57,6 +69,7 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
         <p className="mt-3 text-center text-sm leading-6 text-[#6f7f79]">
           Your next adventure is waiting.
         </p>
+
         <button
           type="button"
           onClick={handleGoogleSignIn}
@@ -69,7 +82,7 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
         <div className="my-9 flex items-center gap-4">
           <div className="h-px flex-1 bg-[#dcebe5]" />
 
-          <span className="text-xs font-medium uppercase tracking-[0.14em] text-[#9aaaA3]">
+          <span className="text-xs font-medium uppercase tracking-[0.14em] text-[#9aaaa3]">
             or
           </span>
 
@@ -79,6 +92,15 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
         <h2 className="mb-5 text-2xl font-bold tracking-[-0.03em] text-[#2f3e46]">
           Sign in with email
         </h2>
+
+        {errorMessage && (
+          <div
+            role="alert"
+            className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-600"
+          >
+            {errorMessage}
+          </div>
+        )}
 
         <Form
           fieldsDetails={signInFields}

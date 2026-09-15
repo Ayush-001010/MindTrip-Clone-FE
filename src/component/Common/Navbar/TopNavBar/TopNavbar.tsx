@@ -36,13 +36,13 @@ const TopNavbar: React.FC<ITopNavBar> = () => {
       {/* RIGHT ACTIONS */}
       <div>
         {isLoggedIn ? (
-          <Button
-            type="text"
-            onClick={handleLogout}
-            className="rounded-full! px-4! font-medium! text-[#6F7F79]! hover:bg-[#E7F1EC]! hover:text-[#335C4D]!"
-          >
-            Logout
-          </Button>
+       <Button
+       type="text"
+       onClick={handleLogout}
+       className="rounded-full! bg-[#335C4D]! px-5! font-medium! text-white! shadow-[0_8px_20px_rgba(79,129,117,0.16)] hover:bg-[#294C40]!"
+     >
+       Logout
+     </Button>
         ) : (
           <div className="flex items-center gap-2">
             <Link to="/auth/signup">
