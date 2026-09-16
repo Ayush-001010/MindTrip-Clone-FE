@@ -41,58 +41,70 @@ const Home: React.FC<IHome> = () => {
   };
   return (
     <main className="min-h-screen bg-[#f7fbfa] text-[#2f3e46]">
-      {/* ================= HERO ================= */}
-      <section className="px-4 pt-7 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center gap-10 lg:flex-row lg:items-center lg:gap-16">
-          {/* LEFT CONTENT */}
-          <div className="w-full lg:w-1/2 lg:pr-6">
-            <motion.h1
-              className="mb-4 mt-[18px] text-[clamp(2.5rem,12vw,3.4rem)] font-bold leading-[0.96] tracking-[-0.06em] text-[#2F3E46] lg:text-[clamp(3rem,4vw,4.8rem)]"
-              initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 1.35, delay: 0.3 }}
-            >
-              {HomeConfig.Title}
-            </motion.h1>
+  
+    
+<section className="px-4 pb-8 pt-10 sm:px-6 lg:px-8 lg:pb-16 lg:pt-14">
+  <div className="mx-auto flex max-w-[1500px] flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-14 xl:gap-20">
+    
+    {/* LEFT CONTENT */}
+    <div className="w-full lg:w-[46%] lg:pr-2 xl:w-[44%]">
+      <motion.div
+        initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 1.1, delay: 0.2 }}
+      >
+        {/* EYEBROW */}
+        <p className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-[#6E9F9F] sm:text-sm">
+          Travel, your way
+        </p>
 
-            <motion.p
-              className="m-0 max-w-[34rem] text-[1.05rem] leading-[1.8] text-[#6F7F79]"
-              initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 1.35, delay: 0.8 }}
-            >
-              {HomeConfig.subLine}
-            </motion.p>
+        {/* HEADING */}
+        <h1
+          className="max-w-2xl text-[clamp(3.1rem,5vw,5.2rem)] font-bold leading-[0.94] tracking-[-0.065em] text-[#2F3E46]"
+        >
+          {HomeConfig.Title}
+        </h1>
+      </motion.div>
 
-            <motion.div
-              className="mt-7 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center"
-              initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 1.35, delay: 1.3 }}
-            >
-              <button
-                type="button"
-                onClick={handleCreateTrip}
-                className="inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-full bg-gradient-to-br from-[#E7F1EC] to-[#DDEAE2] px-6 py-3.5 text-[#335C4D] shadow-[0_16px_30px_rgba(135,160,149,0.24)] transition duration-200 hover:-translate-y-0.5"
-              >
-                Create my trip
-                <FiArrowRight />
-              </button>
-            </motion.div>
-          </div>
+      {/* DESCRIPTION */}
+      <motion.p
+        className="mt-7 max-w-[36rem] text-[1.05rem] leading-[1.75] text-[#6F7F79] sm:text-[1.1rem]"
+        initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 1.1, delay: 0.55 }}
+      >
+        {HomeConfig.subLine}
+      </motion.p>
 
-          {/* HERO IMAGE */}
-          <motion.div
-            className="w-full lg:w-1/2"
-            initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 1.45, delay: 1.9 }}
-          >
-            <HomeStoryCarousel />
-          </motion.div>
-        </div>
-      </section>
+      {/* CTA */}
+      <motion.div
+        className="mt-8"
+        initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 1.1, delay: 0.85 }}
+      >
+        <button
+          type="button"
+          onClick={handleCreateTrip}
+          className="inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-full bg-[#335C4D] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_16px_30px_rgba(79,129,117,0.2)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#294C40]"
+        >
+          Create my trip
+          <FiArrowRight />
+        </button>
+      </motion.div>
+    </div>
 
+    {/* HERO CAROUSEL */}
+    <motion.div
+      className="w-full lg:w-[54%] xl:w-[56%]"
+      initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={{ duration: 1.25, delay: 0.7 }}
+    >
+      <HomeStoryCarousel />
+    </motion.div>
+  </div>
+</section>
       {/* ================= HOW IT WORKS ================= */}
       <HowItWorks />
 
