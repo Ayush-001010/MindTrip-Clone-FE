@@ -24,6 +24,7 @@ export interface IChatContext {
     setItineraryPlan?: React.Dispatch<React.SetStateAction<IItineraryPlan | null>>;
     isSelectedItineraryPlan: boolean;
     setIsSelectedItineraryPlan?: React.Dispatch<React.SetStateAction<boolean>>;
+    isLoading: boolean;
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -35,6 +36,7 @@ const ChatContext = createContext<IChatContext>({
     messages: [],
     itineraryPlan: null,
     isSelectedItineraryPlan: false,
+    isLoading: false,
 });
 
 export const useChatContext = () => {
@@ -46,7 +48,7 @@ export const useChatContext = () => {
 }
 
 const Chat : React.FC<IChat> = () => {
-    const { notificationConfig, sendMessageHandler, messages } = useTripSocketAction();
+    const { notificationConfig, sendMessageHandler, messages , isLoading } = useTripSocketAction();
     const [isSelectedLocation, setIsSelectedLocation] = useState<boolean>(false);
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
@@ -56,7 +58,7 @@ const Chat : React.FC<IChat> = () => {
     const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
 
     return (
-        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan}}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading }}>
             <div className="w-full ">
                 {notification}
                 <Header/>

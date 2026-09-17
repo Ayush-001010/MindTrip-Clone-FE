@@ -33,6 +33,6 @@ export interface ISuggestedDestination {
 
 export default interface ITripAPIResponse {
   description: string;
-  type: "destination" | "activity" | "food";
+  type: "destination" | "activity" | "food" | "final-itinerary";
   suggestedDestination: Array<ISuggestedDestination>;
 }

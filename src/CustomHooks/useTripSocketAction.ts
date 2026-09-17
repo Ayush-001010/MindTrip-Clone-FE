@@ -13,6 +13,7 @@ const useTripSocketAction = () => {
     message: "",
     duration: undefined
   });
+  const [isLoading , setIsLoading] = useState<boolean>(false);
   const [messages, setMessages] = useState<Array<IMessageTrip>>([]);
 
   const { tripId } = useParams();
@@ -49,11 +50,13 @@ const useTripSocketAction = () => {
     const {data} = response;
     console.log(data);
     setMessages(prevMessages => [...prevMessages, data]);
+    setIsLoading(false);
   })
 
   const sendMessageHandler = async (userPrompt: string) => {
     // room:chat
     socket.emit("room:chat", { tripID: tripId , userPrompt });
+    setIsLoading(true);
   }
 
   useEffect(()=>{
@@ -68,7 +71,7 @@ const useTripSocketAction = () => {
     }, 3000);
   },[])
 
-  return { notificationConfig, sendMessageHandler, messages };
+  return { notificationConfig, sendMessageHandler, messages, isLoading };
 };
 
 export default useTripSocketAction;

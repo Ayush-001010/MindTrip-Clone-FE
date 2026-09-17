@@ -46,7 +46,7 @@ const Message: React.FC<IIMessage> = ({ data }) => {
                         </div>
                     </section>
                 )}
-                {response && (
+                {(response && response.type !== "final-itinerary") && (
                     <>
                         <motion.section className="mt-1 flex w-full justify-start" variants={assistantVariant} initial="hidden" animate="show" transition={{ duration: 0.32 }}>
                             <div className="flex max-w-[88%] items-end gap-2.5 sm:max-w-[74%]">
