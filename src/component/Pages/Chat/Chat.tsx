@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import useTripSocketAction from '../../../customHooks/useTripSocketAction';
+import type IFinalItineraryResponse from '../../../Interface/DataInterface/IFinalItineraryResponse';
 import type IChat from './IChat';
 import Header from './Header/Header';
 import JourneyPannel from './JourneyPannel/JourneyPannel';
@@ -25,6 +26,9 @@ export interface IChatContext {
     isSelectedItineraryPlan: boolean;
     setIsSelectedItineraryPlan?: React.Dispatch<React.SetStateAction<boolean>>;
     isLoading: boolean;
+    finalItinerary: IFinalItineraryResponse | null;
+    setTripDate?: (startDate: Date, endDate: Date) => void;
+    setTripBudget?: (budget: number) => void;
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -37,6 +41,7 @@ const ChatContext = createContext<IChatContext>({
     itineraryPlan: null,
     isSelectedItineraryPlan: false,
     isLoading: false,
+    finalItinerary: null,
 });
 
 export const useChatContext = () => {
@@ -48,7 +53,7 @@ export const useChatContext = () => {
 }
 
 const Chat : React.FC<IChat> = () => {
-    const { notificationConfig, sendMessageHandler, messages , isLoading } = useTripSocketAction();
+    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget } = useTripSocketAction();
     const [isSelectedLocation, setIsSelectedLocation] = useState<boolean>(false);
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
@@ -58,7 +63,7 @@ const Chat : React.FC<IChat> = () => {
     const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
 
     return (
-        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading }}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget }}>
             <div className="w-full ">
                 {notification}
                 <Header/>
