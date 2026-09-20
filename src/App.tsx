@@ -11,7 +11,7 @@ import ProtectedRoute from "./Features/Auth/ProtectedRoute/ProtectedRoute";
 import AuthCallback from "./Features/Auth/AuthCallback/AuthCallback";
 import { useDispatch } from "react-redux";
 import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
-
+import Invite from "./component/Pages/Invite/Invite";
 const AppContent: React.FC = () => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -79,7 +79,7 @@ const AppContent: React.FC = () => {
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
-
+          <Route path="/invite/:inviteId" element={<Invite />} />
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/chat" element={<Chat />} />

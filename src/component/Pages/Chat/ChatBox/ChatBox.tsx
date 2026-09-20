@@ -3,6 +3,7 @@ import type IChatBox from "./IChatBox";
 import { useChatContext } from "../Chat";
 import InputBox from "./InputBox/InputBox";
 import MessageBox from "./MessageBox/MessageBox";
+import useTripChat from "../../../../CustomHooks/useTripChat";
 import EmptyBox from "./EmptyBox/EmptyBox";
 
 const ChatBox: React.FC<IChatBox> = () => {

@@ -5,7 +5,6 @@ import HomeConfig from "../../../config/component/HomeConfig";
 
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
-import HorizontalCardList from "../../Common/HorizontalCardList/HorizontalCardList";
 import AuthRequiredModal from "../../Common/Auth/AuthRequiredModal/AuthRequiredModal";
 import HowItWorks from "./components/HowItWorks/HowItWorks";
 import CommonConfig from "../../../config/CommonConfig";
