@@ -88,6 +88,25 @@ const useTripSocketAction = () => {
       duration: 3000
     });
   });
+  socket.on("room:addExpense-response", (response) => {
+    console.log("Received add expense response from server:", response);
+    const { success, data } = response;
+    if(success){
+      setNotificationConfig({
+        open: true,
+        type: "expense-added",
+        message: data,
+        duration: 3000
+      });
+    } else {
+      setNotificationConfig({
+        open: true,
+        type: "error",
+        message: "Failed to add expense",
+        duration: 3000
+      });
+    }
+  });
 
   const setTripDate = (startDate: Date, endDate: Date) => {
     console.log("Setting trip dates:", { startDate, endDate });
@@ -126,13 +145,18 @@ const useTripSocketAction = () => {
     }
   };
 
+  const addExpense = (paidBy :{userId: number, userName: string} , totalAmount:number, title : string , category : string, spendAt: Date, splitMethod: "equal" | "percentage" | "custom" | "ratio",   splitAmong: {userId : number , userName : string , amount : number}[] ,  notes?: string) => {
+    // { tripID, paidBy, totalAmount, title, category, spendAt, splitMethod, splitAmong, notes }
+    socket.emit("room:addExpense", { tripID: tripId, totalAmount, paidBy, title, category, spendAt, splitMethod, splitAmong, notes });
+  } 
+
   useEffect(() => {
     if(isFinalItineraryReceived){
       getFinalItinerary();
     }
   }, [isFinalItineraryReceived]);
 
-  return { notificationConfig, sendMessageHandler, messages, isLoading, finalItinerary , setTripDate, setTripBudget };
+  return { notificationConfig, sendMessageHandler, messages, isLoading, finalItinerary , setTripDate, setTripBudget , addExpense };
 };
 
 export default useTripSocketAction;
