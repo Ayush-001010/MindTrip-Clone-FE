@@ -31,8 +31,20 @@ const useTripAction = () => {
         });
         return response;
     }
+    const joinTrip = async () => {
+        const apiServiceInstance = new APIService();
     
-    return { createNewTrip, fetchTripMemberDetails, createInviteURL };
+        const response = await apiServiceInstance.postRequest<null>(
+            "/trip/joinTrip",
+            {
+                tripId
+            }
+        );
+    
+        return response;
+    };
+    
+    return { createNewTrip, fetchTripMemberDetails, createInviteURL ,joinTrip};
 };
 
 export default useTripAction;

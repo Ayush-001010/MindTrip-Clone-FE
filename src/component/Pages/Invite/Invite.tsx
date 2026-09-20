@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import APIService from "../../../Services/APIService";
+import useTripAction from "../../../CustomHooks/useTripAction";
 
 type InviteState = "loading" | "valid" | "notFound" | "expired";
 
@@ -10,6 +11,16 @@ const Invite: React.FC = () => {
 
   const [state, setState] = useState<InviteState>("loading");
   const [tripID, setTripID] = useState("");
+  const [tripName, setTripName] = useState("");
+  const [inviteUserBy, setInviteUserBy] = useState("");
+  const { joinTrip } = useTripAction();
+  const handleJoinTrip = async () => {
+    const response = await joinTrip();
+
+    if (response.success) {
+        navigate(`/chat/${tripID}`);
+    }
+};
 
   useEffect(() => {
     const validateInvite = async () => {
@@ -20,15 +31,22 @@ const Invite: React.FC = () => {
 
       try {
         const apiServiceInstance = new APIService();
-
+        if (!inviteId || inviteId === "invalid") {
+          setState("notFound");
+          return;
+        }
         const response = await apiServiceInstance.postRequest<{
           tripID: string;
-        }>("/trip/validateUserInvite", {
-          base62: inviteId,
-        });
+          tripName: string;
+          inviteUserBy: string;
+      }>("/trip/validateUserInvite", {
+          inviteURLID: inviteId,
+      });
 
         if (response.success && response.data) {
           setTripID(response.data.tripID);
+          setTripName(response.data.tripName);
+          setInviteUserBy(response.data.inviteUserBy);
           setState("valid");
           return;
         }
@@ -102,25 +120,26 @@ const Invite: React.FC = () => {
         <h1 className="text-2xl font-semibold text-[#2f3e46]">
           Trip Invitation
         </h1>
-
         <p className="mt-4 text-[#6f7f79]">
-          You have been invited to join this trip.
+          <span className="font-semibold text-[#2f3e46]">{inviteUserBy}</span>{" "}
+          invited you to join the{" "}
+          <span className="font-semibold text-[#335C4D]">{tripName}</span>.
         </p>
 
-        <div className="mt-6 rounded-2xl bg-[#f7fbfa] p-4">
+        {/* <div className="mt-6 rounded-2xl bg-[#f7fbfa] p-4">
           <p className="text-sm text-[#6f7f79]">Trip ID</p>
 
           <p className="mt-1 break-all font-semibold text-[#335c4d]">
             {tripID}
           </p>
-        </div>
+        </div> */}
 
         <p className="mt-6 text-[#2f3e46]">Do you want to join this trip?</p>
 
         <div className="mt-5 flex justify-center gap-3">
           <button
             type="button"
-            onClick={() => navigate(`/chat/${tripID}`)}
+            onClick={handleJoinTrip}
             className="rounded-full bg-[#335C4D] px-6 py-2 font-medium text-white transition hover:bg-[#294C40]"
           >
             Yes
