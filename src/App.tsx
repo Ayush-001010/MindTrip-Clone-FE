@@ -12,6 +12,7 @@ import ProtectedRoute from "./Features/Auth/ProtectedRoute/ProtectedRoute";
 import AuthCallback from "./Features/Auth/AuthCallback/AuthCallback";
 import { useDispatch } from "react-redux";
 import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
+import Invite from "./component/Pages/Invite/Invite";
 import Blog from "./component/Pages/Blogs/Blog/Blog";
 
 const AppContent: React.FC = () => {
@@ -83,6 +84,7 @@ const AppContent: React.FC = () => {
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/invite/:inviteId" element={<Invite />} />
           <Route path="/blogs" element={<Blogs/>} />
           <Route path="/blog/create" element={<Blog />} />
 

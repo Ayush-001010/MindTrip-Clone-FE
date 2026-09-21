@@ -6,6 +6,7 @@ import { FaLinkedinIn } from "react-icons/fa6";
 import { SiLeetcode } from "react-icons/si";
 import { FaGithub } from "react-icons/fa6";
 
+
 const Footer: React.FC<IFooter> = () => {
     const genrateIcon = (icon: string) => {
         switch (icon) {

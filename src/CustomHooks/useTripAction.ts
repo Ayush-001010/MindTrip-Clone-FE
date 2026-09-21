@@ -33,6 +33,19 @@ const useTripAction = () => {
         });
         return response;
     }
+    const joinTrip = async (tripID: string) => {
+        const apiServiceInstance = new APIService();
+    
+        const response = await apiServiceInstance.postRequest<null>(
+            "/trip/joinTrip",
+            {
+                tripID
+            }
+        );
+    
+        return response;
+    };
+    return { createNewTrip, fetchTripMemberDetails, createInviteURL ,joinTrip};
 
     const fetchExpenses = async () => {
         const apiServiceInstance = new APIService();

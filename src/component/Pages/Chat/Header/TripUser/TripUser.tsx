@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type ITripUser from "./ITripUser";
 import { Modal } from "antd";
-import useTripAction from "../../../../../customHooks/useTripAction";
+import useTripAction from "../../../../../CustomHooks/useTripAction";
 import InviteBox from "./InviteBox/InviteBox";
 import MemberBox from "./MemberBox/MemberBox";
 import CloseBox from "./CloseBox/CloseBox";

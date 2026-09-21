@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type IInviteBox from "./IInviteBox";
-import useTripAction from "../../../../../../customHooks/useTripAction";
+import useTripAction from "../../../../../../CustomHooks/useTripAction";
 
 const InviteBox: React.FC<IInviteBox> = ({ }) => {
     const { createInviteURL } = useTripAction();
