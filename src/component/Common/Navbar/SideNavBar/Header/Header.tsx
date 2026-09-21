@@ -4,9 +4,11 @@ import CommonConfig from "../../../../../config/CommonConfig";
 import { WiStars } from "react-icons/wi";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useSideNavBarContext } from "../SideNavBar";
 
 const Header: React.FC<IHeader> = () => {
   const titleWords = CommonConfig.companyName.split(" ");
+  const { isCollapsed } = useSideNavBarContext();
 
   return (
     <div className="my-2 px-2">
@@ -22,7 +24,7 @@ const Header: React.FC<IHeader> = () => {
           </span>
 
           {/* BRAND NAME */}
-          <span className="inline-flex">
+          {!isCollapsed && <span className="inline-flex">
             {titleWords.map((word, wordIndex) => {
               const priorCharacters =
                 titleWords
@@ -71,7 +73,7 @@ const Header: React.FC<IHeader> = () => {
                 </span>
               );
             })}
-          </span>
+          </span>}
         </motion.p>
       </Link>
     </div>

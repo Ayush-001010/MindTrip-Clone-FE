@@ -135,35 +135,26 @@ const useTripSocketAction = () => {
         duration: 3000,
       });
     });
-
-    return () => {
-      socket.removeAllListeners();
-      socket.disconnect();
-      socketRef.current = null;
-    };
-  }, []);
-
-  /*
-   * Join the current trip room
-   */
-  useEffect(() => {
-    const socket = socketRef.current;
-
-    if (!socket || !tripId || !userDetails.userName) {
-      return;
+  });
+  socket.on("room:addExpense-response", (response) => {
+    console.log("Received add expense response from server:", response);
+    const { success, data } = response;
+    if(success){
+      setNotificationConfig({
+        open: true,
+        type: "expense-added",
+        message: data,
+        duration: 3000
+      });
+    } else {
+      setNotificationConfig({
+        open: true,
+        type: "error",
+        message: "Failed to add expense",
+        duration: 3000
+      });
     }
-
-    socket.emit("room:join", {
-      tripID: tripId,
-      userID: "123",
-      userName: userDetails.userName,
-    });
-
-    socket.emit("room:fetchOldChat", {
-      tripID: tripId,
-      userID: "123",
-    });
-  }, [tripId, userDetails.userName]);
+  });
 
   const setTripDate = (startDate: Date, endDate: Date) => {
     if (!tripId || !socketRef.current) {
@@ -239,6 +230,11 @@ const useTripSocketAction = () => {
     }
   };
 
+  const addExpense = (paidBy :{userId: number, userName: string} , totalAmount:number, title : string , category : string, spendAt: Date, splitMethod: "equal" | "percentage" | "custom" | "ratio",   splitAmong: {userId : number , userName : string , amount : number}[] ,  notes?: string) => {
+    // { tripID, paidBy, totalAmount, title, category, spendAt, splitMethod, splitAmong, notes }
+    socket.emit("room:addExpense", { tripID: tripId, totalAmount, paidBy, title, category, spendAt, splitMethod, splitAmong, notes });
+  } 
+
   useEffect(() => {
     if (isFinalItineraryReceived) {
       getFinalItinerary();
@@ -253,6 +249,7 @@ const useTripSocketAction = () => {
     finalItinerary,
     setTripDate,
     setTripBudget,
+    addExpense
   };
 };
 

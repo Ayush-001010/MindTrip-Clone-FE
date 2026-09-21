@@ -2,10 +2,12 @@ import { useSelector } from "react-redux";
 import APIService from "../Services/APIService";
 import { useParams } from "react-router-dom";
 import type IUserInterface from "../Interface/DataInterface/IUserDetails";
+import type ITripExpense from "../Interface/DataInterface/ITripExpense";
+import type ITripSplitWiseAnalytics from "../Interface/DataInterface/ITripSplitWiseAnalytics";
 
 const useTripAction = () => {
     const { tripId } = useParams();
-    const { userName } = useSelector((state: any) => state.userDetails as IUserInterface);
+    const { userName , userID } = useSelector((state: any) => state.userDetails as IUserInterface);
     
     const createNewTrip = async () => {
         const apiServiceInstance = new APIService();
@@ -44,6 +46,26 @@ const useTripAction = () => {
         return response;
     };
     return { createNewTrip, fetchTripMemberDetails, createInviteURL ,joinTrip};
+
+    const fetchExpenses = async () => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.postRequest<ITripExpense[]>("/trip/fetchTripExpenses",{
+            "tripID": tripId,
+            "userID": userID || 2
+        });
+        return response;
+    }
+
+    const fetchTripAnalytics = async () => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.postRequest<ITripSplitWiseAnalytics>("/trip/fetchTripAnalytics",{
+            "tripID": tripId,
+            "userID": userID || 2
+        });
+        return response;
+    }
+    
+    return { createNewTrip, fetchTripMemberDetails, createInviteURL, fetchTripAnalytics, fetchExpenses };
 };
 
 export default useTripAction;

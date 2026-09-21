@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Blogs from "./component/Pages/Blogs/Blogs";
 import Home from "./component/Pages/Home/Home";
 import TopNavbar from "./component/Common/Navbar/TopNavBar/TopNavbar";
 import SideNavBar from "./component/Common/Navbar/SideNavBar/SideNavBar";
@@ -12,19 +13,23 @@ import AuthCallback from "./Features/Auth/AuthCallback/AuthCallback";
 import { useDispatch } from "react-redux";
 import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 import Invite from "./component/Pages/Invite/Invite";
+import Blog from "./component/Pages/Blogs/Blog/Blog";
+
 const AppContent: React.FC = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
   const isChatLink = location.pathname.includes("/chat");
-  const isExploreLink = location.pathname === "/explore";
-  const isDarkPage = isChatLink || isExploreLink;
+  const isExploreLink = location.pathname.includes("/explore");
+  const isBlogLink = location.pathname.includes("/blog");
+  const isDarkPage = isChatLink || isExploreLink || isBlogLink;
 
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
+
   useEffect(() => {
     const getItem = localStorage.getItem("userDetails");
     if (getItem) {
@@ -80,6 +85,9 @@ const AppContent: React.FC = () => {
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/invite/:inviteId" element={<Invite />} />
+          <Route path="/blogs" element={<Blogs/>} />
+          <Route path="/blog/create" element={<Blog />} />
+
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/chat" element={<Chat />} />
