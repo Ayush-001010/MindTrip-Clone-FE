@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import useTripSocketAction from '../../../customHooks/useTripSocketAction';
+import useTripSocketAction from "../../../CustomHooks/useTripSocketAction";
 import type IFinalItineraryResponse from '../../../Interface/DataInterface/IFinalItineraryResponse';
 import type IChat from './IChat';
 import Header from './Header/Header';

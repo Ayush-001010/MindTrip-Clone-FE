@@ -9,6 +9,10 @@ const useTripChat = () => {
     const { tripId } = useParams();
 
     const chatWithCopilotHandler = async (message: string) => {
+        if (!tripId) {
+            return;
+        }
+
         setMessages(prevMessages => [
             ...prevMessages,
             {
@@ -49,6 +53,10 @@ const useTripChat = () => {
     };
 
     const fetchMessages = async () => {
+        if (!tripId) {
+            return;
+        }
+
         const apiServiceInstance = new APIService();
 
         const response = await apiServiceInstance.postRequest<IMessageTrip[]>(

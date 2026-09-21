@@ -8,19 +8,23 @@ type InviteState = "loading" | "valid" | "notFound" | "expired";
 const Invite: React.FC = () => {
   const { inviteId } = useParams();
   const navigate = useNavigate();
-
+  const { joinTrip } = useTripAction();
   const [state, setState] = useState<InviteState>("loading");
   const [tripID, setTripID] = useState("");
   const [tripName, setTripName] = useState("");
   const [inviteUserBy, setInviteUserBy] = useState("");
-  const { joinTrip } = useTripAction();
+
   const handleJoinTrip = async () => {
-    const response = await joinTrip();
+    if (!tripID) {
+      return;
+    }
+
+    const response = await joinTrip(tripID);
 
     if (response.success) {
-        navigate(`/chat/${tripID}`);
+      navigate(`/chat/${tripID}`);
     }
-};
+  };
 
   useEffect(() => {
     const validateInvite = async () => {
@@ -39,9 +43,9 @@ const Invite: React.FC = () => {
           tripID: string;
           tripName: string;
           inviteUserBy: string;
-      }>("/trip/validateUserInvite", {
+        }>("/trip/validateUserInvite", {
           inviteURLID: inviteId,
-      });
+        });
 
         if (response.success && response.data) {
           setTripID(response.data.tripID);
