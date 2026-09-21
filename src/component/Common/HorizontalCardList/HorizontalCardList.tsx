@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import type IHorizontalCardList from "./IHorizontalCardList";
-import useHorizontalCardList from "../../../customHooks/useHorizontalCardList";
+
 import type IExploreTrip from "../../../Interface/DataInterface/IExploreTrip";
 import ExploreTripCard from "../Card/ExploreTrip/ExploreTripCard";
+import useHorizontalCardList from "../../../CustomHooks/useHorizontalCardList";
 
 const HorizontalCardList: React.FC<IHorizontalCardList> = ({ endPoint, type }) => {
     const { data, setNewPage } = useHorizontalCardList(endPoint, type);

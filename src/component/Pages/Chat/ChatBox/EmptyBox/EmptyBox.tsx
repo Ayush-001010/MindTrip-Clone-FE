@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import type IEmptyBox from "./IEmptyBox";
-import useCommonActivities from "../../../../../customHooks/useCommonActivities";
+import useCommonActivities from "../../../../../CustomHooks/useCommonActivities";
+
 
 const EmptyBox: React.FC<IEmptyBox> = () => {
     const { getEmptyChatBoxImage } = useCommonActivities();
