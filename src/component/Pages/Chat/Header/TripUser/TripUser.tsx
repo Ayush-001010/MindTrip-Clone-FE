@@ -16,7 +16,6 @@ const TripUser: React.FC<ITripUser> = ({ open, onClose }) => {
 
     const fetchMembers = async () => {
         const response : any = await fetchTripMemberDetails();
-        console.log(response);
         if(response.success) {
             setMembers(response.data);
         }

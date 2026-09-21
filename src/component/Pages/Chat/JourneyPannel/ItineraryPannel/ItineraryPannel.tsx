@@ -1,48 +1,38 @@
-import React from "react";
+import React, { useState }  from "react";
+import { useChatContext } from "../../Chat";
 import type IItineraryPannel from "./IItineraryPannel";
-import { Collapse } from 'antd';
-import LabelHeader from "./LabelHeader/LabelHeader";
-import Itinerary from "./Itinerary/Itinerary";
+import EmptyItinerary from "./EmptyItinerary/EmptyItinerary";
+import Header from "./Header/Header";
+import ItinerarySplitWise from "./Feature/ItinerarySplitWise/ItinerarySplitWise";
 
 const ItineraryPannel: React.FC<IItineraryPannel> = () => {
-    const itinerary = [
-        {
-            key: 1,
-            label: <LabelHeader text="Day 1" />,
-            children: <Itinerary/>,
-        },
-        {
-            key: 2,
-            label: <LabelHeader text="Day 2" />,
-            children: <Itinerary/>,
-        },
-        {
-            key: 3,
-            label: <LabelHeader text="Day 3" />,
-            children: <Itinerary/>,
-        },
-        {
-            key: 4,
-            label: <LabelHeader text="Day 4" />,
-            children: <Itinerary/>,
-        },
-        {
-            key: 5,
-            label: <LabelHeader text="Day 5" />,
-            children: <Itinerary/>,
+    const { finalItinerary } = useChatContext();
+    const [featureSelected , setFeatureSelected] = useState<"ItineraryEdit" | "ItineraryPhotos" | "ItinerarySplitWise" | "Itinerary">("ItinerarySplitWise");
+    if (!finalItinerary) {
+        return <EmptyItinerary/>;
+    }
+
+    const genratedSectionDependingOnFeature = () => {
+        switch (featureSelected) {
+            case "ItineraryEdit":
+                return <div>Edit Itinerary Section</div>;
+            case "ItineraryPhotos":
+                return <div>Photos Section</div>;
+            case "ItinerarySplitWise":
+                return <ItinerarySplitWise/>
+            case "Itinerary":
+                return <div>Itinerary Section</div>;
+            default:
+                return null;
         }
-    ];
+    }
 
     return (
-        <section>
-            <Collapse
-                bordered={false}
-                defaultActiveKey={['1']}
-                items={itinerary}
-                expandIconPosition="end"
-                style={{ backgroundColor: 'transparent', border: 'none' }}
-                className="itinerary-collapse rounded-lg shadow-md text-white!"
-            />
+        <section className="flex h-full min-h-0 flex-col">
+            <Header title={finalItinerary.itineraryTitle} startDate={finalItinerary.startDate} endDate={finalItinerary.endDate}  countUserOnTrip={finalItinerary.countUserOnTrip} budget={finalItinerary.budget} />
+            <div className="min-h-0 flex-1">
+                {genratedSectionDependingOnFeature()}
+            </div>
         </section>
     );
 };

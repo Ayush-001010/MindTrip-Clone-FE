@@ -26,7 +26,19 @@ const useCommonActivities = () => {
             return null;
         }
     }
-    return { getActivitiesImage, getEmptyChatBoxImage }
+
+    const getPlaceImage = async (placeName: string) => {
+        const apiInstance = new APIService();
+        const basePathURL = `/common/getPlaceImage?placeName=${placeName}`;
+        const response = await apiInstance.getRequest<string>(basePathURL);
+        if (response.success && response.data) {
+            return response.data;
+        } else {
+            console.error("Error fetching place image:", response.error);
+            return null;
+        }
+    }
+    return { getActivitiesImage, getEmptyChatBoxImage  , getPlaceImage }
 };
 
 export default useCommonActivities;
