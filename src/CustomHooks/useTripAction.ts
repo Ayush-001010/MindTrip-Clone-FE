@@ -45,8 +45,6 @@ const useTripAction = () => {
     
         return response;
     };
-    return { createNewTrip, fetchTripMemberDetails, createInviteURL ,joinTrip};
-
     const fetchExpenses = async () => {
         const apiServiceInstance = new APIService();
         const response = await apiServiceInstance.postRequest<ITripExpense[]>("/trip/fetchTripExpenses",{
@@ -65,7 +63,7 @@ const useTripAction = () => {
         return response;
     }
     
-    return { createNewTrip, fetchTripMemberDetails, createInviteURL, fetchTripAnalytics, fetchExpenses };
+    return { createNewTrip, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses };
 };
 
 export default useTripAction;

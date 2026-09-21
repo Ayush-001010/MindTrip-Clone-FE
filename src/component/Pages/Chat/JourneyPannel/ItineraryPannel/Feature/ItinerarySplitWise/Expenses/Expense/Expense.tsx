@@ -13,7 +13,7 @@ const Expense: React.FC<IExpense> = ({ expense }) => {
                             {expense.category}
                         </span>
                         <span className="rounded-full border border-[#334155] px-2 py-0.5 text-[0.68rem] uppercase tracking-[0.12em] text-[#c4b5fd]">
-                            {expense.splitMethod}
+                            {expense?.splitMethod}
                         </span>
                     </div>
                 </div>

@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState } from 'react';
-import useTripSocketAction from "../../../CustomHooks/useTripSocketAction";
 import type IFinalItineraryResponse from '../../../Interface/DataInterface/IFinalItineraryResponse';
 import type IChat from './IChat';
 import Header from './Header/Header';
@@ -9,6 +8,7 @@ import type { ISuggestedDestination } from '../../../Interface/DataInterface/ITr
 import useNotification from '../../../customHookWithUI/useNotification';
 import type IMessageTrip from '../../../Interface/DataInterface/IMessageTrip';
 import type { IItineraryPlan } from '../../../Interface/DataInterface/IItineraryOptions';
+import useTripSocketAction from '../../../customHooks/useTripSocketAction';
 
 export interface IChatContext {
     isSelectedLocation: boolean;
