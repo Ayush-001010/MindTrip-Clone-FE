@@ -2,6 +2,8 @@ import React , {useState , useEffect, createContext, useContext} from "react";
 import type IBlog from "./IBlog";
 import type IBlogData from "../../../../Interface/DataInterface/IBlogData";
 import Header from "./Header/Header";
+import PageWheel from "./PageWheel/PageWheel";
+import SpeedDial from "./SpeedDial/SpeedDial";
 
 
 export interface IBlogContext {
@@ -50,6 +52,10 @@ const Blog:React.FC<IBlog> = () => {
     return (
         <blogContext.Provider value={{mode, blogValue: blogValue!}}>
             <Header />
+            <section className="static">
+                <PageWheel />
+            </section>
+            <SpeedDial />
         </blogContext.Provider>
     );
 };
