@@ -17,9 +17,9 @@ export default class SideNavBarConfig {
             link: "/explore"
         },
         {
-            title: "Share Trip",
-            icon: "create",
-            link: "/post-iti"
+            title: "Blog",
+            icon: "blog",
+            link: "/blogs"
         }
     ]
 }

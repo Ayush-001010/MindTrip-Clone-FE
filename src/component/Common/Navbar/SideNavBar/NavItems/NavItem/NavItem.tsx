@@ -7,6 +7,7 @@ import { FaPlusSquare } from "react-icons/fa";
 import { IoCameraOutline } from "react-icons/io5";
 import { useSideNavBarContext } from "../../SideNavBar";
 import { FaSearch } from "react-icons/fa";
+import { FaShareAlt } from "react-icons/fa";
 
 const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
     const { isCollapsed } = useSideNavBarContext();
@@ -22,6 +23,8 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
                 return <BiWorld />
             case "camera":
                 return <IoCameraOutline />;
+            case "blog":
+                return <FaShareAlt />;
             default:
                 return null;
         }
