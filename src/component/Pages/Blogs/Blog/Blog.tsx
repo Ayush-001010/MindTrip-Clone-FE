@@ -1,14 +1,16 @@
 import React , {useState , useEffect, createContext, useContext} from "react";
+import Body from "./Body/Body";
 import type IBlog from "./IBlog";
 import type IBlogData from "../../../../Interface/DataInterface/IBlogData";
 import Header from "./Header/Header";
 import PageWheel from "./PageWheel/PageWheel";
 import SpeedDial from "./SpeedDial/SpeedDial";
 
-
 export interface IBlogContext {
     mode: "create" | "preview";
-    blogValue : IBlogData
+    blogValue : IBlogData;
+    itemAddToActivity: (activity: "Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes") => void;
+    itemToAdd: "Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes" | null;
 }
 
 const blogContext = createContext<IBlogContext | null>(null);
@@ -24,6 +26,11 @@ export const useGetBlogContext = () => {
 const Blog:React.FC<IBlog> = () => {
     const [mode , setMode] = useState<"create" | "preview">("preview");
     const [blogValue , setBlogValue] = useState<IBlogData | null>(null);
+    const [itemToAdd, setItemToAdd] = useState<"Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes" | null>(null);
+
+    const itemAddToActivity = (activity: "Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes") => {
+        setItemToAdd(activity);
+    } 
 
     useEffect(() => {
         const url = location.href;
@@ -36,7 +43,24 @@ const Blog:React.FC<IBlog> = () => {
                 tripDuration: 0,
                 noOfPlaces: 0,
                 noOfActivities: 0,
-                activities: [],
+                activities: [
+                    {
+                        type:"activity",
+                        day: 1,
+                        placeName: "",
+                        activityType:"attraction",
+                        time: "",
+                        description: "",
+                        tips: [],
+                        coordinates: {
+                            latitude: 0,
+                            longitude: 0,
+                        },
+                        images: [],
+                        sideActivities: [],
+                        amountSpent: 0,
+                    }
+                ],
                 hotel: {
                     name: "",
                     address: "",
@@ -50,8 +74,9 @@ const Blog:React.FC<IBlog> = () => {
     },[]);
 
     return (
-        <blogContext.Provider value={{mode, blogValue: blogValue!}}>
+        <blogContext.Provider value={{mode, blogValue: blogValue!, itemAddToActivity, itemToAdd}}>
             <Header />
+            <Body />
             <section className="static">
                 <PageWheel />
             </section>

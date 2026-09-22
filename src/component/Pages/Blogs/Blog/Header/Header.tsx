@@ -54,6 +54,10 @@ const Header: React.FC<IHeader> = () => {
                             </section>
                         )}
                     </div>
+                    <div className="flex items-center gap-2">
+                        <p className="m-0 font-medium text-[#ced4da]">Select Activity:</p>
+                        <p>1</p>
+                    </div>
                 </section>
             </section>
             <section className="flex flex-wrap items-center gap-3 lg:justify-end">

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
+import { useGetBlogContext } from "../Blog";
+import { MdOutlineSurfing } from "react-icons/md";
 import type ISpeedDial from "./ISpeedDial";
+import { MdOutlineTipsAndUpdates } from "react-icons/md";
+import { TbSailboat } from "react-icons/tb";
+import { MdOutlineFlightLand } from "react-icons/md";
+import { IoIosImages } from "react-icons/io";
+import { GrNotes } from "react-icons/gr";
 
 interface ISpeedDialAction {
     id: string;
@@ -9,40 +16,59 @@ interface ISpeedDialAction {
 
 const actions: ISpeedDialAction[] = [
     {
-        id: "share",
-        label: "Share",
+        id:"Activity",
+        label: "Activity",
         path: (
-            <path strokeLinecap="round" strokeWidth="2" d="M7.926 10.898 15 7.727m-7.074 5.39L15 16.29M8 12a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm12 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm0-11a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z" />
-        ),
+            <MdOutlineSurfing size={24} />
+        )
     },
     {
-        id: "print",
-        label: "Print",
+        id:"Tips",
+        label: "Tips",
         path: (
-            <path strokeLinejoin="round" strokeWidth="2" d="M16.444 18H19a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.556M17 11V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v6h10ZM7 15h10v4a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-4Z" />
-        ),
+            <MdOutlineTipsAndUpdates size={24} />
+        )
     },
     {
-        id: "download",
-        label: "Download",
+        id:"Side-Activity",
+        label: "Sub Activity",
         path: (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01" />
-        ),
+            <TbSailboat size={24} />
+        )
     },
     {
-        id: "copy",
-        label: "Copy",
+        id:"Travel",
+        label: "Travel",
         path: (
-            <path strokeLinejoin="round" strokeWidth="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z" />
-        ),
+            <MdOutlineFlightLand size={24} />
+        )
     },
+    {
+        id:"Images",
+        label: "Images",
+        path: (
+            <IoIosImages size={24} />
+        )
+    },
+    {
+        id:"Notes",
+        label: "Notes",
+        path: (
+            <GrNotes size={24} />
+        )
+    }
 ];
 
 const SpeedDial: React.FC<ISpeedDial> = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { itemAddToActivity } = useGetBlogContext();
+
+    const handleActionClick = (id: string) => {
+        itemAddToActivity(id as "Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes");
+    };
 
     return (
-        <div className="group fixed end-6 bottom-6">
+        <div className="group fixed bottom-6 left-35">
             <div
                 id="speed-dial-menu-default"
                 className={`mb-4 flex-col items-center space-y-2 ${isOpen ? "flex" : "hidden"}`}
@@ -51,7 +77,8 @@ const SpeedDial: React.FC<ISpeedDial> = () => {
                     <div key={action.id} className="group/item relative">
                         <button
                             type="button"
-                            className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-default bg-neutral-primary-soft text-body shadow-xs hover:border-default-medium hover:bg-neutral-secondary-medium hover:text-heading focus:outline-none focus:ring-4 focus:ring-neutral-secondary-soft"
+                            onClick={() => handleActionClick(action.id)}
+                            className="flex h-[52px] w-[52px] cursor-pointer items-center justify-center rounded-full border border-slate-600/60 bg-slate-800/80 text-[#ced4da] shadow-sm transition-colors hover:border-slate-400/70 hover:bg-slate-700 hover:text-[#dee2e6] focus:outline-none focus:ring-4 focus:ring-slate-600/40"
                         >
                             <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <g stroke="currentColor">{action.path}</g>
@@ -60,7 +87,7 @@ const SpeedDial: React.FC<ISpeedDial> = () => {
                         </button>
                         <div
                             role="tooltip"
-                            className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 whitespace-nowrap rounded-base bg-dark px-3 py-2 text-sm font-medium text-white opacity-0 shadow-xs transition-opacity duration-300 group-hover/item:opacity-100"
+                            className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 whitespace-nowrap rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 group-hover/item:opacity-100"
                         >
                             {action.label}
                         </div>
@@ -72,7 +99,7 @@ const SpeedDial: React.FC<ISpeedDial> = () => {
                 aria-controls="speed-dial-menu-default"
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white hover:bg-brand-strong focus:outline-none focus:ring-4 focus:ring-brand-medium"
+                className="flex h-12 w-12 items-center justify-center shadow-lg shadow-slate-900/40 rounded-full bg-[#6c757d] transition-colors hover:bg-[#adb5bd] cursor-pointer focus:outline-none "
             >
                 <svg
                     className={`h-5 w-5 transition-transform ${isOpen ? "rotate-45" : ""}`}
