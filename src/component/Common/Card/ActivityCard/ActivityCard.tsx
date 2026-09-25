@@ -7,9 +7,11 @@ import ActivityDuration from "./ActivityDuration/ActivityDuration";
 import ActivityType from "./ActivityType/ActivityType";
 import ActivityNotes from "./ActivityNotes/ActivityNotes";
 import ActivityTips from "./ActivityTips/ActivityTips";
+import ActivityRectangleImage from "./ActivityRectangleImage/ActivityRectangleImage";
 
 interface ActivityCardProps extends React.FC<IActivityCard & {children: ReactNode}> {
     ActivityImage: typeof ActivityImage;
+    ActivityRectangleImage: typeof ActivityRectangleImage;
     ActivityPlaceName : typeof ActivityPlaceName;
     ActivityDuration: typeof ActivityDuration;
     ActivityType : typeof ActivityType;
@@ -26,6 +28,7 @@ const ActivityCard: ActivityCardProps = ({ children }) => {
 };
 
 ActivityCard.ActivityImage = ActivityImage;
+ActivityCard.ActivityRectangleImage = ActivityRectangleImage;
 ActivityCard.ActivityPlaceName = ActivityPlaceName;
 ActivityCard.ActivityDuration = ActivityDuration;
 ActivityCard.ActivityType = ActivityType;

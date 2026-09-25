@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import type IHeader from "./IHeader";
 import { useGetBlogContext } from "../Blog";
 import { MdOutlineEdit } from "react-icons/md";
 import { GoShare } from "react-icons/go";
 import { MdFavoriteBorder } from "react-icons/md";
 import { MdOutlineShoppingCart } from "react-icons/md";
+import TravelAgency from "./TravelAgency/TravelAgency";
 
 const Header: React.FC<IHeader> = () => {
     const { mode, blogValue } = useGetBlogContext();
+    const [isTravelAgency, setTravelAgency] = useState(false);
+
+    const openTravelAgency = () => {
+        setTravelAgency(true);
+    };
+
+    const closeTravelAgency = () => {
+        setTravelAgency(false);
+    };
 
     return (
         <header className="flex flex-col gap-4 border-b border-slate-700/60 px-4 py-4 lg:flex-row lg:items-start lg:justify-between">
@@ -63,6 +73,9 @@ const Header: React.FC<IHeader> = () => {
             <section className="flex flex-wrap items-center gap-3 lg:justify-end">
                 {mode === "create" && (
                     <>
+                        <button onClick={openTravelAgency} className="rounded-full cursor-pointer border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70">
+                            Travel Agency ?
+                        </button>
                         <button className="rounded-full cursor-pointer border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70">
                             Publish
                         </button>
@@ -81,6 +94,7 @@ const Header: React.FC<IHeader> = () => {
                     <MdOutlineShoppingCart className="inline-block cursor-pointer text-lg" />
                 </button>
             </section>
+            <TravelAgency isOpen={isTravelAgency} onClose={closeTravelAgency} />
         </header>
     );
 };

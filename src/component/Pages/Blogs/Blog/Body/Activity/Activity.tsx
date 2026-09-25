@@ -18,7 +18,7 @@ const Activity: React.FC<IActivity> = () => {
             <ActivityCard>
                 <section className="flex w-full items-start gap-4">
                     <ActivityCard.ActivityImage />
-                    <section className="flex min-w-0 flex-1 flex-col gap-2">
+                    <section className="flex min-w-0 flex-1 flex-col gap-2 p-2">
                         <ActivityCard.ActivityPlaceName />
                         <ActivityCard.ActivityDuration />
                         <ActivityCard.ActivityType />
@@ -31,19 +31,21 @@ const Activity: React.FC<IActivity> = () => {
                         case "Tips":
                             return <ActivityCard.ActivityTips key={index} />;
                         case "Images":
-                            return <ActivityCard.ActivityImage key={index} />;
+                            return <ActivityCard.ActivityRectangleImage key={index} />;
                         case "Side-Activity":
                             return (
-                                <ActivityCard key={index}>
-                                    <section className="flex w-full items-start gap-4">
-                                        <ActivityCard.ActivityImage />
-                                        <section className="flex min-w-0 flex-1 flex-col gap-2">
-                                            <ActivityCard.ActivityPlaceName />
-                                            <ActivityCard.ActivityDuration />
-                                            <ActivityCard.ActivityType />
+                                <section className="p-8">
+                                    <ActivityCard key={index}>
+                                        <section className="flex w-full items-start gap-4">
+                                            <ActivityCard.ActivityImage />
+                                            <section className="flex min-w-0 flex-1 flex-col gap-2">
+                                                <ActivityCard.ActivityPlaceName />
+                                                <ActivityCard.ActivityDuration />
+                                                <ActivityCard.ActivityType />
+                                            </section>
                                         </section>
-                                    </section>
-                                </ActivityCard>
+                                    </ActivityCard>
+                                </section>
                             )
                         default: return null;
                     }

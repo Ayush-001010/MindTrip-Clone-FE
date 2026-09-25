@@ -1,4 +1,5 @@
-import React , {useState , useEffect, createContext, useContext} from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
+import CommonConfig from "../../../../config/CommonConfig";
 import Body from "./Body/Body";
 import type IBlog from "./IBlog";
 import type IBlogData from "../../../../Interface/DataInterface/IBlogData";
@@ -8,7 +9,7 @@ import SpeedDial from "./SpeedDial/SpeedDial";
 
 export interface IBlogContext {
     mode: "create" | "preview";
-    blogValue : IBlogData;
+    blogValue: IBlogData;
     itemAddToActivity: (activity: "Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes") => void;
     itemToAdd: "Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes" | null;
 }
@@ -23,58 +24,39 @@ export const useGetBlogContext = () => {
     return context;
 };
 
-const Blog:React.FC<IBlog> = () => {
-    const [mode , setMode] = useState<"create" | "preview">("preview");
-    const [blogValue , setBlogValue] = useState<IBlogData | null>(null);
+const Blog: React.FC<IBlog> = () => {
+    const [mode, setMode] = useState<"create" | "preview">("preview");
+    const [blogValue, setBlogValue] = useState<IBlogData | null>(null);
     const [itemToAdd, setItemToAdd] = useState<"Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes" | null>(null);
 
     const itemAddToActivity = (activity: "Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes") => {
-        setItemToAdd(activity);
-    } 
+        if (activity === "Activity") {
+            addBlogActivityItem();
+        } else {
+            setItemToAdd(activity);
+        }
+    }
+
+    const addBlogActivityItem = () => {
+        setBlogValue((prev: IBlogData | null) => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                activities: [...prev.activities, CommonConfig.initialActivityValue]
+            } as IBlogData;
+        });
+    }
 
     useEffect(() => {
         const url = location.href;
-        if(url.includes("/#/blog/create")){
+        if (url.includes("/#/blog/create")) {
             setMode("create");
-            setBlogValue({
-                tripTitle: "",
-                tripOverview: "",
-                totalSpent: 0,
-                tripDuration: 0,
-                noOfPlaces: 0,
-                noOfActivities: 0,
-                activities: [
-                    {
-                        type:"activity",
-                        day: 1,
-                        placeName: "",
-                        activityType:"attraction",
-                        time: "",
-                        description: "",
-                        tips: [],
-                        coordinates: {
-                            latitude: 0,
-                            longitude: 0,
-                        },
-                        images: [],
-                        sideActivities: [],
-                        amountSpent: 0,
-                    }
-                ],
-                hotel: {
-                    name: "",
-                    address: "",
-                    checkInDate: "",
-                    checkOutDate: "",
-                    amountSpent: 0,
-                    description: ""
-                }
-            });
+            setBlogValue(CommonConfig.initialBlogValue);
         }
-    },[]);
+    }, []);
 
     return (
-        <blogContext.Provider value={{mode, blogValue: blogValue!, itemAddToActivity, itemToAdd}}>
+        <blogContext.Provider value={{ mode, blogValue: blogValue!, itemAddToActivity, itemToAdd }}>
             <Header />
             <Body />
             <section className="static">

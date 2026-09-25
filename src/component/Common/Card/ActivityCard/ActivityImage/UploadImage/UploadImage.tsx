@@ -32,10 +32,13 @@ const UploadImage : React.FC<IUploadImage> = ({ setImageFiles }) => {
         }
     }
     return (
-        <section className="h-full w-full">
+        <section className="h-full w-full p-1">
             {contextHolder}
-            <Dragger {...props} className="!flex !h-full !w-full !items-center !justify-center">
-                <section className="flex items-center justify-center text-[#adb5bd]">
+            <Dragger
+                {...props}
+                className="!flex !h-full !w-full !items-center !justify-center cursor-pointer rounded-lg border border-dashed !border-[#adb5bd]/40 !text-[#adb5bd] transition-colors duration-300 ease-in-out hover:!border-[#000814] hover:!bg-[#000814] hover:!text-white"
+            >
+                <section className="flex items-center justify-center">
                     <IoIosImages size={50} />
                 </section>
             </Dragger>

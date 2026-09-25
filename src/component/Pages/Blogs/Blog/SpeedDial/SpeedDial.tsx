@@ -37,13 +37,6 @@ const actions: ISpeedDialAction[] = [
         )
     },
     {
-        id:"Travel",
-        label: "Travel",
-        path: (
-            <MdOutlineFlightLand size={24} />
-        )
-    },
-    {
         id:"Images",
         label: "Images",
         path: (

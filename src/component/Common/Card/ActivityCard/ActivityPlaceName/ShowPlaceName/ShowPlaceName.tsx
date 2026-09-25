@@ -4,11 +4,12 @@ import { IoLocationOutline } from "react-icons/io5";
 
 const ShowPlaceName: React.FC<IShowPlaceName> = ({ placeName, longitude, latitude }) => {
     return (
-        <section className="flex w-full flex-col gap-0.5">
-            <p className="truncate text-sm font-semibold text-gray-900">{placeName}</p>
-            <p className="flex items-center text-xs text-gray-500">
-                <IoLocationOutline className="mr-1 inline-block"  onClick={()=>console.log(`Longitude: ${longitude}, Latitude: ${latitude}`)}/>
-            </p>
+        <section className="flex w-full items-center gap-2">
+            <p className="truncate text-2xl font-bold text-[#f8f9fa]">{placeName.toUpperCase()}</p>
+            <IoLocationOutline
+                className="shrink-0 cursor-pointer text-xl text-gray-400 transition-colors hover:text-[#f8f9fa]"
+                onClick={()=>console.log(`Longitude: ${longitude}, Latitude: ${latitude}`)}
+            />
         </section>
     );
 };
