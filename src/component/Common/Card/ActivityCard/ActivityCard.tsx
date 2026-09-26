@@ -9,6 +9,7 @@ import ActivityType from "./ActivityType/ActivityType";
 import ActivityNotes from "./ActivityNotes/ActivityNotes";
 import ActivityTips from "./ActivityTips/ActivityTips";
 import ActivityRectangleImage from "./ActivityRectangleImage/ActivityRectangleImage";
+import ActivityAmount from "./ActivityAmount/ActivityAmount";
 
 interface ActivityCardProps extends React.FC<IActivityCard & {children: ReactNode}> {
     ActivityImage: typeof ActivityImage;
@@ -18,6 +19,7 @@ interface ActivityCardProps extends React.FC<IActivityCard & {children: ReactNod
     ActivityType : typeof ActivityType;
     ActivityNotes: typeof ActivityNotes;
     ActivityTips: typeof ActivityTips;
+    ActivityAmount : typeof ActivityAmount;
 }
 
 export interface IActivityCardData {
@@ -51,5 +53,6 @@ ActivityCard.ActivityDuration = ActivityDuration;
 ActivityCard.ActivityType = ActivityType;
 ActivityCard.ActivityNotes = ActivityNotes;
 ActivityCard.ActivityTips = ActivityTips;
+ActivityCard.ActivityAmount = ActivityAmount;
 
 export default ActivityCard;

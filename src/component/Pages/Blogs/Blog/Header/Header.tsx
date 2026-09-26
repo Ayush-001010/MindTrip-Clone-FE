@@ -6,17 +6,26 @@ import { GoShare } from "react-icons/go";
 import { MdFavoriteBorder } from "react-icons/md";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import TravelAgency from "./TravelAgency/TravelAgency";
+import Publish from "./Publish/Publish";
 
 const Header: React.FC<IHeader> = ({ selectedDay }) => {
     const { mode, blogValue, saveChangeToBlog } = useGetBlogContext();
     const [isTravelAgency, setTravelAgency] = useState(false);
+    const { totalSpent } = blogValue ?? { totalSpent: 0 };
+    const [isPublish, setPublish] = useState(true);
 
     const openTravelAgency = () => {
         setTravelAgency(true);
     };
+    const openPublish = () => {
+        setPublish(true);
+    };
 
     const closeTravelAgency = () => {
         setTravelAgency(false);
+    };
+    const closePublish = () => {
+        setPublish(false);
     };
 
     return (
@@ -75,6 +84,10 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                         <p className="m-0 font-medium text-[#ced4da]">Select Day:</p>
                         <p>{selectedDay}</p>
                     </div>
+                    <div className="flex items-center gap-2">
+                        <p className="m-0 font-medium text-[#ced4da]">Total Amount Spend:</p>
+                        <p className="text-[#f8f9fa] font-bold">{totalSpent}</p>
+                    </div>
                 </section>
             </section>
             <section className="flex flex-wrap items-center gap-3 lg:justify-end">
@@ -83,7 +96,7 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                         <button onClick={openTravelAgency} className="rounded-full cursor-pointer border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70">
                             Travel Agency ?
                         </button>
-                        <button className="rounded-full cursor-pointer border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70">
+                        <button onClick={openPublish} className="rounded-full cursor-pointer border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70">
                             Publish
                         </button>
                         <button className="rounded-full cursor-pointer border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70">
@@ -92,16 +105,17 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                     </>
                 )}
                 <button className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-600/70 text-[#ced4da] transition-colors hover:border-slate-300/70 hover:text-[#dee2e6]">
-                    <GoShare className="inline-block cursor-pointer text-lg" />
+                    <GoShare className={mode === "create" ? "disabled cursor-not-allowed " + "inline-block text-lg" : "cursor-pointer " + "inline-block text-lg"} />
                 </button>
                 <button className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-600/70 text-[#ced4da] transition-colors hover:border-slate-300/70 hover:text-[#dee2e6]">
-                    <MdFavoriteBorder className="inline-block cursor-pointer text-lg" />
+                    <MdFavoriteBorder className={mode === "create" ? "disabled cursor-not-allowed " + "inline-block text-lg" : "cursor-pointer " + "inline-block text-lg"} />
                 </button>
                 <button className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-600/70 text-[#ced4da] transition-colors hover:border-slate-300/70 hover:text-[#dee2e6]">
-                    <MdOutlineShoppingCart className="inline-block cursor-pointer text-lg" />
+                    <MdOutlineShoppingCart className={mode === "create" ? "disabled cursor-not-allowed " + "inline-block text-lg" : "cursor-pointer " + "inline-block text-lg"} />
                 </button>
             </section>
             <TravelAgency isOpen={isTravelAgency} onClose={closeTravelAgency} />
+            <Publish isOpen={isPublish} onClose={closePublish} />
         </header>
     );
 };

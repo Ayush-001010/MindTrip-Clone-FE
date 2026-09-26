@@ -28,7 +28,7 @@ const AddActivityType: React.FC<IAddActivityType> = ({ setActivityType }) => {
                 placeholder="Select activity type"
                 options={activityTypeOptions}
                 onChange={(value) => changeHandler(value)}
-                className="w-[200px] [&_.ant-select-arrow]:!text-[#fff] [&_.ant-select-selection-item]:!text-[#e9ecef] [&_.ant-select-selection-placeholder]:!text-gray-400 [&_.ant-select-selector]:!rounded-none [&_.ant-select-selector]:!border-0 [&_.ant-select-selector]:!border-b [&_.ant-select-selector]:!border-gray-300 [&_.ant-select-selector]:!bg-transparent [&_.ant-select-selector]:!px-0 [&_.ant-select-selector]:!shadow-none"
+                className="w-[200px] [&_.ant-select-arrow]:!text-[#fff] [&_.ant-select-selection-item]:!text-sm [&_.ant-select-selection-item]:!text-[#e9ecef] [&_.ant-select-selection-placeholder]:!text-sm [&_.ant-select-selection-placeholder]:!text-gray-400 [&_.ant-select-selector]:!min-h-8 [&_.ant-select-selector]:!rounded-none [&_.ant-select-selector]:!border-0 [&_.ant-select-selector]:!border-b [&_.ant-select-selector]:!border-gray-300 [&_.ant-select-selector]:!bg-transparent [&_.ant-select-selector]:!px-0 [&_.ant-select-selector]:!py-0 [&_.ant-select-selector]:!shadow-none"
                 popupClassName="!bg-transparent !border !border-gray-700 [&_.ant-select-item]:!bg-transparent [&_.ant-select-item]:!text-gray-400 [&_.ant-select-item-option-active]:!text-[#e9ecef] [&_.ant-select-item-option-selected]:!text-[#fff] [&_.ant-select-item-option-selected]:!font-semibold"
             />
         </section>

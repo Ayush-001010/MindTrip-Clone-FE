@@ -5,9 +5,10 @@ export default interface IBlogData {
     tripDuration: number;
     noOfPlaces: number;
     noOfActivities: number;
-    activities: IBlogActivite[] | IBlogTravel[];
-    hotel: IBlogHotel; 
+    activities: IBlogActivite[];
+    hotel: IBlogHotel[]; 
     bookingURL: string;
+    travel: IBlogTravel[];
 }
 
 export interface IBlogActivite {
@@ -30,6 +31,7 @@ export interface IBlogActivite {
 export interface IBlogTravel{
     type:"travel";
     time: string;
+    activityNumber: number;
     day: number;
     travelType: "flight" | "train" | "bus" | "car" | "boat" | "rapido" | "bicycle" | "uber" | "ola";
     amountSpent: number;
@@ -43,5 +45,5 @@ export interface IBlogHotel {
     checkOutDate: string;
     amountSpent: number;
     description: string;
-    images: string[];
+    images: string;
 }

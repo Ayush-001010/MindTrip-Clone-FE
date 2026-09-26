@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type IHotel from "./IHotel";
 import { Modal } from "antd";
 import { useGetBlogContext } from "../../Blog";
 import AddHotel from "./AddHotel/AddHotel";
+import type { IBlogHotel } from "../../../../../../Interface/DataInterface/IBlogData";
+import ShowHotel from "./ShowHotel/ShowHotel";
 
 const Hotel: React.FC<IHotel> = ({ open, onClose }) => {
-    const { mode } = useGetBlogContext();
+    const { blogValue, addingHotel } = useGetBlogContext();
+    const [hotelDetails , setHotelDetails] = useState<IBlogHotel[]>([]);
+    const [isAdding, setIsAdding] = useState(false);
+
+    useEffect(() => {
+        setHotelDetails(blogValue?.hotel ?? []);
+    }, [blogValue]);
+
+    const addHotel = (hotel: IBlogHotel) => {
+        addingHotel(hotel);
+        setHotelDetails((prev) => [...prev, hotel]);
+        setIsAdding(false);
+    };
+
     return (
         <Modal open={open} onCancel={onClose} centered styles={{
             mask: {
@@ -27,7 +42,11 @@ const Hotel: React.FC<IHotel> = ({ open, onClose }) => {
                 display: "none",
             },
         }}>
-            {mode === "create" && <AddHotel />}
+            {isAdding ? (
+                <AddHotel submitHotel={addHotel} />
+            ) : (
+                <ShowHotel hotelDetails={hotelDetails} onAddNewHotel={() => setIsAdding(true)} />
+            )}
         </Modal>
     );
 };

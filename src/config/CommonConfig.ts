@@ -29,6 +29,7 @@ export default class CommonConfig {
     tripDuration: 1,
     noOfPlaces: 0,
     noOfActivities: 0,
+    bookingURL: "",
     activities: [
       {
         type: "activity",
@@ -47,14 +48,8 @@ export default class CommonConfig {
         amountSpent: 0,
       },
     ],
-    hotel: {
-      name: "",
-      address: "",
-      checkInDate: "",
-      checkOutDate: "",
-      amountSpent: 0,
-      description: "",
-    },
+    hotel: [],
+    travel: [],
   };
 
   static readonly initialActivityValue : IBlogActivite = {

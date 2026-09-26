@@ -22,6 +22,7 @@ const Activity: React.FC<IActivity> = ({ indexNumber }) => {
                         <ActivityCard.ActivityPlaceName />
                         <ActivityCard.ActivityDuration />
                         <ActivityCard.ActivityType />
+                        <ActivityCard.ActivityAmount />
                     </section>
                 </section>
                 {addItems.map((type, index) => {

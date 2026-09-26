@@ -59,20 +59,20 @@ const Body: React.FC<IBody> = ({ }) => {
                                 { type: "overview" }
                             ]} />
                             {index != blogValue?.activities.length - 1 && (
-                                <section className="flex">
-                                    <section className="flex w-40 flex-col items-center cursor-pointer my-1">
-                                        <span className="h-18 w-0.5 border-l-2 border-dashed border-[#6c757d]" />
+                                <section className="mt-2 flex items-center gap-3">
+                                    <section className="my-1 flex w-28 shrink-0 flex-col items-center cursor-pointer">
+                                        <span className="h-20 w-0.5 border-l-2 border-dashed border-[#6c757d]" />
                                         <Tooltip title="Travel Options">
-                                            <span onClick={() => selectTravelHandler(index)} className="flex shrink-0 items-center justify-center gap-1.5 w-16 h-16 rounded-full bg-[#212529] hover:bg-[#343a40] hover:font-bold transition-all duration-300 text-white text-base">
+                                            <span onClick={() => selectTravelHandler(index)} className="flex h-14 w-14 shrink-0 items-center justify-center gap-1.5 rounded-full border border-[#343a40] bg-[#212529] text-base text-white transition-all duration-300 hover:bg-[#343a40] hover:font-bold">
                                                 <MdFlightTakeoff />
                                                 <span className="text-gray-400 text-xs">/</span>
                                                 <TbBus />
                                             </span>
                                         </Tooltip>
-                                        <span className="h-18 w-0.5 border-l-2 border-dashed border-[#6c757d]" />
+                                        <span className="h-20 w-0.5 border-l-2 border-dashed border-[#6c757d]" />
                                     </section>
                                     {isTravelSectionVisible.isVisible && isTravelSectionVisible.indexNumber === index && (
-                                        <Travel/>
+                                        <Travel activityIndexNumber={index} />
                                     )}
                                 </section>
                             )}

@@ -6,7 +6,7 @@ import type IBlogData from "../../../../Interface/DataInterface/IBlogData";
 import Header from "./Header/Header";
 import PageWheel from "./PageWheel/PageWheel";
 import SpeedDial from "./SpeedDial/SpeedDial";
-import type { IBlogActivite } from "../../../../Interface/DataInterface/IBlogData";
+import type { IBlogActivite, IBlogHotel, IBlogTravel } from "../../../../Interface/DataInterface/IBlogData";
 import type { IMapMarkerPoint } from "../../../Common/Map/IMap";
 
 export interface IBlogContext {
@@ -19,6 +19,8 @@ export interface IBlogContext {
     mapMarkerPoints: IMapMarkerPoint[];
     selectedLongitude: number;
     selectedLatitude: number;
+    addingHotel: (hotelData: IBlogHotel) => void;
+    addTravel: (travelData: IBlogTravel) => void;
 }
 
 const blogContext = createContext<IBlogContext | null>(null);
@@ -40,20 +42,62 @@ const Blog: React.FC<IBlog> = () => {
     const [selectedLongitude, setSelectedLongitude] = useState<number>(0);
     const [selectedLatitude, setSelectedLatitude] = useState<number>(0);
 
+    const calculateTotalSpent = (
+        activities: IBlogActivite[],
+        hotels: IBlogHotel[],
+        travel: IBlogTravel[]
+    ) => {
+        const activityTotal = activities.reduce((sum, activity) => sum + (activity.amountSpent ?? 0), 0);
+        const hotelTotal = hotels.reduce((sum, hotel) => sum + (hotel.amountSpent ?? 0), 0);
+        const travelTotal = travel.reduce((sum, travelItem) => sum + (travelItem.amountSpent ?? 0), 0);
+
+        return activityTotal + hotelTotal + travelTotal;
+    };
+
     const itemAddToActivity = (activity: "Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes") => {
         if (activity === "Activity") {
-            addBlogActivityItem();
+            changeBlogActivityItem();
         } else {
             setItemToAdd(activity);
         }
     }
 
-    const addBlogActivityItem = () => {
+    const addingHotel = (hotelData : IBlogHotel) => {
         setBlogValue((prev: IBlogData | null) => {
             if (!prev) return prev;
+            const updatedHotel = [...(prev.hotel ?? []), hotelData];
+            const totalSpent = calculateTotalSpent(prev.activities, updatedHotel, prev.travel ?? []);
+
             return {
                 ...prev,
-                activities: [...prev.activities, CommonConfig.initialActivityValue]
+                hotel: updatedHotel,
+                totalSpent,
+            } as IBlogData;
+        });
+    }
+
+    const addTravel = (travelData: IBlogTravel) => {
+        setBlogValue((prev: IBlogData | null) => {
+            if (!prev) return prev;
+            const updatedTravel = [...(prev.travel ?? []), travelData];
+            const totalSpent = calculateTotalSpent(prev.activities, prev.hotel ?? [], updatedTravel);
+
+            return {
+                ...prev,
+                travel: updatedTravel,
+                totalSpent,
+            } as IBlogData;
+        });
+    }
+
+    const changeBlogActivityItem = () => {
+        setBlogValue((prev: IBlogData | null) => {
+            if (!prev) return prev;
+            const newActivity = CommonConfig.initialActivityValue;
+            newActivity.day = selectedDay;
+            return {
+                ...prev,
+                activities: [...prev.activities, newActivity]
             } as IBlogData;
         });
     }
@@ -95,9 +139,12 @@ const Blog: React.FC<IBlog> = () => {
                         [subFieldName]: value
                     };
                     }
+                    const totalSpent = calculateTotalSpent(updatedActivities, prev.hotel ?? [], prev.travel ?? []);
+
                     return {
                         ...prev,
-                        activities: updatedActivities
+                        activities: updatedActivities,
+                        totalSpent,
                     } as IBlogData;
                 });
                 return;
@@ -126,8 +173,45 @@ const Blog: React.FC<IBlog> = () => {
         }
     }, []);
 
+    const addOrRemovingActivityItem = () => {
+        setBlogValue((prev: IBlogData | null) => {
+            const isMoreThanCurrentDurationActivityPresent = prev ? prev.activities.some(activity => activity.day > selectedDay) : false;
+            if(!prev) return prev;
+            if(isMoreThanCurrentDurationActivityPresent){
+                // more those activities exist that are beyond the current selected day
+                return {
+                    ...prev,
+                    activities: prev.activities.filter(activity => activity.day <= selectedDay)
+                } as IBlogData;
+            } else {
+                // no activities exist beyond the current selected day, so we can add a new activity for the selected day
+                const isCurrentDurationActivityPresent = prev.activities.some(activity => activity.day === selectedDay);
+                if(!isCurrentDurationActivityPresent){
+                    const newActivity: IBlogActivite = {
+                        ...CommonConfig.initialActivityValue,
+                        day: selectedDay
+                    };
+                    return {
+                        ...prev,
+                        activities: [...prev.activities, newActivity]
+                    } as IBlogData;
+                }
+            }
+            return prev;
+        })
+    }
+    
+    useEffect(() => {
+        const timeOutObj = setTimeout(() => {
+            addOrRemovingActivityItem();
+        }, 500);
+        return () => clearTimeout(timeOutObj);
+    }, [selectedDay]);
+
+    console.log("Blog value:", blogValue);
+
     return (
-        <blogContext.Provider value={{ mode, blogValue: blogValue!, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay , mapMarkerPoints , selectedLongitude, selectedLatitude }}>
+        <blogContext.Provider value={{ mode, blogValue: blogValue!, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay , mapMarkerPoints , selectedLongitude, selectedLatitude, addingHotel , addTravel }}>
             <Header selectedDay={selectedDay} />
             <Body />
             <section className="static">

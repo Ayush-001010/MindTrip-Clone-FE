@@ -4,7 +4,6 @@ import { MdOutlineSurfing } from "react-icons/md";
 import type ISpeedDial from "./ISpeedDial";
 import { MdOutlineTipsAndUpdates } from "react-icons/md";
 import { TbSailboat } from "react-icons/tb";
-import { MdOutlineFlightLand } from "react-icons/md";
 import { IoIosImages } from "react-icons/io";
 import { GrNotes } from "react-icons/gr";
 
@@ -61,7 +60,7 @@ const SpeedDial: React.FC<ISpeedDial> = () => {
     };
 
     return (
-        <div className="group fixed bottom-6 left-35">
+        <div className="group fixed bottom-6 left-30 z-40">
             <div
                 id="speed-dial-menu-default"
                 className={`mb-4 flex-col items-center space-y-2 ${isOpen ? "flex" : "hidden"}`}
@@ -73,9 +72,9 @@ const SpeedDial: React.FC<ISpeedDial> = () => {
                             onClick={() => handleActionClick(action.id)}
                             className="flex h-[52px] w-[52px] cursor-pointer items-center justify-center rounded-full border border-slate-600/60 bg-slate-800/80 text-[#ced4da] shadow-sm transition-colors hover:border-slate-400/70 hover:bg-slate-700 hover:text-[#dee2e6] focus:outline-none focus:ring-4 focus:ring-slate-600/40"
                         >
-                            <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                <g stroke="currentColor">{action.path}</g>
-                            </svg>
+                            <span className="flex items-center justify-center text-[22px] leading-none" aria-hidden="true">
+                                {action.path}
+                            </span>
                             <span className="sr-only">{action.label}</span>
                         </button>
                         <div

@@ -68,3 +68,12 @@
 .split-expense-select.ant-select .ant-select-arrow {
   color: #93c5fd !important;
 }
+
+.profile-icon-popover .ant-popover-inner {
+  background: #111418 !important;
+  border: 1px solid #343a40 !important;
+}
+
+.profile-icon-popover .ant-popover-arrow:before {
+  background: #111418 !important;
+}
