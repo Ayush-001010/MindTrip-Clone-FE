@@ -6,7 +6,8 @@ export default interface IBlogData {
     noOfPlaces: number;
     noOfActivities: number;
     activities: IBlogActivite[] | IBlogTravel[];
-    hotel: IBlogHotel;
+    hotel: IBlogHotel; 
+    bookingURL: string;
 }
 
 export interface IBlogActivite {
@@ -15,7 +16,7 @@ export interface IBlogActivite {
     placeName: string;
     activityType:"trek" | "surfing" | "sightseeing" | "sketting" | "attraction" | "boating" | "temple";
     time: string;
-    description: string;
+    description: string; 
     tips: string[];
     coordinates: {
         latitude: number;
@@ -42,4 +43,5 @@ export interface IBlogHotel {
     checkOutDate: string;
     amountSpent: number;
     description: string;
+    images: string[];
 }

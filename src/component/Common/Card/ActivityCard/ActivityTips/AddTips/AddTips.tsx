@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import type IAddTips from "./IAddTips";
 import { CiCirclePlus } from "react-icons/ci";
 import { MdOutlineEdit } from "react-icons/md";
+import { useGetActivityCardData } from "../../ActivityCard";
+import { useGetBlogContext } from "../../../../../Pages/Blogs/Blog/Blog";
 
 const AddTips: React.FC<IAddTips> = ({ setTips, setIsStopEditing }) => {
     const [noOfTips, setNoOfTips] = useState(1);
     const [tips, setLocalTips] = useState<string[]>([]);
+    const { saveChangeToBlog } = useGetBlogContext();
+    const { indexNumber } = useGetActivityCardData();
 
-    const handleSetTips = (newTips: string[]) => {
+    const changeHandler = (newTips: string[]) => {
         setLocalTips(newTips);
         setTips(newTips);
+        saveChangeToBlog("activities", newTips, indexNumber, "tips");
     };
 
     return (
@@ -21,7 +26,7 @@ const AddTips: React.FC<IAddTips> = ({ setTips, setIsStopEditing }) => {
                         onChange={(e) => {
                             const newTips = [...tips];
                             newTips[index] = e.target.value;
-                            handleSetTips(newTips);
+                            changeHandler(newTips);
                         }}
                         placeholder={`Enter tip ${index + 1}`}
                         className="w-full border-0 border-b border-gray-300 bg-transparent px-0 py-1.5 text-base font-medium text-[#f8f9fa] outline-none placeholder:text-gray-400 transition-colors focus:border-gray-100"

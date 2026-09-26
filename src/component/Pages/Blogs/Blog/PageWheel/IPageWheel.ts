@@ -1,3 +1,3 @@
 export default interface IPageWheel {
-	count?: number;
+	changeSelectedDay:(newDay: number) => void;
 }

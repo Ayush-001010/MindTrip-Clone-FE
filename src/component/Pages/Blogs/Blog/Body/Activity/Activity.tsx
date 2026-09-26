@@ -3,7 +3,7 @@ import type IActivity from "./IActivity";
 import ActivityCard from "../../../../../Common/Card/ActivityCard/ActivityCard";
 import { useGetBlogContext } from "../../Blog";
 
-const Activity: React.FC<IActivity> = () => {
+const Activity: React.FC<IActivity> = ({ indexNumber }) => {
     const { itemToAdd } = useGetBlogContext();
     const [addItems, setAddItems] = useState<Array<"Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes">>([]);
 
@@ -15,7 +15,7 @@ const Activity: React.FC<IActivity> = () => {
 
     return (
         <section className="w-full">
-            <ActivityCard>
+            <ActivityCard indexNumber={indexNumber}>
                 <section className="flex w-full items-start gap-4">
                     <ActivityCard.ActivityImage />
                     <section className="flex min-w-0 flex-1 flex-col gap-2 p-2">
@@ -35,7 +35,7 @@ const Activity: React.FC<IActivity> = () => {
                         case "Side-Activity":
                             return (
                                 <section className="p-8">
-                                    <ActivityCard key={index}>
+                                    <ActivityCard key={index} indexNumber={indexNumber}>
                                         <section className="flex w-full items-start gap-4">
                                             <ActivityCard.ActivityImage />
                                             <section className="flex min-w-0 flex-1 flex-col gap-2">

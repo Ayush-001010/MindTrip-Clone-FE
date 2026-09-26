@@ -4,10 +4,18 @@ import { useParams } from "react-router-dom";
 import type IUserInterface from "../Interface/DataInterface/IUserDetails";
 import type ITripExpense from "../Interface/DataInterface/ITripExpense";
 import type ITripSplitWiseAnalytics from "../Interface/DataInterface/ITripSplitWiseAnalytics";
+import type { IHotelDataInterface } from "../Interface/CommonInterface";
 
 const useTripAction = () => {
     const { tripId } = useParams();
     const { userName , userID } = useSelector((state: any) => state.userDetails as IUserInterface);
+
+    const fetchHotelDetails = async (city: string) => {
+        const apiServiceInstance = new APIService();
+        const baseURL = "/api/explore/hotels?city="+city+"&page=1&limit=10";
+        const response = await apiServiceInstance.getRequest<IHotelDataInterface[]>(baseURL);
+        return response;
+    }
     
     const createNewTrip = async () => {
         const apiServiceInstance = new APIService();
@@ -63,7 +71,7 @@ const useTripAction = () => {
         return response;
     }
     
-    return { createNewTrip, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses };
+    return { createNewTrip, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails };
 };
 
 export default useTripAction;

@@ -7,8 +7,8 @@ import { MdFavoriteBorder } from "react-icons/md";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import TravelAgency from "./TravelAgency/TravelAgency";
 
-const Header: React.FC<IHeader> = () => {
-    const { mode, blogValue } = useGetBlogContext();
+const Header: React.FC<IHeader> = ({ selectedDay }) => {
+    const { mode, blogValue, saveChangeToBlog } = useGetBlogContext();
     const [isTravelAgency, setTravelAgency] = useState(false);
 
     const openTravelAgency = () => {
@@ -24,6 +24,8 @@ const Header: React.FC<IHeader> = () => {
             <section className="min-w-0 flex-1">
                 <section className="flex items-center gap-3">
                     <input
+                        value={blogValue?.tripTitle ?? ""}
+                        onChange={(e) => saveChangeToBlog("tripTitle", e.target.value)}
                         type="text"
                         placeholder="Name Your Adventure"
                         className={mode === "create" ? "w-full max-w-xl border-b border-[#ced4da]/70 pb-1 text-2xl font-semibold tracking-tight text-[#dee2e6] placeholder:text-[#ced4da]/60 focus:outline-none" : "w-full max-w-xl text-2xl font-semibold tracking-tight text-[#dee2e6] placeholder:text-[#ced4da]/60 focus:outline-none"}
@@ -33,7 +35,12 @@ const Header: React.FC<IHeader> = () => {
                 <section className="mt-3">
                     {mode === "create" && (
                         <div className="flex items-start gap-3">
-                            <textarea placeholder="Describe Your Adventure" className={mode === "create" ? "min-h-[30px] w-full max-w-3xl resize-none border-b border-[#ced4da]/70 pb-1 text-sm font-medium leading-5 text-[#dee2e6] placeholder:text-[#ced4da]/60 focus:outline-none" : ""}>
+                            <textarea
+                                value={blogValue?.tripOverview ?? ""}
+                                onChange={(e) => saveChangeToBlog("tripOverview", e.target.value)}
+                                placeholder="Describe Your Adventure"
+                                className={mode === "create" ? "min-h-[30px] w-full max-w-3xl resize-none border-b border-[#ced4da]/70 pb-1 text-sm font-medium leading-5 text-[#dee2e6] placeholder:text-[#ced4da]/60 focus:outline-none" : ""}
+                            >
                             </textarea>
                             <p className="mb-0 mt-1">
                                 <MdOutlineEdit className="inline-block cursor-pointer text-lg text-[#ced4da] transition-opacity hover:opacity-80" />
@@ -53,7 +60,7 @@ const Header: React.FC<IHeader> = () => {
                     <div className="flex items-center gap-2">
                         <p className="m-0 font-medium text-[#ced4da]">Duration:</p>
                         {mode === "create" && (
-                            <section>
+                            <section onChange={(e:any) => saveChangeToBlog("tripDuration", e.target.value)}>
                                 <select className="w-[30px] cursor-pointer text-sm font-medium text-[#dee2e6] outline-none transition-colors hover:border-slate-300/70 focus:border-slate-300/70">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -65,8 +72,8 @@ const Header: React.FC<IHeader> = () => {
                         )}
                     </div>
                     <div className="flex items-center gap-2">
-                        <p className="m-0 font-medium text-[#ced4da]">Select Activity:</p>
-                        <p>1</p>
+                        <p className="m-0 font-medium text-[#ced4da]">Select Day:</p>
+                        <p>{selectedDay}</p>
                     </div>
                 </section>
             </section>

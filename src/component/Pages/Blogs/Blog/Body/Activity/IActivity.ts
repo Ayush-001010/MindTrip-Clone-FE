@@ -2,4 +2,5 @@ import type IActivityDesignInterface from "../../../../../../Interface/ConfigInt
 
 export default interface IActivity{
     designArr : IActivityDesignInterface[];
+    indexNumber: number;
 }

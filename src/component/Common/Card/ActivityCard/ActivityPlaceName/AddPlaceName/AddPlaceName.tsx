@@ -2,9 +2,18 @@ import React from "react";
 import type IAddPlaceName from "./IAddPlaceName";
 import type { IPlaceOption } from "../ActivityPlaceName";
 import { MdOutlineEdit } from "react-icons/md";
+import { useGetBlogContext } from "../../../../../Pages/Blogs/Blog/Blog";
+import { useGetActivityCardData } from "../../ActivityCard";
 
 const AddPlaceName: React.FC<IAddPlaceName> = ({ setPlaceName , placeName, placeOptions , setLongitude, setLatitude }) => {
+    const {saveChangeToBlog} = useGetBlogContext();
+    const { indexNumber } = useGetActivityCardData();
+
     const handleOptionClick = (option: IPlaceOption) => {
+        console.log(option);
+        saveChangeToBlog("activities", option.place_name , indexNumber , "placeName");
+        saveChangeToBlog("activities", option.longitude , indexNumber , "longitude");
+        saveChangeToBlog("activities", option.latitude , indexNumber , "latitude");
         setPlaceName(option.place_name);
         setLongitude(option.longitude);
         setLatitude(option.latitude);

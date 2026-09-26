@@ -3,12 +3,16 @@ import type IUploadImage from "./IUploadImage";
 import type { UploadFile, UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 import { IoIosImages } from "react-icons/io";
+import { useGetActivityCardData } from "../../ActivityCard";
+import { useGetBlogContext } from "../../../../../Pages/Blogs/Blog/Blog";
 
 const { Dragger } = Upload;
 
-const UploadImage : React.FC<IUploadImage> = ({ setImageFiles }) => {
+const UploadImage: React.FC<IUploadImage> = ({ setImageFiles }) => {
     const [messageApi, contextHolder] = message.useMessage();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const { saveChangeToBlog } = useGetBlogContext();
+    const { indexNumber } = useGetActivityCardData();
 
     const props: UploadProps = {
         name: 'file',
@@ -26,6 +30,7 @@ const UploadImage : React.FC<IUploadImage> = ({ setImageFiles }) => {
             console.log('File list changed', info.fileList);
             setFileList(info.fileList);
             setImageFiles(info.fileList.map(file => file.originFileObj).filter(Boolean) as File[]);
+            saveChangeToBlog("activities", info.fileList.map(file => file.originFileObj).filter(Boolean) as File[], indexNumber, "images");
         },
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);

@@ -26,7 +26,7 @@ export default class CommonConfig {
     tripTitle: "",
     tripOverview: "",
     totalSpent: 0,
-    tripDuration: 0,
+    tripDuration: 1,
     noOfPlaces: 0,
     noOfActivities: 0,
     activities: [

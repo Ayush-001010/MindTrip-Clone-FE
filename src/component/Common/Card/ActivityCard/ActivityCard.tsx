@@ -1,4 +1,5 @@
 import type React from "react";
+import { createContext, useContext } from "react";
 import type IActivityCard from "./IActivityCard";
 import type { ReactNode } from "react";
 import ActivityImage from "./ActivityImage/ActivityImage";
@@ -19,11 +20,27 @@ interface ActivityCardProps extends React.FC<IActivityCard & {children: ReactNod
     ActivityTips: typeof ActivityTips;
 }
 
-const ActivityCard: ActivityCardProps = ({ children }) => {
+export interface IActivityCardData {
+    indexNumber: number;
+}
+
+const ActivityCardDataContext = createContext<IActivityCardData | null>(null);
+
+export const useGetActivityCardData = () => {
+    const context = useContext(ActivityCardDataContext);
+    if (!context) {
+        throw new Error("useActivityCardData must be used within an ActivityCard");
+    }
+    return context;
+};
+
+const ActivityCard: ActivityCardProps = ({ children , indexNumber }) => {
     return (
-        <div>
-            {children}
-        </div>
+        <ActivityCardDataContext.Provider value={{ indexNumber }}>
+            <div>
+                {children}
+            </div>
+        </ActivityCardDataContext.Provider>
     );
 };
 

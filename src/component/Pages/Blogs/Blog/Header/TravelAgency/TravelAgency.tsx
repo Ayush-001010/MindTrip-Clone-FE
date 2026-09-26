@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { useGetBlogContext } from "../../../Blog/Blog";
 import type ITravelAgency from "./ITravelAgency";
 import { Modal } from "antd";
 
 const TravelAgency: React.FC<ITravelAgency> = ({ isOpen, onClose }) => {
     const [websiteLink, setWebsiteLink] = useState("");
+    const { saveChangeToBlog } = useGetBlogContext();
 
     const submitHandler = () => {
         onClose();
+        saveChangeToBlog("bookingURL", websiteLink);
     };
 
     return (
