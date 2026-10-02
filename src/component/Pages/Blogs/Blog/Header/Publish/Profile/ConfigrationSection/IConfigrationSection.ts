@@ -6,4 +6,5 @@ export default interface IConfigrationSection {
     profileIcon: React.ReactNode;
     setProfileIcon: (icon: React.ReactNode) => void;
     setImages: (files: File[]) => void;
+    setProfileIconType: (type: string) => void;
 }

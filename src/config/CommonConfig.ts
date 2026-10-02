@@ -50,6 +50,10 @@ export default class CommonConfig {
     ],
     hotel: [],
     travel: [],
+    profileTitle: "",
+    profileIcon: "",
+    profileImages: [],
+    metaData: [],
   };
 
   static readonly initialActivityValue : IBlogActivite = {

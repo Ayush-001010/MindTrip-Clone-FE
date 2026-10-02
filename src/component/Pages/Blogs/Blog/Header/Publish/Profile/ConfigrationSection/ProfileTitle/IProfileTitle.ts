@@ -5,4 +5,5 @@ export default interface IProfileTitle {
     setProfileName: (name: string) => void;
     profileIcon: React.ReactNode;
     setProfileIcon: (icon: React.ReactNode) => void;
+    setProfileIconType: (type: string) => void;
 }

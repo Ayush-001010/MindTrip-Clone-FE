@@ -12,7 +12,7 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
     const { mode, blogValue, saveChangeToBlog } = useGetBlogContext();
     const [isTravelAgency, setTravelAgency] = useState(false);
     const { totalSpent } = blogValue ?? { totalSpent: 0 };
-    const [isPublish, setPublish] = useState(true);
+    const [isPublish, setPublish] = useState(false);
 
     const openTravelAgency = () => {
         setTravelAgency(true);

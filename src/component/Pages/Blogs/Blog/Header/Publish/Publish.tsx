@@ -5,7 +5,7 @@ import MetaData from "./MetaData/MetaData";
 import Profile from "./Profile/Profile";
 
 const Publish: React.FC<IPublish> = ({ isOpen, onClose }) => {
-    const [step , setStep] = useState(1);
+    const [step , setStep] = useState(0);
     const [metadata, setMetadata] = useState([]);
 
     const saveMetadata = (metadata: any) => {
@@ -37,7 +37,7 @@ const Publish: React.FC<IPublish> = ({ isOpen, onClose }) => {
         }} footer={null}>
             <section>
                 {step === 0 && <MetaData saveMetadata={saveMetadata} />}
-                {step === 1 && <Profile />}
+                {step === 1 && <Profile metaData={metadata} />}
             </section>
         </Modal>
     );

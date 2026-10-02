@@ -36,12 +36,34 @@ const ProfilePopoverContent: React.FC<{ clickHandler: (icon: React.ReactNode) =>
     )
 };
 
-const ProfileTitle: React.FC<IProfileTitle> = ({ profileName, setProfileName, profileIcon, setProfileIcon }) => {
+const ProfileTitle: React.FC<IProfileTitle> = ({ profileName, setProfileName, profileIcon, setProfileIcon , setProfileIconType }) => {
     const [openPopover, setOpenPopover] = useState(false);
 
     const clickIcon = (icon: React.ReactNode) => {
         setProfileIcon(icon);
         setOpenPopover(false);
+        switch (icon) {
+            case <MdOutlineTravelExplore />:
+                setProfileIconType("travel");
+                break;
+            case <PiMountainsDuotone />:
+                setProfileIconType("mountain");
+                break;
+            case <TbBeach />:
+                setProfileIconType("beach");
+                break;
+            case <RiEBike2Fill />:
+                setProfileIconType("ebike");
+                break;
+            case <TbCarSuvFilled />:
+                setProfileIconType("car");
+                break;
+            case <FaSnowflake />:
+                setProfileIconType("snowflake");
+                break;
+            default:
+                setProfileIconType("");
+        }
     };
     return (
         <section className="flex w-full items-center gap-3">

@@ -4,7 +4,7 @@ import { Collapse, type CollapseProps } from "antd";
 import ProfileTitle from "./ProfileTitle/ProfileTitle";
 import ProfileImages from "./ProfileImages/ProfileImages";
 
-const ConfigrationSection: React.FC<IConfigrationSection> = ({ profileName, setProfileName, profileIcon, setProfileIcon, setImages }) => {
+const ConfigrationSection: React.FC<IConfigrationSection> = ({ profileName, setProfileName, profileIcon, setProfileIcon, setImages, setProfileIconType }) => {
 
     const items: CollapseProps['items'] = [
         {
@@ -16,6 +16,7 @@ const ConfigrationSection: React.FC<IConfigrationSection> = ({ profileName, setP
                     setProfileName={setProfileName}
                     profileIcon={profileIcon}
                     setProfileIcon={setProfileIcon}
+                    setProfileIconType={setProfileIconType}
                 />
             )
         },
