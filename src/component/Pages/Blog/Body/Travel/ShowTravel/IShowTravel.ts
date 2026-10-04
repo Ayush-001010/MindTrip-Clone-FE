@@ -2,5 +2,5 @@ import type { IBlogTravel } from "../../../../../../Interface/DataInterface/IBlo
 
 export default interface IShowTravel {
     travelData: IBlogTravel;
-    onEdit: () => void;
+    onEdit?: () => void;
 }

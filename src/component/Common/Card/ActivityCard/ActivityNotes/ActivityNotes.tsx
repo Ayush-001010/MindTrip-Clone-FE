@@ -23,7 +23,7 @@ const ActivityNotes: React.FC<IActivityNotes> = () => {
 
     useEffect(() => {
         const timeoutID = setTimeout(() => {
-            if (isStopEditing) {
+            if (isStopEditing && mode === "create") {
                 saveChangeToBlog("activities", notes, indexNumber, "description");
             }
         }, 400);
@@ -39,6 +39,7 @@ const ActivityNotes: React.FC<IActivityNotes> = () => {
                     {isStopEditing && notes !== "" && <ShowActivityNotes notes={notes} />}
                 </>
             )}
+            {mode === "preview" && notes !== "" && <ShowActivityNotes notes={notes} />}
         </div>
     );
 };

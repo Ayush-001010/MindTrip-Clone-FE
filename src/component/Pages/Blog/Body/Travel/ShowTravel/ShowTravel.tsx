@@ -31,13 +31,15 @@ const ShowTravel: React.FC<IShowTravel> = ({ travelData, onEdit }) => {
                         <p className="mt-0.5 text-[11px] text-gray-400">Day {travelData.day} transfer</p>
                     </div>
                 </div>
-                <button
-                    type="button"
-                    onClick={onEdit}
-                    className="shrink-0 text-gray-400 transition hover:text-[#f8f9fa]"
-                >
-                    <MdOutlineEdit className="text-sm" />
-                </button>
+                {onEdit && (
+                    <button
+                        type="button"
+                        onClick={onEdit}
+                        className="shrink-0 text-gray-400 transition hover:text-[#f8f9fa]"
+                    >
+                        <MdOutlineEdit className="text-sm" />
+                    </button>
+                )}
             </div>
 
             <div className="rounded-lg border border-[#2b3035] bg-[#0b0f13] px-2.5 py-1.5">

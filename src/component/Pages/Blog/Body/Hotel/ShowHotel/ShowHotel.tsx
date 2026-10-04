@@ -50,13 +50,15 @@ const ShowHotel: React.FC<IShowHotel> = ({ hotelDetails, onAddNewHotel }) => {
                     )}
                 </div>
             </div>
-            <button
-                type="button"
-                onClick={onAddNewHotel}
-                className="mt-4 w-full rounded-xl border border-[#495057] bg-transparent px-4 py-4 text-left text-sm font-medium text-[#dee2e6] transition-colors hover:bg-[#212529]"
-            >
-                Add New Hotel
-            </button>
+            {onAddNewHotel && (
+                <button
+                    type="button"
+                    onClick={onAddNewHotel}
+                    className="mt-4 w-full rounded-xl border border-[#495057] bg-transparent px-4 py-4 text-left text-sm font-medium text-[#dee2e6] transition-colors hover:bg-[#212529]"
+                >
+                    Add New Hotel
+                </button>
+            )}
         </section>
     );
 };

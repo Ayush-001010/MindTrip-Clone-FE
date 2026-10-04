@@ -86,9 +86,9 @@ const AppContent: React.FC = () => {
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/invite/:inviteId" element={<Invite />} />
-          <Route path="/blog/create" element={<Blog />} />
+          <Route path="/blog/create" element={<Blog key="blog-create" />} />
           <Route path="/inspiration" element={<Inspiration />} />
-          <Route path="/inspiration/blog/:blogId" element={<Blog />} />
+          <Route path="/inspiration/blog/:blogId" element={<Blog key="blog-preview" />} />
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/chat" element={<Chat />} />

@@ -35,6 +35,7 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                         value={blogValue?.tripTitle ?? ""}
                         onChange={(e) => saveChangeToBlog("tripTitle", e.target.value)}
                         type="text"
+                        readOnly={mode !== "create"}
                         placeholder="Name Your Adventure"
                         className={mode === "create" ? "w-full max-w-xl border-b border-[#ced4da]/70 pb-1 text-2xl font-semibold tracking-tight text-[#dee2e6] placeholder:text-[#ced4da]/60 focus:outline-none" : "w-full max-w-xl text-2xl font-semibold tracking-tight text-[#dee2e6] placeholder:text-[#ced4da]/60 focus:outline-none"}
                     />
@@ -54,6 +55,9 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                                 <MdOutlineEdit className="inline-block cursor-pointer text-lg text-[#ced4da] transition-opacity hover:opacity-80" />
                             </p>
                         </div>
+                    )}
+                    {mode === "preview" && blogValue?.tripOverview && (
+                        <p className="m-0 max-w-3xl text-sm font-medium leading-5 text-[#dee2e6]">{blogValue.tripOverview}</p>
                     )}
                 </section>
                 <section className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-[#dee2e6]">
@@ -78,6 +82,7 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                                 </select>
                             </section>
                         )}
+                        {mode === "preview" && <p className="m-0 font-normal">{blogValue?.tripDuration}</p>}
                     </div>
                     <div className="flex items-center gap-2">
                         <p className="m-0 font-medium text-[#ced4da]">Select Day:</p>

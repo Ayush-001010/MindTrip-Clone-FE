@@ -3,6 +3,10 @@ import type IFetchBlogFilter from "../Interface/DataInterface/IFetchBlogFilter";
 import type IFetchBlogResult from "../Interface/DataInterface/IFetchBlogResult";
 import APIService from "../Services/APIService";
 
+const API_HIT_DELAY_MS = 1000;
+const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+
 const useBlogAction = () => {
     const getMetaData = async () => {
         const apiInstance = new APIService();
@@ -26,6 +30,7 @@ const useBlogAction = () => {
             console.log(fileUploadResponse);
             if(fileUploadResponse.success) {
                 const url = fileUploadResponse.data as string;
+                await delay(API_HIT_DELAY_MS);
                 const uploadResponse = await apiInstance.uploadFileToS3(url, file, fileType);
                 console.log(uploadResponse);
             }
@@ -121,7 +126,13 @@ const useBlogAction = () => {
         return response;
     }
 
-    return { getMetaData, saveBlog, getTopFiveBlogs, getProfileAndTitle, searchMetaData, fetchBlogs };
+    const fetchBlogById = async (blogId: string) => {
+        const apiInstance = new APIService();
+        const response = await apiInstance.getRequest<IBlogData>(`/blog/fetch/${blogId}`);
+        return response;
+    }
+
+    return { getMetaData, saveBlog, getTopFiveBlogs, getProfileAndTitle, searchMetaData, fetchBlogs, fetchBlogById };
 }
 
 export default useBlogAction;

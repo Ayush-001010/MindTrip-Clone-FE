@@ -1,4 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
+import { useParams } from "react-router-dom";
+import useBlogAction from "../../../customHooks/useBlogAction";
+import useCommonAction from "../../../customHooks/useCommonAction";
 import CommonConfig from "../../../config/CommonConfig";
 import Body from "./Body/Body";
 import type IBlog from "./IBlog";
@@ -37,6 +40,10 @@ export const useGetBlogContext = () => {
 };
 
 const Blog: React.FC<IBlog> = () => {
+    const { blogId } = useParams();
+    const { fetchBlogById } = useBlogAction();
+    const { getImages } = useCommonAction();
+    const [fetchError, setFetchError] = useState<string | null>(null);
     const [mode, setMode] = useState<"create" | "preview">("preview");
     const [blogValue, setBlogValue] = useState<IBlogData | null>(null);
     const [itemToAdd, setItemToAdd] = useState<"Activity" | "Tips" | "Side-Activity" | "Travel" | "Images" | "Notes" | null>(null);
@@ -181,6 +188,86 @@ const Blog: React.FC<IBlog> = () => {
         setSelectedDay(newDay);
     }
 
+    // saved blogs store S3 keys for images, so they must be resolved to viewable URLs first
+    const resolveImageURLs = async (imageKeys: string[]) => {
+        const responses = await Promise.all((imageKeys ?? []).map((key) =>
+            /^https?:\/\//.test(key) ? Promise.resolve({ data: key }) : getImages(key)
+        ));
+        return responses.flatMap((response) => (typeof response?.data === "string" ? [response.data] : []));
+    };
+
+    // converts the saved blog into the shape the create-mode components already understand
+    const prepareBlogForPreview = async (blog: IBlogData): Promise<IBlogData> => {
+        const activitiesPerDay: Record<number, number> = {};
+        const indexedActivities = (blog.activities ?? []).map((activity) => {
+            activitiesPerDay[activity.day] = (activitiesPerDay[activity.day] ?? 0) + 1;
+            return { ...activity, index: activitiesPerDay[activity.day] };
+        });
+
+        const activities = await Promise.all(indexedActivities.map(async (activity) => {
+            const itemOrder: string[] = [];
+            if (activity.description) itemOrder.push("Notes");
+            if (activity.tips && activity.tips.length > 0) itemOrder.push("Tips");
+            return {
+                ...activity,
+                tips: activity.tips ?? [],
+                sideActivities: activity.sideActivities ?? [],
+                images: await resolveImageURLs(activity.images),
+                itemOrder,
+            } as IBlogActivite;
+        }));
+
+        return {
+            ...blog,
+            activities,
+            hotel: blog.hotel ?? [],
+            travel: blog.travel ?? [],
+        };
+    };
+
+    useEffect(() => {
+        if (!blogId) return;
+        let cancelled = false;
+
+        const loadBlog = async () => {
+            setMode("preview");
+            setFetchError(null);
+            const response = await fetchBlogById(blogId);
+            if (cancelled) return;
+            if (!response.success || !response.data) {
+                setFetchError("Unable to load this blog.");
+                return;
+            }
+            const blog = await prepareBlogForPreview(response.data);
+            if (cancelled) return;
+            setMapMarkerPoints(
+                blog.activities
+                    .filter((activity) => activity.coordinates?.longitude && activity.coordinates?.latitude)
+                    .map((activity) => ({
+                        longitude: activity.coordinates.longitude,
+                        latitude: activity.coordinates.latitude,
+                    }))
+            );
+            setBlogValue(blog);
+        };
+
+        loadBlog();
+        return () => {
+            cancelled = true;
+        };
+    }, [blogId]);
+
+    useEffect(() => {
+        if (!blogId || !blogValue) return;
+        const activityOfDay = blogValue.activities.find((activity) =>
+            activity.day === selectedDay && activity.coordinates?.longitude && activity.coordinates?.latitude
+        );
+        if (activityOfDay) {
+            setSelectedLongitude(activityOfDay.coordinates.longitude);
+            setSelectedLatitude(activityOfDay.coordinates.latitude);
+        }
+    }, [blogId, blogValue, selectedDay]);
+
     useEffect(() => {
         const url = location.href;
         if (url.includes("/#/blog/create")) {
@@ -232,6 +319,8 @@ const Blog: React.FC<IBlog> = () => {
     }
 
     useEffect(() => {
+        // a saved blog is read-only, its activities must never be padded or trimmed
+        if (blogId) return;
         const timeOutObj = setTimeout(() => {
             addOrRemovingActivityItem();
         }, 500);
@@ -240,6 +329,10 @@ const Blog: React.FC<IBlog> = () => {
 
     console.log("Blog value:", blogValue);
 
+    if (fetchError) {
+        return <p className="p-8 text-center text-[#ced4da]">{fetchError}</p>;
+    }
+
     return (
         <blogContext.Provider value={{ mode, blogValue: blogValue!, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay, mapMarkerPoints, selectedLongitude, selectedLatitude, addingHotel, addTravel , currentEditActivityIndex, setCurrentEditActivityIndex , setMode }}>
             <Header selectedDay={selectedDay} />
@@ -247,7 +340,7 @@ const Blog: React.FC<IBlog> = () => {
             <section className="static">
                 <PageWheel changeSelectedDay={changeSelectedDay} />
             </section>
-            <SpeedDial />
+            {mode === "create" && <SpeedDial />}
         </blogContext.Provider>
     );
 };

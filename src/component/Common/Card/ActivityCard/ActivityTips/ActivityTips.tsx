@@ -22,7 +22,7 @@ const ActivityTips: React.FC<IActivityTips> = () => {
     
 
     useEffect(() => {
-        if(isStopEditing && tips.length > 0) {
+        if(isStopEditing && tips.length > 0 && mode === "create") {
             saveChangeToBlog("activities", tips, indexNumber, "tips");
         }
     }, [isStopEditing]);
@@ -40,6 +40,7 @@ const ActivityTips: React.FC<IActivityTips> = () => {
                     )}
                 </>
             )}
+            {mode === "preview" && tips.length > 0 && <ShowTips tips={tips} />}
         </section>
     );
 };

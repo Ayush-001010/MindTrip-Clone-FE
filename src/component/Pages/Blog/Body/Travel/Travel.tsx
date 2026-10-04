@@ -7,7 +7,7 @@ import { useGetBlogContext } from "../../Blog";
 
 const Travel: React.FC<ITravel> = ({activityIndexNumber}) => {
     const [travelData, setTravelData] = useState<IBlogTravel | null>(null);
-    const {addTravel , blogValue , selectedDay} = useGetBlogContext();
+    const {addTravel , blogValue , selectedDay , mode} = useGetBlogContext();
     console.log("Activity Index Number:", activityIndexNumber ," ", selectedDay);
 
     const handleSaveTravel = (data: IBlogTravel) => {
@@ -16,18 +16,25 @@ const Travel: React.FC<ITravel> = ({activityIndexNumber}) => {
     };
 
     useEffect(() => {
+        if (mode === "preview") {
+            // travel numbers repeat on every day, so the day must match too
+            setTravelData(blogValue?.travel?.find(item => item.activityNumber === activityIndexNumber && item.day === selectedDay) ?? null);
+            return;
+        }
         if (blogValue?.travel && blogValue.travel.filter(item => item.activityNumber === activityIndexNumber).length > 0) {
             setTravelData(blogValue.travel.filter(item => item.activityNumber === activityIndexNumber)[0]);
             console.log("Travel data set from blogValue:", blogValue.travel.filter(item => item.activityNumber === activityIndexNumber)[0]);
         }
-    }, [blogValue , selectedDay , activityIndexNumber]); 
+    }, [blogValue , selectedDay , activityIndexNumber , mode]); 
+
+    if (mode === "preview" && !travelData) return null;
 
 
     return (
         <section className="min-w-0 flex-1">
             {!travelData && <AddTravel setTravelData={handleSaveTravel} />}
             {travelData && <section className="flex h-full items-center">
-                 <ShowTravel travelData={travelData} onEdit={() => setTravelData(null)} />
+                 <ShowTravel travelData={travelData} onEdit={mode === "create" ? () => setTravelData(null) : undefined} />
             </section>
             }
         </section>

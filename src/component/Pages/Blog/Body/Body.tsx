@@ -11,7 +11,7 @@ import Travel from "./Travel/Travel";
 import Loader from "./Loader/Loader";
 
 const Body: React.FC<IBody> = ({ }) => {
-    const { blogValue , selectedDay, mapMarkerPoints , selectedLongitude, selectedLatitude } = useGetBlogContext();
+    const { mode, blogValue , selectedDay, mapMarkerPoints , selectedLongitude, selectedLatitude } = useGetBlogContext();
     const [isTravelSectionVisible, setIsTravelSectionVisible] = useState({
         isVisible: false,
         indexNumber: -1
@@ -43,11 +43,13 @@ const Body: React.FC<IBody> = ({ }) => {
         <div className="w-full flex p-4">
             <section className="w-1/2 h-[630px] overflow-y-auto pr-2">
                 {isLoading && <Loader />}
+                {(mode === "create" || (blogValue?.hotel ?? []).length > 0) && (
                 <section className="flex justify-end">
                     <button onClick={() => setIsHotelModalOpen(true)} className="rounded-lg border-1 border-[#495057] p-1 w-[60px] text-[#ced4da] cursor-pointer hover:bg-[#343a40] transition-all duration-300">
                         Hotel
                     </button>
                 </section>
+                )}
                 { !isLoading && blogValue?.activities.map((activityItem, index) => {
                     if(activityItem.day !== selectedDay) return null;
                     const activitiesInThisDay = blogValue?.activities.filter(activity => activity.day === selectedDay);
@@ -55,10 +57,13 @@ const Body: React.FC<IBody> = ({ }) => {
                     activitiesInThisDay.forEach((activity) => {
                         if(activity.index > activityItem.index) lastActivity = false;
                     });
+                    // a saved blog only shows the transfer between two activities when one was recorded
+                    const hasTravel = (blogValue?.travel ?? []).some(item => item.day === selectedDay && item.activityNumber === activityItem.index);
+                    const showTravelConnector = !lastActivity && (mode === "create" || hasTravel);
                     return (
                         <section>
                             <Activity indexNumber={index} key={index} blogActivity={activityItem} />
-                            { !lastActivity && (
+                            { showTravelConnector && (
                                 <section className="mt-2 flex items-center gap-3">
                                     <section className="my-1 flex w-28 shrink-0 flex-col items-center cursor-pointer">
                                         <span className="h-20 w-0.5 border-l-2 border-dashed border-[#6c757d]" />
@@ -71,7 +76,7 @@ const Body: React.FC<IBody> = ({ }) => {
                                         </Tooltip>
                                         <span className="h-20 w-0.5 border-l-2 border-dashed border-[#6c757d]" />
                                     </section>
-                                    {isTravelSectionVisible.isVisible && isTravelSectionVisible.indexNumber === index && (
+                                    {((mode === "preview") || (isTravelSectionVisible.isVisible && isTravelSectionVisible.indexNumber === index)) && (
                                         <Travel  activityIndexNumber={activityItem.index} />
                                     )}
                                 </section>

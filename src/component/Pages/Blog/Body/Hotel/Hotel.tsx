@@ -7,7 +7,7 @@ import type { IBlogHotel } from "../../../../../Interface/DataInterface/IBlogDat
 import ShowHotel from "./ShowHotel/ShowHotel";
 
 const Hotel: React.FC<IHotel> = ({ open, onClose }) => {
-    const { blogValue, addingHotel } = useGetBlogContext();
+    const { blogValue, addingHotel, mode } = useGetBlogContext();
     const [hotelDetails , setHotelDetails] = useState<IBlogHotel[]>([]);
     const [isAdding, setIsAdding] = useState(false);
 
@@ -45,7 +45,7 @@ const Hotel: React.FC<IHotel> = ({ open, onClose }) => {
             {isAdding ? (
                 <AddHotel submitHotel={addHotel} />
             ) : (
-                <ShowHotel hotelDetails={hotelDetails} onAddNewHotel={() => setIsAdding(true)} />
+                <ShowHotel hotelDetails={hotelDetails} onAddNewHotel={mode === "create" ? () => setIsAdding(true) : undefined} />
             )}
         </Modal>
     );
