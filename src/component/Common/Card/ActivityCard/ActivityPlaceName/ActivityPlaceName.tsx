@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import type IActivityPlaceName from "./IActivityPlaceName";
-import { useGetBlogContext } from "../../../../Pages/Blogs/Blog/Blog";
+import { useGetBlogContext } from "../../../../Pages/Blog/Blog";
 import AddPlaceName from "./AddPlaceName/AddPlaceName";
 import ShowPlaceName from "./ShowPlaceName/ShowPlaceName";
 import axios from "axios";
+import { useGetActivityCardData } from "../ActivityCard";
 
 export interface IPlaceOption {
     place_name: string;
@@ -17,6 +18,15 @@ const ActivityPlaceName: React.FC<IActivityPlaceName> = () => {
     const [latitude, setLatitude] = useState(0);
     const {mode} = useGetBlogContext();
     const [placeOptions, setPlaceOptions] = useState<IPlaceOption[]>([]);
+    const { blogActivity } = useGetActivityCardData();
+
+    useEffect(() => {
+        if (blogActivity && blogActivity.placeName && blogActivity.coordinates.longitude && blogActivity.coordinates.latitude) {
+            setPlaceName(blogActivity.placeName || "");
+            setLongitude(blogActivity.coordinates.longitude || 0);
+            setLatitude(blogActivity.coordinates.latitude || 0);
+        }
+    }, [blogActivity]);
 
     useEffect(() => {
         const timeObj = setTimeout(async () => {
@@ -44,8 +54,9 @@ const ActivityPlaceName: React.FC<IActivityPlaceName> = () => {
                 <>
                     { (longitude === 0 && latitude === 0) && <AddPlaceName setPlaceName={setPlaceName} placeName={placeName} placeOptions={placeOptions} setLongitude={setLongitude} setLatitude={setLatitude}/> }
                     { (longitude > 0 && latitude > 0) && <ShowPlaceName placeName={placeName} longitude={longitude} latitude={latitude} /> }
-                </>
+                </> 
             )}
+            {mode === "preview" && (longitude > 0 && latitude > 0) && <ShowPlaceName placeName={placeName} longitude={longitude} latitude={latitude} />}
         </section>
     );
 };

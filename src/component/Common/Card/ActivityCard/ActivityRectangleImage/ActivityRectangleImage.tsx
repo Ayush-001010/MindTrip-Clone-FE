@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type IActivityRectangleImage from "./IActivityRectangleImage";
-import { useGetBlogContext } from "../../../../Pages/Blogs/Blog/Blog";
+import { useGetBlogContext } from "../../../../Pages/Blog/Blog";
 import UploadImage from "../ActivityImage/UploadImage/UploadImage";
 import ShowImages from "../ActivityImage/ShowImages/ShowImages";
 import { useGetActivityCardData } from "../ActivityCard";
@@ -10,6 +10,11 @@ const ActivityRectangleImage: React.FC<IActivityRectangleImage> = () => {
     const [imageFiles, setImageFiles] = useState<File[]>([]);
     const { saveChangeToBlog } = useGetBlogContext();
     const { indexNumber } = useGetActivityCardData();
+    const { blogActivity } = useGetActivityCardData();
+
+    useEffect(() => {
+    }, [blogActivity]);
+
     const changeHandler: React.Dispatch<React.SetStateAction<File[]>> = (newImageFiles) => {
         setImageFiles((prev) => {
             const resolvedFiles =

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Blogs from "./component/Pages/Blogs/Blogs";
 import Home from "./component/Pages/Home/Home";
 import TopNavbar from "./component/Common/Navbar/TopNavBar/TopNavbar";
 import SideNavBar from "./component/Common/Navbar/SideNavBar/SideNavBar";
@@ -13,7 +12,8 @@ import AuthCallback from "./Features/Auth/AuthCallback/AuthCallback";
 import { useDispatch } from "react-redux";
 import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 import Invite from "./component/Pages/Invite/Invite";
-import Blog from "./component/Pages/Blogs/Blog/Blog";
+import Blog from "./component/Pages/Blog/Blog";
+import Inspiration from "./component/Pages/Inspiration/Inspiration";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -22,7 +22,8 @@ const AppContent: React.FC = () => {
   const isChatLink = location.pathname.includes("/chat");
   const isExploreLink = location.pathname.includes("/explore");
   const isBlogLink = location.pathname.includes("/blog");
-  const isDarkPage = isChatLink || isExploreLink || isBlogLink;
+  const isInspirationLink = location.pathname.includes("/inspiration");
+  const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink;
 
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
@@ -42,7 +43,7 @@ const AppContent: React.FC = () => {
     <div
       className={
         isDarkPage
-          ? "flex min-h-screen w-full min-w-0 overflow-x-hidden bg-[#04080f] text-white"
+          ? "flex h-screen w-full min-w-0 overflow-hidden bg-[#04080f] text-white"
           : "min-h-screen w-full overflow-x-hidden bg-[#f7fbfa] text-black"
       }
     >
@@ -69,13 +70,13 @@ const AppContent: React.FC = () => {
       )}
 
       {/* SIDEBAR */}
-      {isDarkPage && <aside className="flex shrink-0 flex-col border-r border-white/10 bg-[#1f2327]">
+      {isDarkPage && <aside className="flex h-screen shrink-0 flex-col border-r border-white/10 bg-[#1f2327]">
         <SideNavBar />
       </aside>}
       {!isDarkPage && <TopNavbar />}
 
       {/* MAIN APPLICATION AREA */}
-      <div className="min-w-0 flex-1">
+      <div className={`min-w-0 flex-1 ${isDarkPage ? "h-screen overflow-y-auto" : ""}`}>
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
@@ -85,9 +86,9 @@ const AppContent: React.FC = () => {
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/invite/:inviteId" element={<Invite />} />
-          <Route path="/blogs" element={<Blogs/>} />
           <Route path="/blog/create" element={<Blog />} />
-
+          <Route path="/inspiration" element={<Inspiration />} />
+          <Route path="/inspiration/blog/:blogId" element={<Blog />} />
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/chat" element={<Chat />} />

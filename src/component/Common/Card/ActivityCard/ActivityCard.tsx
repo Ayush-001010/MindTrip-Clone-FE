@@ -10,20 +10,23 @@ import ActivityNotes from "./ActivityNotes/ActivityNotes";
 import ActivityTips from "./ActivityTips/ActivityTips";
 import ActivityRectangleImage from "./ActivityRectangleImage/ActivityRectangleImage";
 import ActivityAmount from "./ActivityAmount/ActivityAmount";
+import type { IBlogActivite } from "../../../../Interface/DataInterface/IBlogData";
+import { useGetBlogContext } from "../../../Pages/Blog/Blog";
 
-interface ActivityCardProps extends React.FC<IActivityCard & {children: ReactNode}> {
+interface ActivityCardProps extends React.FC<IActivityCard & { children: ReactNode }> {
     ActivityImage: typeof ActivityImage;
     ActivityRectangleImage: typeof ActivityRectangleImage;
-    ActivityPlaceName : typeof ActivityPlaceName;
+    ActivityPlaceName: typeof ActivityPlaceName;
     ActivityDuration: typeof ActivityDuration;
-    ActivityType : typeof ActivityType;
+    ActivityType: typeof ActivityType;
     ActivityNotes: typeof ActivityNotes;
     ActivityTips: typeof ActivityTips;
-    ActivityAmount : typeof ActivityAmount;
+    ActivityAmount: typeof ActivityAmount;
 }
 
 export interface IActivityCardData {
     indexNumber: number;
+    blogActivity:IBlogActivite;
 }
 
 const ActivityCardDataContext = createContext<IActivityCardData | null>(null);
@@ -36,12 +39,20 @@ export const useGetActivityCardData = () => {
     return context;
 };
 
-const ActivityCard: ActivityCardProps = ({ children , indexNumber }) => {
+const ActivityCard: ActivityCardProps = ({ children, indexNumber , itSubActivity , blogActivity }) => {
+    const { mode  , currentEditActivityIndex , setCurrentEditActivityIndex } = useGetBlogContext();
     return (
-        <ActivityCardDataContext.Provider value={{ indexNumber }}>
-            <div>
+        <ActivityCardDataContext.Provider value={{ indexNumber , blogActivity }}>
+            <section>
+                { (mode === "create" && !itSubActivity) && (
+                    <button className={"bg-[#333533] my-2 p-2 rounded-xl text-xs font-semibold cursor-pointer " + (currentEditActivityIndex === indexNumber ? "text-[#a1c181]" : "text-[#bf0603]")}
+                        onClick={() => setCurrentEditActivityIndex(indexNumber)}>
+                        {currentEditActivityIndex === indexNumber ? "Active" : "In-Active"}
+                    </button>
+                )
+                }
                 {children}
-            </div>
+            </section>
         </ActivityCardDataContext.Provider>
     );
 };

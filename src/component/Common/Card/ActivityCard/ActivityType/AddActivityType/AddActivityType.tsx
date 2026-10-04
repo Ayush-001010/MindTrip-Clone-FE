@@ -5,7 +5,7 @@ import { TbBrandTripadvisor } from "react-icons/tb";
 import { GiMountainClimbing, GiSpeedBoat } from "react-icons/gi";
 import { MdTempleBuddhist } from "react-icons/md";
 import { useGetActivityCardData } from "../../ActivityCard";
-import { useGetBlogContext } from "../../../../../Pages/Blogs/Blog/Blog";
+import { useGetBlogContext } from "../../../../../Pages/Blog/Blog";
 
 const activityTypeOptions = [
     { value: "Attraction", label: <span className="flex items-center gap-2"><TbBrandTripadvisor /> Attraction</span> },

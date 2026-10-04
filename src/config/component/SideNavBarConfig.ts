@@ -6,20 +6,16 @@ export default class SideNavBarConfig {
             title: "Chat",
             icon: "chat",
             link: "/chat"
-        },{
-            title: "Trips",
-            icon: "trip",
-            link: "/trips"
+        },
+        {
+            title: "Inspiration",
+            icon: "inspiration",
+            link: "/inspiration"
         },
         {
             title: "Explore",
             icon: "explore",
             link: "/explore"
-        },
-        {
-            title: "Blog",
-            icon: "blog",
-            link: "/blogs"
         }
     ]
 }

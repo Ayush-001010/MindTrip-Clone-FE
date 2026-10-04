@@ -1,4 +1,6 @@
 import type IBlogData from "../Interface/DataInterface/IBlogData";
+import type IFetchBlogFilter from "../Interface/DataInterface/IFetchBlogFilter";
+import type IFetchBlogResult from "../Interface/DataInterface/IFetchBlogResult";
 import APIService from "../Services/APIService";
 
 const useBlogAction = () => {
@@ -81,9 +83,45 @@ const useBlogAction = () => {
         return saveResponse;
     };
     
-    
+    const getTopFiveBlogs = async () => {
+        const apiInstance = new APIService();
+        const response = await apiInstance.getRequest("/blog/top-five");
+        return response;
+    }
 
-    return { getMetaData, saveBlog };
+    const getProfileAndTitle = async (key: string) => {
+        const apiInstance = new APIService();
+        const response = await apiInstance.getRequest<{ profile: string; title: string }[]>(
+            "/blog/profile-and-title",
+            { key }
+        );
+        return response.success && response.data ? response.data : [];
+    }
+
+    const searchMetaData = async (key: string) => {
+        const apiInstance = new APIService();
+        const response = await apiInstance.getRequest<{ value: string }[]>(
+            "/blog/fetchMetaData",
+            { key }
+        );
+        return response.success && response.data ? response.data : [];
+    }
+
+    const fetchBlogs = async (filter: IFetchBlogFilter) => {
+        const apiInstance = new APIService();
+        const { page, placeName, budget, noOfPlaces, profileOrTitle, metaData } = filter;
+        const queryParams: Record<string, string | number> = { page };
+        if (placeName) queryParams.placeName = placeName;
+        if (budget !== undefined) queryParams.budget = budget;
+        if (noOfPlaces !== undefined) queryParams.noOfPlaces = noOfPlaces;
+        if (profileOrTitle) queryParams.profileOrTitle = profileOrTitle;
+        if (metaData && metaData.length > 0) queryParams.metaData = metaData.join(",");
+
+        const response = await apiInstance.getRequest<IFetchBlogResult>("/blog/fetch", queryParams);
+        return response;
+    }
+
+    return { getMetaData, saveBlog, getTopFiveBlogs, getProfileAndTitle, searchMetaData, fetchBlogs };
 }
 
 export default useBlogAction;

@@ -4,7 +4,7 @@ import type { UploadFile, UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 import { IoIosImages } from "react-icons/io";
 import { useGetActivityCardData } from "../../ActivityCard";
-import { useGetBlogContext } from "../../../../../Pages/Blogs/Blog/Blog";
+import { useGetBlogContext } from "../../../../../Pages/Blog/Blog";
 
 const { Dragger } = Upload;
 
@@ -27,10 +27,11 @@ const UploadImage: React.FC<IUploadImage> = ({ setImageFiles }) => {
             return false;
         },
         onChange(info) {
-            console.log('File list changed', info.fileList);
             setFileList(info.fileList);
-            setImageFiles(info.fileList.map(file => file.originFileObj).filter(Boolean) as File[]);
-            saveChangeToBlog("activities", info.fileList.map(file => file.originFileObj).filter(Boolean) as File[], indexNumber, "images");
+            const files = info.fileList.map(file => file.originFileObj).filter(Boolean) as File[];
+            setImageFiles(files);
+            // keep raw File objects here, saveBlog needs them to upload to S3 before replacing with real URLs
+            saveChangeToBlog("activities", files, indexNumber, "images");
         },
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);

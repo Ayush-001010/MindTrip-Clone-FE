@@ -8,6 +8,7 @@ import { IoCameraOutline } from "react-icons/io5";
 import { useSideNavBarContext } from "../../SideNavBar";
 import { FaSearch } from "react-icons/fa";
 import { FaShareAlt } from "react-icons/fa";
+import { LuInstagram } from "react-icons/lu";
 
 const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
     const { isCollapsed } = useSideNavBarContext();
@@ -25,6 +26,8 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
                 return <IoCameraOutline />;
             case "blog":
                 return <FaShareAlt />;
+            case "inspiration":
+                return <LuInstagram />;
             default:
                 return null;
         }

@@ -13,13 +13,16 @@ export default interface IBlogData {
     profileIcon: string;
     profileImages: string[];
     metaData: string[];
+    numberOfLikes?: number;
+    id?: string;
 }
 
 export interface IBlogActivite {
+    index: number;
     type:"activity";
     day: number;
     placeName: string;
-    activityType:"trek" | "surfing" | "sightseeing" | "sketting" | "attraction" | "boating" | "temple";
+    activityType:"" | "trek" | "surfing" | "sightseeing" | "sketting" | "attraction" | "boating" | "temple";
     time: string;
     description: string; 
     tips: string[];
@@ -30,6 +33,7 @@ export interface IBlogActivite {
     images: string[];
     sideActivities: IBlogActivite[];
     amountSpent: number;
+    itemOrder : string[];
 }
 
 export interface IBlogTravel{

@@ -2,16 +2,11 @@ import React from "react";
 import { MdOutlineEdit } from "react-icons/md";
 
 import type IAddActivityNotes from "./IAddActivityNotes";
-import { useGetActivityCardData } from "../../ActivityCard";
-import { useGetBlogContext } from "../../../../../Pages/Blogs/Blog/Blog";
 
 const AddActivityNotes: React.FC<IAddActivityNotes> = ({ setNotes, setIsStopEditing }) => {
-    const { saveChangeToBlog } = useGetBlogContext();
-    const { indexNumber } = useGetActivityCardData();
 
     const changeHandler = (value: string) => {
         setNotes(value);
-        saveChangeToBlog("activities", value, indexNumber, "description");
     };
     return (
         <section className="mt-4 flex items-start gap-2">

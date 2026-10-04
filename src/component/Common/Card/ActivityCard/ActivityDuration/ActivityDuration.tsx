@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type IActivityDuration from "./IActivityDuration";
-import { useGetBlogContext } from "../../../../Pages/Blogs/Blog/Blog";
+import { useGetBlogContext } from "../../../../Pages/Blog/Blog";
 import AddActivityDuration from "./AddActivityDuration/AddActivityDuration";
-import type moment from "moment";
+import moment from "moment";
 import ShowActivityDuration from "./ShowActivityDuration/ShowActivityDuration";
+import { useGetActivityCardData } from "../ActivityCard";
 
 const ActivityDuration: React.FC<IActivityDuration> = ({}) => {
     const {mode} = useGetBlogContext();
     const [value, setValue] = useState<[moment.Moment, moment.Moment] | null>(null);
+    const { blogActivity } = useGetActivityCardData();
+
+    useEffect(() => {
+        if (blogActivity && blogActivity.time) {
+            const [start, end] = blogActivity.time.split(" - ");
+            setValue([moment(start, "HH:mm"), moment(end, "HH:mm")]);
+        } else {
+            setValue(null);
+        }
+    }, [blogActivity]);
 
     return (
         <section className="flex w-full flex-col">

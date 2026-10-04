@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useGetActivityCardData } from "../ActivityCard";
 import type IActivityAmount from "./IActivityAmount";
-import { useGetBlogContext } from "../../../../Pages/Blogs/Blog/Blog";
+import { useGetBlogContext } from "../../../../Pages/Blog/Blog";
 import AddActivityAmount from "./AddActivityAmount/AddActivityAmount";
 import ShowActivityAmount from "./ShowActivityAmount/ShowActivityAmount";
 
 const ActivityAmount: React.FC<IActivityAmount> = () => {
     const {mode} = useGetBlogContext();
     const [activityAmount, setActivityAmount] = useState<number | null>(null);
+    const { blogActivity } = useGetActivityCardData();
+
+    useEffect(() => {
+        if (blogActivity && blogActivity.amountSpent !== 0) {
+            setActivityAmount(blogActivity.amountSpent);
+        }
+    }, [blogActivity]);
 
     return (
         <div>

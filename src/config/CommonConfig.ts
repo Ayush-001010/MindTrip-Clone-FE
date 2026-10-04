@@ -32,10 +32,11 @@ export default class CommonConfig {
     bookingURL: "",
     activities: [
       {
+        index: 1,
         type: "activity",
         day: 1,
         placeName: "",
-        activityType: "attraction",
+        activityType: "",
         time: "",
         description: "",
         tips: [],
@@ -46,6 +47,7 @@ export default class CommonConfig {
         images: [],
         sideActivities: [],
         amountSpent: 0,
+        itemOrder: [],
       },
     ],
     hotel: [],
@@ -57,10 +59,11 @@ export default class CommonConfig {
   };
 
   static readonly initialActivityValue : IBlogActivite = {
+    index: 0,
     type: "activity",
     day: 1,
     placeName: "",
-    activityType: "attraction",
+    activityType: "",
     time: "",
     description: "",
     tips: [],
@@ -71,5 +74,6 @@ export default class CommonConfig {
     images: [],
     sideActivities: [],
     amountSpent: 0,
+    itemOrder: [],
   };
 }

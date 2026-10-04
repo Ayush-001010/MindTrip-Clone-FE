@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type IActivityType from "./IActivityType";
-import { useGetBlogContext } from "../../../../Pages/Blogs/Blog/Blog";
+import { useGetActivityCardData } from "../ActivityCard";
+import { useGetBlogContext } from "../../../../Pages/Blog/Blog";
 import AddActivityType from "./AddActivityType/AddActivityType";
 import ShowActivityType from "./ShowActivityType/ShowActivityType";
 
 const ActivityType: React.FC<IActivityType> = ({ }) => {
     const { mode } = useGetBlogContext();
     const [activityType, setActivityType] = useState<string | null>(null);
+    const { blogActivity } = useGetActivityCardData();
+
+    useEffect(() => {
+        if (blogActivity && blogActivity.activityType !== "") {
+            setActivityType(blogActivity.activityType);
+        }
+    }, [blogActivity]);
 
     return (
         <section className="flex w-full flex-col">

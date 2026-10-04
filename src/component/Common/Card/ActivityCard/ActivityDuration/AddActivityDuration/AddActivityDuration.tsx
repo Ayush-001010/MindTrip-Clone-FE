@@ -3,7 +3,7 @@ import type IAddActivityDuration from "./IAddActivityDuration";
 import { TimePicker } from "antd";
 import type { Dayjs } from "dayjs";
 import type { Moment } from "moment";
-import { useGetBlogContext } from "../../../../../Pages/Blogs/Blog/Blog";
+import { useGetBlogContext } from "../../../../../Pages/Blog/Blog";
 import { useGetActivityCardData } from "../../ActivityCard";
 
 const { RangePicker } = TimePicker;

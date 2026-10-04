@@ -1,7 +1,7 @@
 import React from "react";
 import type IAddActivityAmount from "./IAddActivityAmount";
 import { MdOutlineEdit } from "react-icons/md";
-import { useGetBlogContext } from "../../../../../Pages/Blogs/Blog/Blog";
+import { useGetBlogContext } from "../../../../../Pages/Blog/Blog";
 import { useGetActivityCardData } from "../../ActivityCard";
 
 

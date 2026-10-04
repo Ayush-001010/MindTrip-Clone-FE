@@ -2,7 +2,7 @@ import React from "react";
 import type IAddPlaceName from "./IAddPlaceName";
 import type { IPlaceOption } from "../ActivityPlaceName";
 import { MdOutlineEdit } from "react-icons/md";
-import { useGetBlogContext } from "../../../../../Pages/Blogs/Blog/Blog";
+import { useGetBlogContext } from "../../../../../Pages/Blog/Blog";
 import { useGetActivityCardData } from "../../ActivityCard";
 
 const AddPlaceName: React.FC<IAddPlaceName> = ({ setPlaceName , placeName, placeOptions , setLongitude, setLatitude }) => {
