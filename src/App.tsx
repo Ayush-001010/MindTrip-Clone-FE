@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, createContext, useContext, useState } from "react";
 import Home from "./component/Pages/Home/Home";
 import TopNavbar from "./component/Common/Navbar/TopNavBar/TopNavbar";
 import SideNavBar from "./component/Common/Navbar/SideNavBar/SideNavBar";
 import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
-import Chat from "./component/Pages/Chat/Chat";
+import type { IFavouritesActivity } from "./Interface/DataInterface/IFavouritesActivity";
+import type { IFavouritesHotel } from "./Interface/DataInterface/IFavouritesHotel";
 import SignIn from "./Features/Auth/SignIn/SignIn";
 import SignUp from "./Features/Auth/SignUp/SignUp";
 import Explore from "./component/Pages/Explore/Explore";
@@ -14,6 +15,38 @@ import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 import Invite from "./component/Pages/Invite/Invite";
 import Blog from "./component/Pages/Blog/Blog";
 import Inspiration from "./component/Pages/Inspiration/Inspiration";
+import useFavorites from "./customHookWithUI/useFavorites";
+import Chat from "./component/Pages/Chat/Chat";
+import type { IFavouritesBlog } from "./Interface/DataInterface/IFavouritesBlog";
+
+
+export interface IAppContext {
+  favoritesConfig: {
+    openFavorites: boolean;
+    uiType: "create-collection" | "show-collection-for-add-purpose" | undefined;
+  };
+  changeFavoritesConfig: (config: { openFavorites: boolean; uiType: "create-collection" | "show-collection-for-add-purpose" | undefined , data?: IFavouritesActivity | IFavouritesHotel | IFavouritesBlog, mode?: "activity" | "hotel" | "blog" }) => void;
+  data?: IFavouritesActivity | IFavouritesHotel | IFavouritesBlog;
+  mode?: "activity" | "hotel" | "blog";
+}
+
+const AppContext = createContext<IAppContext>(
+  {
+    favoritesConfig: {
+      openFavorites: false,
+      uiType: undefined
+    },
+    changeFavoritesConfig: () => { }
+  }
+);
+
+export const useGetAppContext = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useAppContext must be used within an AppProvider");
+  }
+  return context;
+}
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -23,7 +56,9 @@ const AppContent: React.FC = () => {
   const isExploreLink = location.pathname.includes("/explore");
   const isBlogLink = location.pathname.includes("/blog");
   const isInspirationLink = location.pathname.includes("/inspiration");
+  const { favoritesConfig, data: favoritesData, mode: favoritesMode } = useGetAppContext();
   const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink;
+  const faviorites = useFavorites(favoritesConfig.openFavorites, favoritesConfig.uiType ?? "show-collection-for-add-purpose", favoritesData, favoritesMode);
 
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
@@ -47,6 +82,7 @@ const AppContent: React.FC = () => {
           : "min-h-screen w-full overflow-x-hidden bg-[#f7fbfa] text-black"
       }
     >
+      {faviorites}
       {/* MOBILE MENU BUTTON */}
       {isDarkPage && (
         <button
@@ -83,7 +119,7 @@ const AppContent: React.FC = () => {
           <Route path="/chat/:tripId" element={<Chat />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/auth/signin" element={<SignIn />} />
-          <Route path="/auth/signup" element={<SignUp />} />
+          <Route path="/auth/signup" element={< SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/invite/:inviteId" element={<Invite />} />
           <Route path="/blog/create" element={<Blog key="blog-create" />} />
@@ -101,9 +137,19 @@ const AppContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  const [favoritesConfig, setFavoritesConfig] = useState<{ openFavorites: boolean; uiType: "create-collection" | "show-collection-for-add-purpose" | undefined , data?: IFavouritesActivity | IFavouritesHotel | IFavouritesBlog, mode?: "activity" | "hotel" | "blog" }>({ openFavorites: false, uiType: undefined });
+
+  console.log("Data :", favoritesConfig.data);
   return (
     <HashRouter>
-      <AppContent />
+      <AppContext.Provider value={{
+        favoritesConfig,
+        changeFavoritesConfig: setFavoritesConfig,
+        data: favoritesConfig.data,
+        mode: favoritesConfig.mode,
+      }}>
+        <AppContent />
+      </AppContext.Provider>
     </HashRouter>
   );
 };

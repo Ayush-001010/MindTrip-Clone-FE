@@ -12,6 +12,8 @@ import { RiEBike2Fill } from "react-icons/ri";
 import { FaSnowflake } from "react-icons/fa";
 import { FaShareFromSquare } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useGetAppContext } from "../../../../App";
+import type { IFavouritesBlog } from "../../../../Interface/DataInterface/IFavouritesBlog";
 
 const profileIconMap: Record<string, React.ReactNode> = {
     travel: <MdOutlineTravelExplore />,
@@ -27,6 +29,7 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData }) => {
     const { getImages } = useCommonAction();
     const [imageURLs, setImageURLs] = useState<string[]>([]);
     const profileImages = blogData?.profileImages;
+    const { changeFavoritesConfig } = useGetAppContext();
 
     useEffect(() => {
         let cancelled = false;
@@ -48,6 +51,7 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData }) => {
     }
 
     const { tripTitle, tripOverview, tripDuration, totalSpent, numberOfLikes, profileTitle, profileIcon } = blogData;
+    console.log("Blog Data:", blogData);
 
     return (
         <section className="group relative flex h-[420px] w-[300px] shrink-0 flex-col overflow-hidden rounded-2xl border border-gray-700 bg-[#111418] transition-all duration-300 hover:-translate-y-1 hover:border-gray-500 hover:shadow-[0_16px_40px_rgba(0,0,0,0.55)]">
@@ -82,7 +86,21 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData }) => {
                 </div>
 
                 <div className="flex items-center gap-2 text-xs text-gray-200">
-                    <span className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1">
+                    <span onClick={()=>{
+                        changeFavoritesConfig({
+                            openFavorites: true,
+                            uiType: "show-collection-for-add-purpose",
+                            data: {
+                                blogID: Number(blogData.id) || 0,
+                                blogTitle: blogData?.tripTitle || "",
+                                blogImage: imageURLs[0] || "",
+                                blogDescription: blogData?.tripOverview || "",
+                                rating: 0,
+                                reviews: 0,
+                            } as IFavouritesBlog,
+                            mode: "blog"
+                        });
+                    }} className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1">
                         <AiOutlineHeart size={14} />
                         {numberOfLikes ?? 0}
                     </span>

@@ -252,6 +252,7 @@ const Explore: React.FC = () => {
                         hotel={hotel}
                         selected={selectedHotel?.id === hotel.id}
                         onClick={() => setSelectedHotel(hotel)}
+                        location={selectedLocation.name}
                       />
                     ))}
                   </div>
@@ -290,6 +291,7 @@ const Explore: React.FC = () => {
                         place={place}
                         selected={selectedPlace?.id === place.id}
                         onClick={() => setSelectedPlace(place)}
+                        location={selectedLocation.name}
                       />
                     ))}
                   </div>
@@ -320,6 +322,7 @@ const Explore: React.FC = () => {
                         place={place}
                         selected={selectedPlace?.id === place.id}
                         onClick={() => setSelectedPlace(place)}
+                        location={selectedLocation.name}
                       />
                     ))}
                   </div>
@@ -350,6 +353,7 @@ const Explore: React.FC = () => {
                         place={place}
                         selected={selectedPlace?.id === place.id}
                         onClick={() => setSelectedPlace(place)}
+                        location={selectedLocation.name}
                       />
                     ))}
                   </div>

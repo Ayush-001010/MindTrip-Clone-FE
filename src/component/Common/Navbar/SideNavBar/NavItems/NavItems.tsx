@@ -7,7 +7,7 @@ import type SideNavItemInterface from "../../../../../Interface/ConfigInterface/
 const NavItems: React.FC<INavItems> = () => {
     return <section className="mt-6 flex flex-col gap-2 p-2 w-full">
         {SideNavBarConfig.sideNavItems.map((item: SideNavItemInterface) => (
-            <NavItem key={item.link || item.title} isCollapsed={false} title={item.title} icon={item.icon} link={item.link} />
+            <NavItem key={item.link || item.title} isCollapsed={false} title={item.title} icon={item.icon} link={item?.link} />
         ))}
     </section>
 };

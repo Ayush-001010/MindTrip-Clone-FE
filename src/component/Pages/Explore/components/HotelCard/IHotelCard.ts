@@ -5,4 +5,5 @@ export default interface IHotelCard {
   hotel: IHotel;
   onClick: () => void;
   selected?: boolean;
+  location: string;
 }

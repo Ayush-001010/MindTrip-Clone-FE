@@ -5,4 +5,5 @@ export default interface IPlaceCard {
   place: IExplorePlace;
   onClick: () => void;
   selected?: boolean;
+  location: string;
 }
