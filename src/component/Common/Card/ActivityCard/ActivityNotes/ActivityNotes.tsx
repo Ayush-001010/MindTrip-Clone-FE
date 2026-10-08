@@ -14,7 +14,6 @@ const ActivityNotes: React.FC<IActivityNotes> = () => {
     const { indexNumber } = useGetActivityCardData();
 
     useEffect(() => {
-        console.log("blogActivity:", blogActivity);
         if (blogActivity && blogActivity.description.length > 0) {
             setNotes(blogActivity.description);
             setIsStopEditing(true);
@@ -30,7 +29,6 @@ const ActivityNotes: React.FC<IActivityNotes> = () => {
         return () => clearTimeout(timeoutID);
     }, [isStopEditing]);
 
-    console.log("mode:", mode);
     return (
         <div>
             {mode === "create" && (

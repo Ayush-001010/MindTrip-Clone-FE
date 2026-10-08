@@ -12,7 +12,6 @@ const HotelCard: React.FC<IHotelCard> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   const { changeFavoritesConfig } = useGetAppContext();
-  console.log("Hotel location:", location, "Hotel:", hotel);
 
   return (
     <div

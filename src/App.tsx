@@ -139,7 +139,6 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   const [favoritesConfig, setFavoritesConfig] = useState<{ openFavorites: boolean; uiType: "create-collection" | "show-collection-for-add-purpose" | undefined , data?: IFavouritesActivity | IFavouritesHotel | IFavouritesBlog, mode?: "activity" | "hotel" | "blog" }>({ openFavorites: false, uiType: undefined });
 
-  console.log("Data :", favoritesConfig.data);
   return (
     <HashRouter>
       <AppContext.Provider value={{

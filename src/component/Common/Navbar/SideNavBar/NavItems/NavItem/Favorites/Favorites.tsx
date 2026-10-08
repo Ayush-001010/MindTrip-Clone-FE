@@ -43,7 +43,7 @@ const Favorites: React.FC<IFavorites> = ({ openDrawer, closeDrawer }) => {
                             Add Collection
                         </p>
                     </header>
-                    <section className="grid grid-cols-2 gap-4">
+                    <section>
                         {collections.map((collection) => (
                             <CollectionCard key={collection.id} name={collection.name} id={collection.id} image1={collection.image1} image2={collection.image2} image3={collection.image3} />
                         ))}

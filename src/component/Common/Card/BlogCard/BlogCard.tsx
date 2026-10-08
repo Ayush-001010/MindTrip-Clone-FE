@@ -25,7 +25,6 @@ const profileIconMap: Record<string, React.ReactNode> = {
 };
 
 const BlogCard: React.FC<IBlogCard> = ({ blogData }) => {
-    console.log(blogData);
     const { getImages } = useCommonAction();
     const [imageURLs, setImageURLs] = useState<string[]>([]);
     const profileImages = blogData?.profileImages;
@@ -51,7 +50,6 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData }) => {
     }
 
     const { tripTitle, tripOverview, tripDuration, totalSpent, numberOfLikes, profileTitle, profileIcon } = blogData;
-    console.log("Blog Data:", blogData);
 
     return (
         <section className="group relative flex h-[420px] w-[300px] shrink-0 flex-col overflow-hidden rounded-2xl border border-gray-700 bg-[#111418] transition-all duration-300 hover:-translate-y-1 hover:border-gray-500 hover:shadow-[0_16px_40px_rgba(0,0,0,0.55)]">

@@ -23,14 +23,12 @@ const useFavorites = (open: boolean, uiType: "create-collection" | "show-collect
     }
 
     const addFavoritesItem = useCallback(async (collectionId: number) => { 
-        console.log("Adding favorites item with data:", data, "mode:", mode, "collectionId:", collectionId);
         const apiInstance = new APIService();
         const response = await apiInstance.postRequest("/faviourites/addFavourites",{
             type:mode,
             data: data,
             collectionId: collectionId,
         });
-        console.log("Add favorites response:", response);
     },[data, mode])
 
     useEffect(() => {

@@ -17,7 +17,6 @@ const ItineraryPlan: React.FC<IItineraryPlanInterface> = () => {
     const [defaultCoordinates, setDefaultCoordinates] = useState<{ longitude: number; latitude: number }>({ longitude: 0, latitude: 0 });
 
     const genreateCoordinatesPlace = (planData: IItineraryPlan) => {
-        console.log(planData);
         const uniqueCoordinatesForPlaces: IMapMarkerPoint[] = [];
         let firstLongitude : number | null = null;
         let firstLatitude: number | null = null;
@@ -39,7 +38,6 @@ const ItineraryPlan: React.FC<IItineraryPlanInterface> = () => {
             });
         });
         setPlaceCoordinates(uniqueCoordinatesForPlaces);
-        console.log("Unique Coordinates for Places:", uniqueCoordinatesForPlaces);
         setLongitude(firstLongitude);
         setLatitude(firstLatitude);
         setDefaultCoordinates({
@@ -66,7 +64,6 @@ const ItineraryPlan: React.FC<IItineraryPlanInterface> = () => {
         }
     }, [itineraryPlan]);
 
-    console.log(itineraryPlanState);
 
     return (
         <div className="flex h-full min-h-0 w-full flex-col">

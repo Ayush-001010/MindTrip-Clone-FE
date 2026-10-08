@@ -31,9 +31,7 @@ const ActivityPlaceName: React.FC<IActivityPlaceName> = () => {
     useEffect(() => {
         const timeObj = setTimeout(async () => {
             if(!placeName) return;
-            console.log("Place name changed:", placeName);
             const response = await axios.get(`https://api.maptiler.com/geocoding/${placeName}.json?key=gvBWK8FAy2ynzJcqqJV7&limit=10`);
-            console.log("Geocoding response:", response.data);
             const {features} = response.data;
             const options: IPlaceOption[] = [];
 

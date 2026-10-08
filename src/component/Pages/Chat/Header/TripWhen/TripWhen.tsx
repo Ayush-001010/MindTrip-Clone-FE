@@ -26,7 +26,6 @@ const TripWhen: React.FC<ITripWhen> = ({ open, closeHandler }) => {
 
     const submitHandler = () => {
         if (startDate && endDate && setTripDate) {
-            console.log("Start Date:", startDate?.toDate(), "End Date:", endDate?.toDate());
             setTripDate(startDate.toDate(), endDate.toDate());
         }
     }

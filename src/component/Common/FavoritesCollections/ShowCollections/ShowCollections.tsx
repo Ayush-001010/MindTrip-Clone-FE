@@ -9,7 +9,6 @@ const ShowCollections: React.FC<IShowCollections> = ({ addFavoritesItem }) => {
     const { fetchCollection } = useFavouritesAction();
     const [collections, setCollections] = useState<IFaviouritesCollection[]>([]);
 
-    console.log("Collection     ", collections);
 
     useEffect(() => {
         const getCollections = async () => {

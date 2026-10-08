@@ -57,13 +57,12 @@ const useTripSocketAction = () => {
   });
   socket.on("room:chat-response",(response) => {
     const {data} = response;
-    console.log(data);
     setMessages(prevMessages => [...prevMessages, data]);
     setIsLoading(false);
   });
   socket.on("room:setTripStartAndEnd-response" , (response) => {
     const { startDate, endDate } = response;
-    console.log("Received trip dates from server:", response);
+    // console.log("Received trip dates from server:", response);
     setFinalItinerary(prev => {
       if (!prev) {
         return prev;
@@ -81,7 +80,7 @@ const useTripSocketAction = () => {
   });
   socket.on("room:setTripBudget-response", (response) => {
     const { budget } = response;
-    console.log("Received trip budget from server:", budget);
+    // console.log("Received trip budget from server:", budget);
     setNotificationConfig({
       open: true,
       type: "alert",
@@ -90,7 +89,7 @@ const useTripSocketAction = () => {
     });
   });
   socket.on("room:addExpense-response", (response) => {
-    console.log("Received add expense response from server:", response);
+    // console.log("Received add expense response from server:", response);
     const { success, data } = response;
     if(success){
       setNotificationConfig({
@@ -110,7 +109,7 @@ const useTripSocketAction = () => {
   });
 
   const setTripDate = (startDate: Date, endDate: Date) => {
-    console.log("Setting trip dates:", { startDate, endDate });
+    // console.log("Setting trip dates:", { startDate, endDate });
     socket.emit("room:setTripStartAndEnd", { tripID: tripId, startDate, endDate });
   };
   const setTripBudget = (budget: number) => {
@@ -131,7 +130,7 @@ const useTripSocketAction = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      console.log("Fetching old chat for trip:", tripId);
+      // console.log("Fetching old chat for trip:", tripId);
       socket.emit("room:fetchOldChat", { tripID: tripId, userID: "123" });
     }, 3000);
   },[]);
@@ -140,9 +139,7 @@ const useTripSocketAction = () => {
     // /trip/fetchFinalItinerary
     const apiServiceInstance = new APIService();
     const response = await apiServiceInstance.postRequest<any>("/trip/fetchFinalItinerary", { tripID: tripId });
-    console.log(response);
     if(response && response.data){
-      console.log("Processed trip itinerary dates:", response.data);
       setFinalItinerary({...(JSON.parse(response.data.tripItinerary) as IFinalItineraryResponse) , countUserOnTrip : response.data.countUserOnTrip , startDate: response.data.startDate, endDate: response.data.endDate , budget : response.data.budget });
     }
   };

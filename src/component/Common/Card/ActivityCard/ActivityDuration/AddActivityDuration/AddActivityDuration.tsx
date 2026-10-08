@@ -14,7 +14,6 @@ const AddActivityDuration: React.FC<IAddActivityDuration> = ({ setValue }) => {
 
     const changeHandler = (value: [Dayjs | null, Dayjs | null] | null) => {
         setValue(value as unknown as [Moment, Moment] | null);
-        console.log(`Selected time range: ${value?.[0]?.format("HH:mm")} - ${value?.[1]?.format("HH:mm")}`);
         const time1 = value?.[0]?.format("HH:mm");
         const time2 = value?.[1]?.format("HH:mm");
         if(time1 && time2) {

@@ -11,7 +11,6 @@ const ActivityBox: React.FC<IActivityBox> = ({ activity, setLongitude, setLatitu
     const getPlaceImageURL = async (placeName: string) => {
         const imageURL = await getPlaceImage(placeName);
         setPlaceImageURL(imageURL ?? "https://d2uqdcpehc2tdl.cloudfront.net/ExploreTrip/Manali.jpg");
-        console.log("Fetched place image URL:", imageURL);
     }
     const genratedTimingUI = (time: "Morning" | "Afternoon" | "Evening" | "Whole Day") => {
         switch (time) {

@@ -5,7 +5,6 @@ import CreateCollections from "./CreateCollections/CreateCollections";
 import ShowCollections from "./ShowCollections/ShowCollections";
 
 const FavoritesCollections: React.FC<IFavoritesCollections> = ({ open, onClose, uiType , addFavoritesItem }) => {
-    console.log(uiType);
     return (
         <Modal open={open} onCancel={onClose} footer={null}
             title={null}

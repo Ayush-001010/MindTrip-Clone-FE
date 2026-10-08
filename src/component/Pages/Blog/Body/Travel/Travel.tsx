@@ -8,7 +8,6 @@ import { useGetBlogContext } from "../../Blog";
 const Travel: React.FC<ITravel> = ({activityIndexNumber}) => {
     const [travelData, setTravelData] = useState<IBlogTravel | null>(null);
     const {addTravel , blogValue , selectedDay , mode} = useGetBlogContext();
-    console.log("Activity Index Number:", activityIndexNumber ," ", selectedDay);
 
     const handleSaveTravel = (data: IBlogTravel) => {
         setTravelData(data);
@@ -23,7 +22,6 @@ const Travel: React.FC<ITravel> = ({activityIndexNumber}) => {
         }
         if (blogValue?.travel && blogValue.travel.filter(item => item.activityNumber === activityIndexNumber).length > 0) {
             setTravelData(blogValue.travel.filter(item => item.activityNumber === activityIndexNumber)[0]);
-            console.log("Travel data set from blogValue:", blogValue.travel.filter(item => item.activityNumber === activityIndexNumber)[0]);
         }
     }, [blogValue , selectedDay , activityIndexNumber , mode]); 
 

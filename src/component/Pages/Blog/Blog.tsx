@@ -116,7 +116,6 @@ const Blog: React.FC<IBlog> = () => {
 
     const addMapMarkerPoint = (longitude: number, latitude: number) => {
         if (longitude === 0 || latitude === 0) return;
-        console.log("Adding map marker point:", { longitude, latitude });
         setMapMarkerPoints((prev: IMapMarkerPoint[]) => [
             ...prev,
             { longitude, latitude }
@@ -173,7 +172,6 @@ const Blog: React.FC<IBlog> = () => {
                 } as IBlogData;
             });
         } else {
-            console.log(fieldName, value);
             setBlogValue((prev: IBlogData | null) => {
                 if (!prev) return prev;
                 return {
@@ -278,7 +276,6 @@ const Blog: React.FC<IBlog> = () => {
 
     const addOrRemovingActivityItem = () => {
         setBlogValue((prev: IBlogData | null) => {
-            console.log("Adding or removing activity item for selected day:", blogValue?.tripDuration);
             if(!blogValue?.tripDuration) return prev;
             const isMoreThanCurrentDurationActivityPresent = prev ? prev.activities.some(activity => activity.day > blogValue?.tripDuration) : false;
 
@@ -293,16 +290,13 @@ const Blog: React.FC<IBlog> = () => {
             else {
                 // no activities exist beyond the current selected day, so we can add a new activity for the selected day
                 const isCurrentDurationActivityPresent = prev.activities.some(activity => activity.day === blogValue?.tripDuration);
-                console.log("Is current duration activity present:", isCurrentDurationActivityPresent);
                 if (!isCurrentDurationActivityPresent) {
                     let lastDay = -1;
                     blogValue?.activities.forEach(activity => {
-                        console.log("Checking activity:", activity.day);
                         if (activity.day > lastDay) {
                             lastDay = activity.day;
                         }
                     });
-                    console.log("Last day before adding new activities:", lastDay);
                     while (lastDay < blogValue?.tripDuration) {
                         lastDay++;
                         const newActivity: IBlogActivite = {

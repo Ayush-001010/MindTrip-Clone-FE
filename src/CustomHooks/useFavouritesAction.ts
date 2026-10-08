@@ -21,7 +21,16 @@ const useFavouritesAction = () => {
         return response;
     };
 
-    return { fetchCollection, createCollection };
+    const fetchCollectionDetails = async (collectionId: number , type : "Activity" | "Hotel" | "Blog") => {
+        const apiInstance = new APIService();
+        const response = await apiInstance.postRequest("/faviourites/collectionDetails", {
+            collectionId,
+            type
+        });
+        return response;
+    };
+
+    return { fetchCollection, createCollection, fetchCollectionDetails };
 };
 
 export default useFavouritesAction;

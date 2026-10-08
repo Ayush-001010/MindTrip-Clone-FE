@@ -15,24 +15,20 @@ const useBlogAction = () => {
     };
 
     const saveBlog = async (blogData: IBlogData , profileName: string , profileIcon: string , images: File[] , metaData: string[]) => {
-        console.log(blogData, profileName, profileIcon, images, metaData);
         const apiInstance = new APIService();
         const profileImages: string[] = [];
         for (const file of images) {
             let { name: fileName = "", type: fileType = "" } = file;
-            console.log(fileName, fileType);
             fileName = "Blog/" + fileName
             const fileUploadResponse = await apiInstance.postRequest("/common/getUploadedFileURL", {
                 contentType:fileType,
                 key:fileName,
             });
             profileImages.push(fileName);
-            console.log(fileUploadResponse);
             if(fileUploadResponse.success) {
                 const url = fileUploadResponse.data as string;
                 await delay(API_HIT_DELAY_MS);
                 const uploadResponse = await apiInstance.uploadFileToS3(url, file, fileType);
-                console.log(uploadResponse);
             }
         }
         blogData.profileImages = profileImages;
@@ -51,11 +47,9 @@ const useBlogAction = () => {
                     key: fileName,
                 });
                 imageURLs.push(fileName);
-                console.log(fileUploadResponse);
                 if (fileUploadResponse.success) {
                     const url = fileUploadResponse.data as string;
                     const uploadResponse = await apiInstance.uploadFileToS3(url, image, fileType);
-                    console.log(uploadResponse);
                 }
             }));
             activity.images = imageURLs;
@@ -73,11 +67,9 @@ const useBlogAction = () => {
                         key: fileName,
                     });
                     sideImageURLs.push(fileName);
-                    console.log(fileUploadResponse);
                     if (fileUploadResponse.success) {
                         const url = fileUploadResponse.data as string;
                         const uploadResponse = await apiInstance.uploadFileToS3(url, image, fileType);
-                        console.log(uploadResponse);
                     }
                 }));
                 sideActivity.images = sideImageURLs;
