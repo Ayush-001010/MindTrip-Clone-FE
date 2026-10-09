@@ -130,8 +130,8 @@ const useTripSocketAction = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      // console.log("Fetching old chat for trip:", tripId);
-      socket.emit("room:fetchOldChat", { tripID: tripId, userID: "123" });
+      if(tripId)
+        socket.emit("room:fetchOldChat", { tripID: tripId, userID: "123" });
     }, 3000);
   },[]);
 

@@ -4,9 +4,12 @@ import AuthLayout from "../AuthLayout/AuthLayout";
 import Form from "../../../Components/UI/Forms/Form";
 import type ISignIn from "./ISignIn";
 import signInFields from "./signInFields";
+import { useDispatch } from "react-redux";
+import { setUserDetailsData } from "../../../Redux/Slices/UserDetails/UserDetails";
 
 const SignIn: React.FunctionComponent<ISignIn> = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const submitHandler = async (values: Record<string, any>) => {
@@ -26,6 +29,8 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
 
       const data = await response.json();
 
+      console.log("Data : ",data);
+
       if (!response.ok) {
         setErrorMessage(
           data.message || "Unable to sign in. Please try again."
@@ -38,10 +43,15 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
         return;
       }
 
+      const {user} = data;
+      
+      dispatch(setUserDetailsData(user as any));
+
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userDetails", JSON.stringify(user));
 
 
-      navigate("/chat", { replace: true });
+      navigate("/inspiration", { replace: true });
     } catch (error) {
       console.error("Login error:", error);
 

@@ -10,8 +10,6 @@ import SignUp from "./Features/Auth/SignUp/SignUp";
 import Explore from "./component/Pages/Explore/Explore";
 import ProtectedRoute from "./Features/Auth/ProtectedRoute/ProtectedRoute";
 import AuthCallback from "./Features/Auth/AuthCallback/AuthCallback";
-import { useDispatch } from "react-redux";
-import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 import Invite from "./component/Pages/Invite/Invite";
 import Blog from "./component/Pages/Blog/Blog";
 import Inspiration from "./component/Pages/Inspiration/Inspiration";
@@ -50,7 +48,6 @@ export const useGetAppContext = () => {
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const isChatLink = location.pathname.includes("/chat");
   const isExploreLink = location.pathname.includes("/explore");
@@ -65,15 +62,6 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
-
-  useEffect(() => {
-    const getItem = localStorage.getItem("userDetails");
-    if (getItem) {
-      const userDetails = JSON.parse(getItem);
-      dispatch(setUserDetailsData(userDetails));
-    }
-  }, []);
-
   return (
     <div
       className={

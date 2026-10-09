@@ -10,11 +10,13 @@ const UserPannel: React.FC<IUserPannel> = () => {
     const { isCollapsed } = useSideNavBarContext();
     const userDetails = useSelector((state: any) => state.userDetails as IUserInterface);
     const [userName, setUserName] = useState("");
+    const [userEmail, setUserEmail] = useState("");
 
 
     useEffect(() => {
         if(userDetails.userName) {
             setUserName(userDetails.userName);
+            setUserEmail(userDetails.userEmail as string);
         }
     }, [userDetails]);
 
@@ -31,7 +33,7 @@ const UserPannel: React.FC<IUserPannel> = () => {
                     </div>
                     <div>
                         <p className="m-0 text-white text-xs">{userName}</p>
-                        <p className="m-0 text-white text-xs">testing@gmail.com</p>
+                        <p className="m-0 text-white text-xs">{userEmail}</p>
                     </div>
                     <div className="cursor-pointer w-6 h-6 rounded-full p-1 bg-white text-[#000] hover:bg-[#e9ecef] transition">
                         <BsThreeDots className="text-2xs" />
@@ -43,7 +45,7 @@ const UserPannel: React.FC<IUserPannel> = () => {
                     <div>
                         <div className="h-12 w-12 rounded-full bg-[#495057] shadow-lg text-[#fff]">
                             <p className="m-0 flex h-full items-center justify-center text-sm  font-semibold">
-                                {userName[0]?.toUpperCase()}{userName[userName.length - 1]?.toUpperCase()}
+                                {userName[0]?.toUpperCase()}
                             </p>
                         </div>
                     </div>

@@ -238,7 +238,7 @@ const steps = [
 
 const HowItWorks: React.FC = () => {
   return (
-    <section className="mt-24 overflow-hidden px-2 py-20 text-[#2f3e46] sm:px-4 lg:px-6">
+    <section className="mt-18 overflow-hidden px-2 py-20 text-[#2f3e46] sm:px-4 lg:px-6">
       <div className="mx-auto max-w-7xl">
         {/* SECTION HEADER */}
         <motion.div

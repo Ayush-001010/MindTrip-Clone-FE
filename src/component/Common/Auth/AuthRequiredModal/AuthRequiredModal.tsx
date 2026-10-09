@@ -44,8 +44,7 @@ const AuthRequiredModal: React.FC<IAuthRequiredModal> = ({
         </h2>
 
         <p className="mt-3 leading-6 text-[#6f7e78]">
-          Please sign in or sign up to continue
-          creating your trip.
+          Please sign in or sign up to continue creating your trip.
         </p>
 
         {/* ACTIONS */}
@@ -53,7 +52,7 @@ const AuthRequiredModal: React.FC<IAuthRequiredModal> = ({
           <button
             type="button"
             onClick={handleSignIn}
-            className="flex-1 rounded-full border border-[#d8e5df] px-6 py-3 font-medium text-[#345c52] transition hover:bg-[#f4f8f6]"
+            className="flex-1 cursor-pointer rounded-full border border-[#d8e5df] px-6 py-3 font-medium text-[#345c52] transition hover:bg-[#f4f8f6]"
           >
             Sign In
           </button>
@@ -61,7 +60,7 @@ const AuthRequiredModal: React.FC<IAuthRequiredModal> = ({
           <button
             type="button"
             onClick={handleSignUp}
-            className="flex-1 rounded-full bg-[#dfeee8] px-6 py-3 font-medium text-[#345c52] transition hover:bg-[#d3e7df]"
+            className="flex-1 cursor-pointer rounded-full bg-[#dfeee8] px-6 py-3 font-medium text-[#345c52] transition hover:bg-[#d3e7df]"
           >
             Sign Up
           </button>

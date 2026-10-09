@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type IUserDetails from "../../../Interface/DataInterface/IUserDetails";
 
 const initialValue: IUserDetails = {
-  isLoggedIn: true,
+  isLoggedIn: false,
 };
 
 const UserDetailsSlice = createSlice({
@@ -11,7 +11,11 @@ const UserDetailsSlice = createSlice({
   reducers: {
     setUserDetailsData: (state, action) => {
       action.payload = JSON.parse(JSON.stringify(action.payload));
-      state.userName = action.payload.userName;
+      state.userName = action.payload.name;
+      state.isLoggedIn = true;
+      state.userID = action.payload.id.toString();
+      console.log("Setting user details:", action.payload);
+      state.userEmail = action.payload.email;
     },
   },
 });

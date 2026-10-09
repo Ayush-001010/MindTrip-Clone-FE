@@ -5,7 +5,7 @@ import ContentToggle from "./ContentToggle/ContentToggle";
 import Blogs from "./Blogs/Blogs";
 
 const Inspiration: React.FC<IInspiration> = () => {
-    const [contentType , setContentType] = useState<"home" | "blog" | "agent">("blog");
+    const [contentType , setContentType] = useState<"home" | "blog" | "agent">("home");
 
     return (
         <div className="static">
