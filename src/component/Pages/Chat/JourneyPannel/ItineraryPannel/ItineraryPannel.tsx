@@ -29,7 +29,7 @@ const ItineraryPannel: React.FC<IItineraryPannel> = () => {
 
     return (
         <section className="flex h-full min-h-0 flex-col">
-            <Header title={finalItinerary.itineraryTitle} startDate={finalItinerary.startDate} endDate={finalItinerary.endDate}  countUserOnTrip={finalItinerary.countUserOnTrip} budget={finalItinerary.budget} />
+            <Header setFeatureSelected={setFeatureSelected} title={finalItinerary.itineraryTitle} startDate={finalItinerary.startDate} endDate={finalItinerary.endDate}  countUserOnTrip={finalItinerary.countUserOnTrip} budget={finalItinerary.budget} />
             <div className="min-h-0 flex-1">
                 {genratedSectionDependingOnFeature()}
             </div>

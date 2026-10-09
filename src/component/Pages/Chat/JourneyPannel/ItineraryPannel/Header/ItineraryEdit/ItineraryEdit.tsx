@@ -3,11 +3,11 @@ import type IItineraryEdit from "./IItineraryEdit";
 import { FaEdit } from "react-icons/fa";
 import { Tooltip } from "antd";
 
-const ItineraryEdit : React.FC<IItineraryEdit> = () => {
+const ItineraryEdit : React.FC<IItineraryEdit> = ({ setFeatureSelected }) => {
     return (
         <section className="border-r-1 border-[#adb5bd] cursor-pointer flex items-center">
             <Tooltip title="Edit Itinerary">
-                <FaEdit className="text-[#f8f9fa] mr-2" />
+                <FaEdit onClick={() => setFeatureSelected("ItineraryEdit")} className="text-[#f8f9fa] mr-2" />
             </Tooltip>
         </section>
     )

@@ -7,7 +7,7 @@ import ItineraryEdit from "./ItineraryEdit/ItineraryEdit";
 import ItineraryPhotos from "./ItineraryPhotos/ItineraryPhotos";
 import ItinerarySplitWise from "./ItinerarySplitWise/ItinerarySplitWise";
 
-const Header: React.FC<IHeader> = ({ title, startDate, endDate, countUserOnTrip, budget }) => {
+const Header: React.FC<IHeader> = ({ title, startDate, endDate, countUserOnTrip, budget , setFeatureSelected }) => {
     return (
         <header>
             <section>
@@ -20,9 +20,9 @@ const Header: React.FC<IHeader> = ({ title, startDate, endDate, countUserOnTrip,
                     <UserCount countUserOnTrip={countUserOnTrip} />
                 </section>
                 <section className="flex">
-                    <ItineraryEdit />
+                    <ItineraryEdit setFeatureSelected={setFeatureSelected} />
                     <ItineraryPhotos />
-                    <ItinerarySplitWise />
+                    <ItinerarySplitWise setFeatureSelected={setFeatureSelected}/>
                 </section>
             </section>
         </header>

@@ -4,4 +4,5 @@ export default interface IHeader {
     endDate: Date | null;
     countUserOnTrip: number;
     budget: number | null;
+    setFeatureSelected: React.Dispatch<React.SetStateAction<"ItineraryEdit" | "ItineraryPhotos" | "ItinerarySplitWise" | "Itinerary">>;
 }
