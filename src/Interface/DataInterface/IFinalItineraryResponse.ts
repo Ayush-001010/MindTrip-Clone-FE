@@ -26,4 +26,5 @@ export default interface IFinalItineraryResponse {
     endDate: Date | null;
     startDate: Date | null;
     countUserOnTrip: number;
+    travelTips?: string[];
 }
