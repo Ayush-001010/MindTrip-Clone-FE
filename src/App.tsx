@@ -16,6 +16,8 @@ import Inspiration from "./component/Pages/Inspiration/Inspiration";
 import useFavorites from "./customHookWithUI/useFavorites";
 import Chat from "./component/Pages/Chat/Chat";
 import type { IFavouritesBlog } from "./Interface/DataInterface/IFavouritesBlog";
+import { useDispatch } from "react-redux";
+import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 
 
 export interface IAppContext {
@@ -48,6 +50,7 @@ export const useGetAppContext = () => {
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const isChatLink = location.pathname.includes("/chat");
   const isExploreLink = location.pathname.includes("/explore");
@@ -62,6 +65,14 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const item =localStorage.getItem("userDetails");
+    if(item) {
+      const userDetails = JSON.parse(item);
+      dispatch(setUserDetailsData(userDetails));
+    }
+  }, []);
   return (
     <div
       className={

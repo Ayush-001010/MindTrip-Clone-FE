@@ -5,25 +5,32 @@ import type IIMessage from "./IMessage";
 import moment from "moment";
 import { LuBot } from "react-icons/lu";
 import type ITripAPIResponse from "../../../Interface/DataInterface/ITripAPIResponse";
+import type IItineraryFinalResponse from "../../../Interface/DataInterface/IItineraryFinalResponse";
 import DestinationResponse from "./DestinationResponse/DestinationResponse";
-import type IQuestionGatherResponse from "../../../Interface/DataInterface/IQuestionGatherResponse";
+// import type IQuestionGatherResponse from "../../../Interface/DataInterface/IQuestionGatherResponse";
 import UserMessage from "./UserMessage/UserMessage";
 import Loader from "./Loader/Loader";
-import type IItineraryOptions from "../../../Interface/DataInterface/IItineraryOptions";
+// import type IItineraryOptions from "../../../Interface/DataInterface/IItineraryOptions";
 import ItineraryOptions from "./ItineraryOptions/ItineraryOptions";
+// import type { IItineraryFallBack } from "../../../Interface/DataInterface/IItinerarayFallBack";
+import FallBackResponse from "./FallBackResponse/FallBackResponse";
+import FinalResponse from "./FinalResponse/FinalResponse";
 
 const Message: React.FC<IIMessage> = ({ data }) => {
     const { message, timestamp, response } = data;
     const formattedTimestamp = moment(timestamp).format("HH:mm DD/MM/YY");
 
-    const generateAssistantResponse = (response: ITripAPIResponse | IQuestionGatherResponse | IItineraryOptions) => {
+    const generateAssistantResponse = (response: NonNullable<typeof data.response>) => {
         if (typeof response === "string") {
             response = JSON.parse(response as unknown as string) as ITripAPIResponse;
         }
+        console.log("Response Type:", response.type);
         switch (response.type) {
             case "destination": return <DestinationResponse data={response} />;
             case "question-gather": return <QuestionGatherResponse data={response} />;
             case "itinerary-options": return <ItineraryOptions itineraryOptions={response} />;
+            case "fallback": return <FallBackResponse message={response.message} />;
+            case "final-itinerary" : return <FinalResponse message={(response as IItineraryFinalResponse).message} />;
             default: return null;
         }
     }
@@ -46,7 +53,7 @@ const Message: React.FC<IIMessage> = ({ data }) => {
                         </div>
                     </section>
                 )}
-                {(response && response.type !== "final-itinerary") && (
+                {(response) && (
                     <>
                         <motion.section className="mt-1 flex w-full justify-start" variants={assistantVariant} initial="hidden" animate="show" transition={{ duration: 0.32 }}>
                             <div className="flex max-w-[88%] items-end gap-2.5 sm:max-w-[74%]">
