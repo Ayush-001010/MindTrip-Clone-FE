@@ -2,8 +2,8 @@ export interface IQuestion {
     description: string;
     multiple: boolean;
     options: Array<string>;
-    purpose: string;
-    required: boolean;
+    purpose?: string;
+    required?: boolean;
     type: string;
 }
 

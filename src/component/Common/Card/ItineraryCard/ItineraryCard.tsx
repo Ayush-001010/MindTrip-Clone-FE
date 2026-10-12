@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from "react";
+import ItineraryHotel from "./ItineraryHotel/ItineraryHotel";
 import type IItineraryCard from "./IItineraryCard";
 import ItineraryTips from "./ItineraryTips/ItineraryTips";
 import ItineraryActivity from "./ItineraryActivity/ItineraryActivity";
@@ -7,6 +8,7 @@ import type { IFinalItineraryDay } from "../../../../Interface/DataInterface/IFi
 interface ItineraryCardProps extends React.FC<IItineraryCard & {children: React.ReactNode}> {
     ItineraryTips: typeof ItineraryTips;
     ItineraryActivity : typeof ItineraryActivity;
+    ItineraryHotel : typeof ItineraryHotel;
 }
 
 export interface IItineraryCardContext {
@@ -37,5 +39,6 @@ const ItineraryCard : ItineraryCardProps = ({children, mode, tips, days}) => {
 
 ItineraryCard.ItineraryTips = ItineraryTips;
 ItineraryCard.ItineraryActivity = ItineraryActivity;
+ItineraryCard.ItineraryHotel = ItineraryHotel;
 
 export default ItineraryCard;

@@ -42,6 +42,7 @@ const useTripSocketAction = () => {
       });
     }
   });
+
   socket.on("room:oldChatDetails", (oldMessages: any) => {
     console.log("Received old chat details from server:", oldMessages);
     // setMessages(oldMessages);
@@ -61,11 +62,13 @@ const useTripSocketAction = () => {
       setMessages((prevMessages) => [...prevMessages, obj]);
     });
   });
+
   socket.on("room:chat-response", (response) => {
     const { data } = response;
     setMessages((prevMessages) => [...prevMessages, data]);
     setIsLoading(false);
   });
+
   socket.on("room:setTripStartAndEnd-response", (response) => {
     const { startDate, endDate } = response;
     setFinalItinerary((prev) => {
@@ -87,7 +90,8 @@ const useTripSocketAction = () => {
       };
     });
   });
-  socket.on("room:setTripBudget-response", (response) => {
+
+  socket.on("room:setTripBudget-response", (_) => {
     // const { budget } = response;
     // console.log("Received trip budget from server:", budget);
     setNotificationConfig({
@@ -97,6 +101,7 @@ const useTripSocketAction = () => {
       duration: 3000,
     });
   });
+
   socket.on("room:addExpense-response", (response) => {
     // console.log("Received add expense response from server:", response);
     const { success, data } = response;
@@ -117,6 +122,12 @@ const useTripSocketAction = () => {
     }
   });
 
+  socket.on("room:hotelRequest-response", (response) => {
+    setIsLoading(false);
+    console.log("Received hotel request response from server:", response);
+    setMessages((prevMessages) => [...prevMessages, response]);
+  });
+
   const setTripDate = (startDate: Date, endDate: Date) => {
     // console.log("Setting trip dates:", { startDate, endDate });
     socket.emit("room:setTripStartAndEnd", {
@@ -125,6 +136,7 @@ const useTripSocketAction = () => {
       endDate,
     });
   };
+
   const setTripBudget = (budget: number) => {
     socket.emit("room:setTripBudget", { tripID: tripId, budget });
   };
@@ -133,6 +145,11 @@ const useTripSocketAction = () => {
     // room:chat
     socket.emit("room:chat", { tripID: tripId, userPrompt, userID });
     setIsLoading(true);
+  };
+
+  const searchHotelHandler = () => {
+    setIsLoading(true);
+    socket.emit("room:hotelRequest", { tripID: tripId, userPrompt : "Suggest the hotels according to itinerary", userID });
   };
 
   useEffect(() => {
@@ -216,6 +233,7 @@ const useTripSocketAction = () => {
     setTripDate,
     setTripBudget,
     addExpense,
+    searchHotelHandler,
   };
 };
 

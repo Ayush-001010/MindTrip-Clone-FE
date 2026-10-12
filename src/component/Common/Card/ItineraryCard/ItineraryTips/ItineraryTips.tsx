@@ -11,7 +11,7 @@ const ItineraryTips : React.FC<IItineraryTips> = () => {
     const closeFunc = () => setOpenModal(false);
 
     return (
-        <section className="flex justify-end">
+        <section>
             <p onClick={openFunc} className="text-3xl hover:text-[#ffea00] transition-all duration-500 ease-in-out cursor-pointer">
                 <FaLightbulb/>
             </p>

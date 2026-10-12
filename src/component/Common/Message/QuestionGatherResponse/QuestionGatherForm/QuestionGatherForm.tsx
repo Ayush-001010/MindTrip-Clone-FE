@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type IQuestionGatherForm from "./IQuestionGatherForm";
-import { Radio } from "antd";
+import { Checkbox, Radio } from "antd";
 
 const QuestionGatherForm: React.FC<IQuestionGatherForm> = ({ questions, sendMessageHandler }) => {
     const [formValues, setFormValues] = useState({});
@@ -26,6 +26,20 @@ const QuestionGatherForm: React.FC<IQuestionGatherForm> = ({ questions, sendMess
                     )}
 
                     {type === "multiple-choice" && (
+                        <div className="flex flex-col gap-2">
+                            <Checkbox.Group
+                                onChange={(checkedValues) => setFormValues((prev) => ({ ...prev, [description]: checkedValues }))}
+                            >
+                                {options?.map((option, idx) => (
+                                    <label key={option ?? idx} className="flex items-center gap-2 text-sm text-gray-200">
+                                        <Checkbox value={option} />
+                                        <span>{option}</span>
+                                    </label>
+                                ))}
+                            </Checkbox.Group>
+                        </div>
+                    )}
+                    {type === "single-choice" && (
                         <div className="flex flex-col gap-2">
                             <Radio.Group
                                 onChange={(e) => setFormValues((prev) => ({ ...prev, [description]: e.target.value }))}

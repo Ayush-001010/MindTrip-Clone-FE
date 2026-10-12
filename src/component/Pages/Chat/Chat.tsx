@@ -30,6 +30,7 @@ export interface IChatContext {
     setTripDate?: (startDate: Date, endDate: Date) => void;
     setTripBudget?: (budget: number) => void;
     addExpense?: (paidBy :{userId: number, userName: string} , totalAmount:number, title : string , category : string, spendAt: Date, splitMethod: "equal" | "percentage" | "custom" | "ratio",   splitAmong: {userId : number , userName : string , amount : number}[] ,  notes?: string) => void;
+    searchHotelHandler?: () => void;
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -55,7 +56,7 @@ export const useChatContext = () => {
 }
 
 const Chat : React.FC<IChat> = () => {
-    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense  } = useTripSocketAction();
+    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler  } = useTripSocketAction();
     const [isSelectedLocation, setIsSelectedLocation] = useState<boolean>(false);
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
@@ -65,7 +66,7 @@ const Chat : React.FC<IChat> = () => {
     const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
 
     return (
-        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense }}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler }}>
             <div className="w-full ">
                 {notification}
                 <Header/>

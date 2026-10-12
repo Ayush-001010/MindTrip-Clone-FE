@@ -15,6 +15,7 @@ import ItineraryOptions from "./ItineraryOptions/ItineraryOptions";
 // import type { IItineraryFallBack } from "../../../Interface/DataInterface/IItinerarayFallBack";
 import FallBackResponse from "./FallBackResponse/FallBackResponse";
 import FinalResponse from "./FinalResponse/FinalResponse";
+import ShowHotelSearchResponse from "./ShowHotelSearchResponse/ShowHotelSearchResponse";
 
 const Message: React.FC<IIMessage> = ({ data }) => {
     const { message, timestamp, response } = data;
@@ -31,6 +32,8 @@ const Message: React.FC<IIMessage> = ({ data }) => {
             case "itinerary-options": return <ItineraryOptions itineraryOptions={response} />;
             case "fallback": return <FallBackResponse message={response.message} />;
             case "final-itinerary" : return <FinalResponse message={(response as IItineraryFinalResponse).message} />;
+            case "hotel-information-gather" : return <QuestionGatherResponse data={response} />;
+            case "hotel-search" : return <ShowHotelSearchResponse data={response} />;
             default: return null;
         }
     }
