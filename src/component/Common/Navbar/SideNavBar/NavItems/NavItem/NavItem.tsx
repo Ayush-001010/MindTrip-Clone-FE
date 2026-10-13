@@ -41,20 +41,27 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
         }
     }
 
+    const isActive = link ? path() === link : favoritesDrawerOpen;
+    const itemClass = `group flex w-full cursor-pointer items-center rounded-xl py-3 text-[#C9BFB5] transition-colors duration-200 hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-white/40 ${isCollapsed ? "justify-center px-0" : "justify-start gap-3 px-4"} ${isActive ? "bg-white/10 font-semibold text-white ring-1 ring-inset ring-white/15 shadow-[0_8px_20px_rgba(0,0,0,0.55),0_2px_4px_rgba(0,0,0,0.4)]" : ""}`;
+    const content = (
+        <>
+            <span className="shrink-0 text-xl">{fetchIcon(icon)}</span>
+            {!isCollapsed && <span className="truncate text-base font-medium">{title}</span>}
+        </>
+    );
+
     return (
-        <div className="my-3 flex flex-col items-start gap-2 rounded-2xl p-2 transition w-full">
-            {link && <Link to={link} className="w-full">
-                <p className={`${path() === link ? "bg-[#212529]" : ""} w-full transition cursor-pointer  hover:bg-[#212529] text-[#fff] ${isCollapsed ? "p-3 flex justify-center items-center shadow-lg rounded-full font-bold " : "flex items-center justify-start gap-3  rounded-4xl p-3"}`}>
-                    <span className="text-lg font-thin">{fetchIcon(icon)}</span>
-                    {!isCollapsed && <span className="text-lg font-medium">{title}</span>}
-                </p>
-            </Link>}
+        <div className="w-full">
+            {link && (
+                <Link to={link} className={itemClass} title={title} aria-label={title} aria-current={isActive ? "page" : undefined}>
+                    {content}
+                </Link>
+            )}
             {(!link && title === "Favorites") && (
                 <section className="w-full">
-                    <p onClick={openFavoritesDrawer} className={`w-full transition cursor-pointer  hover:bg-[#212529] text-[#fff] ${isCollapsed ? "p-3 flex justify-center items-center shadow-lg rounded-full font-bold " : "flex items-center justify-start gap-3  rounded-4xl p-3"}`}>
-                        <span className="text-lg font-thin">{fetchIcon(icon)}</span>
-                        {!isCollapsed && <span className="text-lg font-medium">{title}</span>}
-                    </p>
+                    <button type="button" onClick={openFavoritesDrawer} className={itemClass} title={title} aria-label={title}>
+                        {content}
+                    </button>
 
                     {favoritesDrawerOpen && <Favorites openDrawer={favoritesDrawerOpen} closeDrawer={closeFavoritesDrawer} />}
                 </section>

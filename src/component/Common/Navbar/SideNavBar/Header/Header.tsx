@@ -5,7 +5,7 @@ import { WiStars } from "react-icons/wi";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useSideNavBarContext } from "../SideNavBar";
-import { SlLogout } from "react-icons/sl";
+import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 
 const Header: React.FC<IHeader> = () => {
   const titleWords = CommonConfig.companyName.split(" ");
@@ -89,9 +89,11 @@ const Header: React.FC<IHeader> = () => {
         layout
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className={isCollapsed ? "bg-[#212529] flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl text-lg text-[#F4E8DC] transition-colors duration-200 hover:bg-[#212529] hover:text-[#fff]" : "flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl text-lg text-[#F4E8DC] transition-colors duration-200 hover:bg-[#212529] hover:text-[#9B6B43]"}
+        aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-[#212529] text-xl text-[#F4E8DC] transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-white/40"
       >
-        <SlLogout />
+        {isCollapsed ? <LuPanelLeftOpen /> : <LuPanelLeftClose />}
       </motion.button>
     </motion.div>
   );

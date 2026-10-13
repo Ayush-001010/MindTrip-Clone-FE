@@ -24,7 +24,7 @@ const SideNavBar: React.FC<ISideNavBar> = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     return (
         <SideNavBarContext.Provider value={{ isCollapsed, setIsCollapsed }}>
-            <div className={`transition-all transition-ease duration-300 h-screen ${isCollapsed ? "w-[100px]" : " w-[220px]"} flex h-full flex-col justify-between border-r border-slate-200/70 bg-[#121113] p-3 shadow-[0_12px_24px_rgba(148,163,184,0.12)]`}>
+            <div className={`flex h-screen shrink-0 flex-col justify-between overflow-hidden border-r border-white/10 bg-[#121113] p-3 transition-[width] duration-300 ease-out ${isCollapsed ? "w-[88px]" : "w-[240px]"}`}>
                 <div className="w-full">
                     <Header />
                     <NavItems />
