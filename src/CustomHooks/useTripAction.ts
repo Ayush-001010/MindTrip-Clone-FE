@@ -84,8 +84,16 @@ const useTripAction = () => {
         const response = await apiServiceInstance.getRequest("/trip/fetchTripIDs" ,{ "userId":  3 });
         return response;
     };
+
+    const fetchImportanDates = async () => {
+        const apiInstance = new APIService();
+        const response = await apiInstance.getRequest("/trip/getImportantDates",{
+            "userID" : userID || 2
+        });
+        return response;
+    };
     
-    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails };
+    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates };
 };
 
 export default useTripAction;

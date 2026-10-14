@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import type IFinalItineraryResponse from '../../../Interface/DataInterface/IFinalItineraryResponse';
 import type IChat from './IChat';
 import Header from './Header/Header';
@@ -64,6 +64,24 @@ const Chat : React.FC<IChat> = () => {
     const [itineraryPlan , setItineraryPlan] = useState<IItineraryPlan | null>(null);
     const [isSelectedItineraryPlan, setIsSelectedItineraryPlan] = useState<boolean>(false);
     const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
+
+    useEffect(() => {
+        const aiMessage = localStorage.getItem("aiMessage");
+        if (aiMessage) {
+            const obj = JSON.parse(aiMessage);
+            console.log("Object from localStorage:", obj);
+            if(obj.createdAt ) {
+                // Please check createdAt much be lessthan 1 minute from the current time
+                const date = new Date(obj.createdAt);
+                const now = new Date();
+                const diffInMinutes = (now.getTime() - date.getTime()) / (1000 * 60);
+                if(diffInMinutes < 1) {
+                    console.log("AI message is less than 1 minute old:", obj);
+                    sendMessageHandler(obj.text);
+                }
+            }
+        }
+    }, []);
 
     return (
         <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler }}>

@@ -50,9 +50,15 @@ const renderTyped = (segments: ISegment[], visibleCount: number) => {
     });
 };
 
-const LeftSection: React.FC<ILeftSection> = () => {
+const LeftSection: React.FC<ILeftSection> = ({setSelectedOption}) => {
     const [typedCount, setTypedCount] = useState(0);
     const [thinking, setThinking] = useState<boolean>(true);
+
+    const clickHandler = (optionNumber: number) => {
+        if(optionNumber === 4) {
+            setSelectedOption("search-longweekends");
+        }
+    }
 
     useEffect(() => {
         const timeout = setTimeout(() => setThinking(false), 800);
@@ -118,6 +124,7 @@ const LeftSection: React.FC<ILeftSection> = () => {
                                 key={index}
                                 type="button"
                                 disabled={visibleIn(index) < lengths[index]}
+                                onClick={() => clickHandler(index)}
                                 className={`rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-left text-sm leading-6 text-[#C9BFB5] shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition duration-300 enabled:cursor-pointer enabled:hover:-translate-y-0.5 enabled:hover:border-white/25 enabled:hover:bg-white/10 enabled:hover:text-white focus-visible:outline-2 focus-visible:outline-white/40 sm:text-base ${visibleIn(index) > 0 ? "opacity-100" : "opacity-0"}`}
                             >
                                 {renderTyped(paragraphs[index], visibleIn(index))}
