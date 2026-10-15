@@ -127,6 +127,19 @@ const useTripSocketAction = () => {
     console.log("Received hotel request response from server:", response);
     setMessages((prevMessages) => [...prevMessages, response]);
   });
+  socket.on("room:editTripName-response", (res)=>{
+    console.log("Received edit trip name response from server:", res);
+    setNotificationConfig({
+      open: true,
+      type: "alert",
+      message: "Trip name has been updated",
+      duration: 3000,
+    });
+  });
+
+  const editTripName = (newTripName: string) => {
+    socket.emit("room:editTripName", { tripID: tripId, newTripName });
+  };
 
   const setTripDate = (startDate: Date, endDate: Date) => {
     // console.log("Setting trip dates:", { startDate, endDate });
@@ -224,17 +237,7 @@ const useTripSocketAction = () => {
     }
   }, [isFinalItineraryReceived]);
 
-  return {
-    notificationConfig,
-    sendMessageHandler,
-    messages,
-    isLoading,
-    finalItinerary,
-    setTripDate,
-    setTripBudget,
-    addExpense,
-    searchHotelHandler,
-  };
+  return { notificationConfig,sendMessageHandler,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName};
 };
 
 export default useTripSocketAction;
