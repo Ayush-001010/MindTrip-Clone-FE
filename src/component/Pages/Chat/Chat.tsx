@@ -9,6 +9,8 @@ import useNotification from '../../../customHookWithUI/useNotification';
 import type IMessageTrip from '../../../Interface/DataInterface/IMessageTrip';
 import type { IItineraryPlan } from '../../../Interface/DataInterface/IItineraryOptions';
 import useTripSocketAction from '../../../customHooks/useTripSocketAction';
+import type { IHotelDetail } from '../../../Interface/DataInterface/IHotelSearchResponse';
+import type ITripHotelData from '../../../Interface/DataInterface/ITripHotel';
 
 export interface IChatContext {
     isSelectedLocation: boolean;
@@ -31,6 +33,12 @@ export interface IChatContext {
     setTripBudget?: (budget: number) => void;
     addExpense?: (paidBy :{userId: number, userName: string} , totalAmount:number, title : string , category : string, spendAt: Date, splitMethod: "equal" | "percentage" | "custom" | "ratio",   splitAmong: {userId : number , userName : string , amount : number}[] ,  notes?: string) => void;
     searchHotelHandler?: () => void;
+    showHotelInLocationPannel: boolean;
+    setShowHotelInLocationPannel?: React.Dispatch<React.SetStateAction<boolean>>;
+    showHotelDetails: IHotelDetail | null;
+    setShowHotelDetails?: React.Dispatch<React.SetStateAction<IHotelDetail | null>>;
+    addHotelToWishList?: (hotel : ITripHotelData) => void;
+    bookHotelHandler?: (hotel : ITripHotelData) => void;
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -44,7 +52,9 @@ const ChatContext = createContext<IChatContext>({
     isSelectedItineraryPlan: false,
     isLoading: false,
     finalItinerary: null,
-    addExpense: (_paidBy :{userId: number, userName: string} , _totalAmount:number, _title : string , _category : string, _spendAt: Date, _splitMethod: "equal" | "percentage" | "custom" | "ratio",   _splitAmong: {userId : number , userName : string , amount : number}[] ,  _notes?: string) => {}
+    addExpense: (_paidBy :{userId: number, userName: string} , _totalAmount:number, _title : string , _category : string, _spendAt: Date, _splitMethod: "equal" | "percentage" | "custom" | "ratio",   _splitAmong: {userId : number , userName : string , amount : number}[] ,  _notes?: string) => {},
+    showHotelInLocationPannel: false,
+    showHotelDetails: null
 });
 
 export const useChatContext = () => {
@@ -56,10 +66,12 @@ export const useChatContext = () => {
 }
 
 const Chat : React.FC<IChat> = () => {
-    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler  } = useTripSocketAction();
+    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , addHotelToWishList, bookHotelHandler } = useTripSocketAction();
     const [isSelectedLocation, setIsSelectedLocation] = useState<boolean>(false);
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
+    const [showHotelInLocationPannel, setShowHotelInLocationPannel] = useState<boolean>(false);
+    const [showHotelDetails , setShowHotelDetails] = useState<IHotelDetail | null>(null);
     const [destination, setDestination] = useState<ISuggestedDestination | null>(null);
     const [itineraryPlan , setItineraryPlan] = useState<IItineraryPlan | null>(null);
     const [isSelectedItineraryPlan, setIsSelectedItineraryPlan] = useState<boolean>(false);
@@ -84,7 +96,7 @@ const Chat : React.FC<IChat> = () => {
     }, []);
 
     return (
-        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler }}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler }}>
             <div className="w-full ">
                 {notification}
                 <Header/>

@@ -2,7 +2,7 @@ import { useState , useEffect } from "react";
 import { TiUserAdd } from "react-icons/ti";
 import { MdOutlineNotificationImportant } from "react-icons/md";
 
-export const notificationTypeArray = ["userJoin","alert"];
+export const notificationTypeArray = ["userJoin","alert","expense-added","error","success"];
 
 const useNotification = (type: typeof notificationTypeArray[number] , message: string , open: boolean , duration?: number) => {
     const [isOpen, setIsOpen] = useState(open);
@@ -51,6 +51,26 @@ const useNotification = (type: typeof notificationTypeArray[number] , message: s
                     </div>
                 );
             case "expense-added":
+                return (
+                    <div role="status" aria-live="polite" className="fixed top-4 right-4 z-50">
+                        <div className="flex items-start gap-3 bg-green-100 px-4 py-3 shadow-lg rounded-lg border border-green-200 text-sm text-green-800 max-w-xs">
+                            <div className="text-2xl text-green-600 mt-0.5">
+                                <MdOutlineNotificationImportant />
+                            </div>
+                            <div className="flex-1">
+                                <p className="font-medium text-green-900">{message}</p>
+                            </div>
+                            <button
+                                onClick={() => setIsOpen(false)}
+                                className="ml-2 text-green-400 hover:text-green-600 focus:outline-none"
+                                aria-label="Close notification"
+                            >
+                                ×
+                            </button>
+                        </div>
+                    </div>
+                );
+            case "success":
                 return (
                     <div role="status" aria-live="polite" className="fixed top-4 right-4 z-50">
                         <div className="flex items-start gap-3 bg-green-100 px-4 py-3 shadow-lg rounded-lg border border-green-200 text-sm text-green-800 max-w-xs">

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type IHotelCard from "./IHotelCard";
+import { useChatContext } from "../../../Pages/Chat/Chat";
 
 const MAX_VISIBLE_AMENITIES = 3;
 
@@ -8,6 +9,28 @@ const HotelCard: React.FC<IHotelCard> = ({ data: hotel }) => {
     const image = hotel.images?.[0]?.thumbnail;
     const visibleAmenities = hotel.amenities?.slice(0, MAX_VISIBLE_AMENITIES) ?? [];
     const extraAmenitiesCount = (hotel.amenities?.length ?? 0) - visibleAmenities.length;
+    const {setShowHotelInLocationPannel , setShowHotelDetails , addHotelToWishList} = useChatContext();
+
+    const submitHandler = () => {
+        if(setShowHotelInLocationPannel && setShowHotelDetails && hotel) {
+            setShowHotelInLocationPannel(true);
+            setShowHotelDetails(hotel);
+        }
+    }
+    const addToWishListHandler = () => {
+        if(addHotelToWishList && hotel) {
+            addHotelToWishList({
+                name : hotel.name,
+                longitude : hotel.gps_coordinates.longitude,
+                latitude : hotel.gps_coordinates.latitude,
+                image : hotel.images.map(img => img.thumbnail).join(','),
+                amenities : hotel.amenities?.join(','),
+                price : Number(hotel.rate_per_night?.lowest || 0),
+                rating: Number(hotel.ratings),
+                reviews: hotel.reviews,
+            });
+        }
+    }
 
     return (
         <div className="flex w-56 shrink-0 snap-start flex-col gap-2 overflow-hidden rounded-xl border border-white/10 bg-[#272c31] p-2.5 transition-colors hover:border-white/20 hover:bg-[#2e343a]">
@@ -69,6 +92,22 @@ const HotelCard: React.FC<IHotelCard> = ({ data: hotel }) => {
                         )}
                     </div>
                 )}
+                <div className="mt-1 flex gap-2">
+                    <button
+                        onClick={submitHandler}
+                        type="button"
+                        className="flex-1 cursor-pointer rounded-lg bg-blue-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-400 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                    >
+                        Book
+                    </button>
+                    <button
+                        onClick={addToWishListHandler}
+                        type="button"
+                        className="flex-1 cursor-pointer rounded-lg border border-white/20 bg-transparent px-3 py-1.5 text-xs font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                    >
+                        Add to Wishlist
+                    </button>
+                </div>
             </div>
         </div>
     );

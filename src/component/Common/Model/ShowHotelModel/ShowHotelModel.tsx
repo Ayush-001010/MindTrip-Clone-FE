@@ -1,17 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type IShowHotelModel from "./IShowHotelModel";
 import { Modal } from "antd";
 import { IoSearch } from "react-icons/io5";
 import { useChatContext } from "../../../Pages/Chat/Chat";
+import useTripAction from "../../../../CustomHooks/useTripAction";
+import type ITripHotelData from "../../../../Interface/DataInterface/ITripHotel";
+import TripHotelList from "../../List/TripHotelList/TripHotelList";
 
 const ShowHotelModel: React.FC<IShowHotelModel> = ({ open, onClose }) => {
     const { searchHotelHandler } = useChatContext();
+    const { fetchTripHotelDetails } = useTripAction();
+    const [hotels, setHotels] = useState<ITripHotelData[]>([]);
     const searchHotel = () => {
         onClose();
-        if(searchHotelHandler) {
+        if (searchHotelHandler) {
             searchHotelHandler();
         }
     }
+
+    useEffect(() => {
+        if (open) {
+            fetchTripHotelDetails().then(response => {
+                setHotels(response.data ?? []);
+            });
+        }
+    }, [open]);
 
     return (
         <Modal open={open} onCancel={onClose} centered width={640} footer={null} title={null} rootClassName="transparent-modal"
@@ -45,12 +58,18 @@ const ShowHotelModel: React.FC<IShowHotelModel> = ({ open, onClose }) => {
                         <IoSearch className="text-base" />
                     </button>
                 </header>
-                <section className="flex flex-col items-center justify-center gap-2 py-10 text-center">
-                    <span className="text-3xl" aria-hidden>
-                        🏨
-                    </span>
-                    <p className="m-0 text-sm leading-6 text-white/60">You haven&apos;t selected any hotels yet</p>
-                </section>
+                {hotels.length > 0 ? (
+                    <section className="pt-4">
+                        <TripHotelList hotels={hotels} />
+                    </section>
+                ) : (
+                    <section className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+                        <span className="text-3xl" aria-hidden>
+                            🏨
+                        </span>
+                        <p className="m-0 text-sm leading-6 text-white/60">You haven&apos;t selected any hotels yet</p>
+                    </section>
+                )}
             </main>
         </Modal>
     );

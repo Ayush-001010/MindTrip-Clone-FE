@@ -74,7 +74,6 @@ const ItineraryPlan: React.FC<IItineraryPlanInterface> = () => {
             <section className="mt-4 min-h-0 flex-1 overflow-y-auto pb-4">
                 {itineraryPlanState?.itinerary.map((itineraryActivities, index) => <ItineraryActivitiesBox day={itineraryActivities.day} title={itineraryActivities.title} key={`itinerary-activities-box-${index}`} itineraryActivities={itineraryActivities.activities} setLongitude={setLongitude} setLatitude={setLatitude} />)}
             </section>
-
         </div>
     );
 };

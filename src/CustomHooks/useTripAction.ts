@@ -5,6 +5,7 @@ import type IUserInterface from "../Interface/DataInterface/IUserDetails";
 import type ITripExpense from "../Interface/DataInterface/ITripExpense";
 import type ITripSplitWiseAnalytics from "../Interface/DataInterface/ITripSplitWiseAnalytics";
 import type { IHotelDataInterface } from "../Interface/CommonInterface";
+import type ITripHotelData from "../Interface/DataInterface/ITripHotel";
 
 const useTripAction = () => {
     const { tripId } = useParams();
@@ -92,8 +93,38 @@ const useTripAction = () => {
         });
         return response;
     };
+
+    const fetchTripHotelDetails = async () => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.getRequest<ITripHotelData[]>("/trip/fetchTripHotelDetails",{
+            "base62": tripId || 0
+        });
+        return response;
+    };
+
+    const addCommentOnTripHotel = async (hotelID: string, comment: string) => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.postRequest<null>(
+            "/trip/commentOnTripHotel",
+            {
+                base62 : tripId,
+                id: hotelID,
+                comment : JSON.stringify({name:userName , comment})
+            }
+        );
+        return response;
+    };
+
+    const likeOrDislikeTripHotel = async (hotelID: string, like: boolean) => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.postRequest<null>(
+            "/trip/likeOrDislikeTripHotel",
+            { base62: tripId, id: hotelID, action: like ? "like" : "dislike"}
+        );
+        return response;
+    };
     
-    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates };
+    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , addCommentOnTripHotel , likeOrDislikeTripHotel };
 };
 
 export default useTripAction;

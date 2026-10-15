@@ -6,10 +6,11 @@ import { useChatContext } from "../Chat";
 import ItineraryPannel from "./ItineraryPannel/ItineraryPannel";
 import EmptyPannel from "./EmptyPannel/EmptyPannel";
 import ItineraryPlan from "./ItineraryPlan/ItineraryPlan";
+import HotelPannel from "./HotelPannel/HotelPannel";
 
 const JourneyPannel: React.FC<IJourneyPannel> = () => {
-    const [pannelType, setPannelType] = useState<"location" | "trip" >("trip");
-    const { isSelectedLocation, locationLatitude, locationLongitude , isSelectedItineraryPlan } = useChatContext();
+    const [pannelType, setPannelType] = useState<"location" | "trip">("trip");
+    const { isSelectedLocation, locationLatitude, locationLongitude, isSelectedItineraryPlan, showHotelInLocationPannel } = useChatContext();
     const hasSelectedCoordinates = locationLatitude !== 0 || locationLongitude !== 0;
 
     useEffect(() => {
@@ -24,6 +25,12 @@ const JourneyPannel: React.FC<IJourneyPannel> = () => {
         }
     }, [isSelectedItineraryPlan]);
 
+    useEffect(() => {
+        if (showHotelInLocationPannel) {
+            setPannelType("location");
+        }
+    }, [showHotelInLocationPannel]);
+
 
     return (
         <div className="m-3 flex h-185 w-1/2 flex-col p-4 bg-[#121113] rounded-xl ">
@@ -34,13 +41,16 @@ const JourneyPannel: React.FC<IJourneyPannel> = () => {
                 {pannelType === "trip" && !isSelectedItineraryPlan && (
                     <ItineraryPannel />
                 )}
-                {( (pannelType === "location" && !isSelectedItineraryPlan) && (isSelectedLocation || hasSelectedCoordinates)) && (
+                {((pannelType === "location" && !isSelectedItineraryPlan) && (isSelectedLocation || hasSelectedCoordinates)) && (
                     <LocationPannel />
                 )}
-                {isSelectedItineraryPlan && (
-                    <ItineraryPlan/>
+                {(pannelType === "location" && showHotelInLocationPannel) && (
+                    <HotelPannel />
                 )}
-                {( (pannelType === "location" && !isSelectedItineraryPlan) && !(isSelectedLocation || hasSelectedCoordinates)) && (
+                {isSelectedItineraryPlan && (
+                    <ItineraryPlan />
+                )}
+                {((pannelType === "location" && !isSelectedItineraryPlan) && !(isSelectedLocation || hasSelectedCoordinates)) && (
                     <EmptyPannel />
                 )}
             </div>

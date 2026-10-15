@@ -7,6 +7,7 @@ import type INotificationConfig from "../Interface/DataInterface/INotificationCo
 import type IMessageTrip from "../Interface/DataInterface/IMessageTrip";
 import type IFinalItineraryResponse from "../Interface/DataInterface/IFinalItineraryResponse";
 import APIService from "../Services/APIService";
+import type ITripHotelData from "../Interface/DataInterface/ITripHotel";
 
 const useTripSocketAction = () => {
   const [notificationConfig, setNotificationConfig] =
@@ -127,6 +128,7 @@ const useTripSocketAction = () => {
     console.log("Received hotel request response from server:", response);
     setMessages((prevMessages) => [...prevMessages, response]);
   });
+
   socket.on("room:editTripName-response", (res)=>{
     console.log("Received edit trip name response from server:", res);
     setNotificationConfig({
@@ -135,6 +137,27 @@ const useTripSocketAction = () => {
       message: "Trip name has been updated",
       duration: 3000,
     });
+  });
+
+  socket.on("room:createTripHotel-response", (response) => {
+    console.log("Response : ", response);
+    if(response.success) {
+      if(response.data === "wishlist") {
+        setNotificationConfig({
+          open: true,
+          type: "alert",
+          message: "Hotel has been added to your wishlist",
+          duration: 3000,
+        });
+      } else if(response.data === "booked") {
+        setNotificationConfig({
+          open: true,
+          type: "success",
+          message: "Hotel has been added to your booked list",
+          duration: 3000,
+        });
+      }
+    }
   });
 
   const editTripName = (newTripName: string) => {
@@ -158,6 +181,22 @@ const useTripSocketAction = () => {
     // room:chat
     socket.emit("room:chat", { tripID: tripId, userPrompt, userID });
     setIsLoading(true);
+  };
+
+  const bookHotelHandler = (hotel : ITripHotelData) => {
+    hotel.base62 = tripId;
+    socket.emit("room:createTripHotel" , {
+      tripHotelData: hotel,
+      type: "booked"
+    })
+  };
+
+  const addHotelToWishList = (hotel : ITripHotelData) => {
+    hotel.base62 = tripId;
+    socket.emit("room:createTripHotel" , {
+      tripHotelData: hotel,
+      type: "wishlist"
+    })
   };
 
   const searchHotelHandler = () => {
@@ -237,7 +276,7 @@ const useTripSocketAction = () => {
     }
   }, [isFinalItineraryReceived]);
 
-  return { notificationConfig,sendMessageHandler,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName};
+  return { notificationConfig,sendMessageHandler,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName,addHotelToWishList, bookHotelHandler};
 };
 
 export default useTripSocketAction;
