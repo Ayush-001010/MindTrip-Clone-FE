@@ -16,7 +16,7 @@ const TripBudget: React.FC<ITripBudget> = ({ open, closeHandler }) => {
     };
 
     return (
-        <Modal open={open} footer={null} closable={false} centered onCancel={closeHandler}>
+        <Modal open={open} footer={null}  centered onCancel={closeHandler}>
             <section className="bg-[#161a1d] text-[#f8f9fa] shadow-xl">
                 <div className="flex justify-end p-3 pb-0">
                     <CloseBox onClose={closeHandler} />

@@ -4,12 +4,20 @@ import useFavouritesAction from "../../../../customHooks/useFavouritesAction";
 import type IFaviouritesCollection from "../../../../Interface/DataInterface/IFavouritesCollection";
 import CollectionCard from "../../Card/CollectionCard/CollectionCard";
 import { CiCirclePlus } from "react-icons/ci";
+import { useGetAppContext } from "../../../../App";
 
 const ShowCollections: React.FC<IShowCollections> = ({ addFavoritesItem }) => {
     const { fetchCollection } = useFavouritesAction();
     const [collections, setCollections] = useState<IFaviouritesCollection[]>([]);
+     const {changeFavoritesConfig} = useGetAppContext();
 
 
+     const createCollection = () => {
+        changeFavoritesConfig({
+            openFavorites: true,
+            uiType: "create-collection"
+        });
+    }
     useEffect(() => {
         const getCollections = async () => {
             const response = await fetchCollection();
@@ -31,6 +39,7 @@ const ShowCollections: React.FC<IShowCollections> = ({ addFavoritesItem }) => {
                 <button
                     type="button"
                     className="flex cursor-pointer items-center gap-2 rounded-full bg-[#22C55E] px-4 py-2 text-sm font-semibold text-[#121113] shadow-lg transition hover:bg-[#4ade80] active:scale-95"
+                    onClick={createCollection}
                 >
                     <CiCirclePlus className="text-lg" />
                     Add Collection

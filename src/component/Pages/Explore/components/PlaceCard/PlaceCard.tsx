@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type IPlaceCard from "./IPlaceCard";
 import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { useGetAppContext } from "../../../../../App";
-import type { IFaviouritesActivity } from "../../../../../Interface/DataInterface/IFavouritesActivity";
+import type { IFavouritesActivity } from "../../../../../Interface/DataInterface/IFavouritesActivity";
 
 const PlaceCard: React.FC<IPlaceCard> = ({
   place,
@@ -26,17 +26,17 @@ const PlaceCard: React.FC<IPlaceCard> = ({
           openFavorites: true,
           uiType : "show-collection-for-add-purpose",
           data: {
-            placeName : location,
-            activityImage: place.image,
-            activityName: place.name,
-            activityAddress: place.address,
-            activityDescription: place.description,
-            activityLocation: location,
-            rating: place.rating,
-            reviews: place.reviews,
-            longitude: place.longitude,
-            latitude: place.latitude, 
-          } as IFaviouritesActivity,
+            placeName : location || "",
+            activityImage: place.image || "",
+            activityName: place.name || "",
+            activityAddress: place.address || "",
+            activityDescription: place.description || "",
+            activityLocation: location || "",
+            rating: place.rating || 0,
+            reviews: place.reviews || 0,
+            longitude: place.longitude || 0,
+            latitude: place.latitude || 0, 
+          } as IFavouritesActivity,
           mode: "activity"
         })
       }} className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm transition hover:bg-black/60">

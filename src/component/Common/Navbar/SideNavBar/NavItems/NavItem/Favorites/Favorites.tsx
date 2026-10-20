@@ -6,10 +6,20 @@ import type IFaviouritesCollection from "../../../../../../../Interface/DataInte
 import EmptyPannel from "./EmptyPannel/EmptyPannel";
 import CollectionCard from "../../../../../Card/CollectionCard/CollectionCard";
 import { CiCirclePlus } from "react-icons/ci";
+import { useGetAppContext } from "../../../../../../../App";
 
 const Favorites: React.FC<IFavorites> = ({ openDrawer, closeDrawer }) => {
     const [collections, setCollections] = useState<IFaviouritesCollection[]>([]);
     const { fetchCollection } = useFavouritesAction();
+    const {changeFavoritesConfig} = useGetAppContext();
+
+    const createCollection = () => {
+        changeFavoritesConfig({
+            openFavorites: true,
+            uiType: "create-collection"
+        });
+        closeDrawer();
+    }
 
     useEffect(() => {
         const getCollections = async () => {
@@ -38,7 +48,7 @@ const Favorites: React.FC<IFavorites> = ({ openDrawer, closeDrawer }) => {
                 <>
                     <header className="flex justify-around border-b border-white/20 pb-2 mb-4">
                         <p className="text-xl mb-2 font-semibold text-white">Your Collections</p>
-                        <p className="ml-auto cursor-pointer flex items-center gap-2 text-sm font-semibold text-[#22C55E]">
+                        <p onClick={createCollection} className="ml-auto cursor-pointer flex items-center gap-2 text-sm font-semibold text-[#22C55E]">
                             <CiCirclePlus className="text-lg" />
                             Add Collection
                         </p>

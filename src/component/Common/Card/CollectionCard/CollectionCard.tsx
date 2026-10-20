@@ -23,7 +23,7 @@ const CollectionCard: React.FC<ICollectionCard> = ({ name, id, image1, image2, i
                     className="group flex w-full cursor-pointer flex-col gap-3 items-center w-full max-w-3xs"
                 >
                     {!image1 && (
-                        <div className="flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-white/20 bg-white/5 p-4 text-center transition-colors group-hover:border-[#22C55E]/60 group-hover:bg-white/10">
+                        <div onClick={openCollectionDetailsHandler} className="flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-white/20 bg-white/5 p-4 text-center transition-colors group-hover:border-[#22C55E]/60 group-hover:bg-white/10">
                             <MdOutlineCollectionsBookmark className="text-3xl text-[#22C55E]" />
                             <p className="text-xs leading-snug text-white/60">
                                 You haven't added any places, blogs, or stays yet

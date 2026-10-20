@@ -9,22 +9,26 @@ const Budget: React.FC<IBudget> = ({ budget }) => {
         setOpenBudget(true);
     }
     const closeBudget = () => {
-        setOpenBudget(()=> false);
+        setOpenBudget(false);
     }
     return (
-        <section onClick={toggleOpenBudget} className="flex cursor-pointer items-center border-r-1 text-[#ced4da] border-[#ced4da] cursor-pointer mr-2">
-            <p className="mb-0 flex justify-center items-center">
-                <RiMoneyRupeeCircleLine className="inline mr-1" />
-            </p>
-            {budget !== null ? (
-                <p className="text-sm mr-1">{budget}</p>
-            ) : (
-                <p className="text-sm mr-1">Not Set</p>
+        <section className="flex cursor-pointer items-center border-r-1 text-[#ced4da] border-[#ced4da] cursor-pointer mr-2">
+            <section onClick={toggleOpenBudget} className="flex cursor-pointer items-center">
+                <p className="mb-0 flex justify-center items-center">
+                    <RiMoneyRupeeCircleLine className="inline mr-1" />
+                </p>
+                {budget !== null ? (
+                    <p className="text-sm mr-1">{budget}</p>
+                ) : (
+                    <p className="text-sm mr-1">Not Set</p>
+                )}
+            </section>
+            {openBudget && (
+                <TripBudget
+                    open={openBudget}
+                    closeHandler={closeBudget}
+                />
             )}
-            <TripBudget
-                open={openBudget}
-                closeHandler={closeBudget}
-            />
         </section>
     );
 };
