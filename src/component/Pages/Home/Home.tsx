@@ -20,7 +20,7 @@ const Home: React.FC<IHome> = () => {
     const token = localStorage.getItem("token");
 
     if (token) {
-      navigate("/chat");
+      navigate("/inspiration");
       return;
     }
 
@@ -85,7 +85,7 @@ const Home: React.FC<IHome> = () => {
                 onClick={handleCreateTrip}
                 className="inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-full bg-[#335C4D] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_16px_30px_rgba(79,129,117,0.2)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#294C40]"
               >
-                Create my trip
+                Explore
                 <FiArrowRight />
               </button>
             </motion.div>

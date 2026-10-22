@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import type IActivityBox from "./IActivityBox";
 
 import { FaLocationDot } from "react-icons/fa6";
-import useCommonActivities from "../../../../../../../CustomHooks/useCommonActivities";
+import useCommonActivities from "../../../../../../../../CustomHooks/useCommonActivities";
 
 const ActivityBox: React.FC<IActivityBox> = ({ activity, setLongitude, setLatitude }) => {
     const [placeImageURL, setPlaceImageURL] = useState<string>("https://d2uqdcpehc2tdl.cloudfront.net/ExploreTrip/Manali.jpg");

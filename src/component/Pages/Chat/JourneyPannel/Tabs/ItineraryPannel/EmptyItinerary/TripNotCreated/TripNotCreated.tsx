@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
-import useTripAction from "../../../../../../../CustomHooks/useTripAction";
+import useTripAction from "../../../../../../../../CustomHooks/useTripAction";
 import type ITripNotCreated from "./ITripNotCreated";
 
 const TripNotCreated: React.FC<ITripNotCreated> = () => {

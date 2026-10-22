@@ -3,10 +3,10 @@ import type IJourneyPannel from "./IJourneyPannel";
 import ToggleSwitch from "./ToggleSwitch/ToggleSwitch";
 import LocationPannel from "./LocationPannel/LocationPannel";
 import { useChatContext } from "../Chat";
-import ItineraryPannel from "./ItineraryPannel/ItineraryPannel";
-import EmptyPannel from "./EmptyPannel/EmptyPannel";
-import ItineraryPlan from "./ItineraryPlan/ItineraryPlan";
-import HotelPannel from "./HotelPannel/HotelPannel";
+import ItineraryPannel from "./Tabs/ItineraryPannel/ItineraryPannel";
+import EmptyPannel from "./Tabs/EmptyPannel/EmptyPannel";
+import ItineraryPlan from "./Tabs/ItineraryPlan/ItineraryPlan";
+import HotelPannel from "./Tabs/HotelPannel/HotelPannel";
 
 const JourneyPannel: React.FC<IJourneyPannel> = () => {
     const [pannelType, setPannelType] = useState<"location" | "trip">("trip");

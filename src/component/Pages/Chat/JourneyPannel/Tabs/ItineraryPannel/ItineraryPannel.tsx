@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useChatContext } from "../../Chat";
+import { useChatContext } from "../../../Chat";
 import type IItineraryPannel from "./IItineraryPannel";
 import EmptyItinerary from "./EmptyItinerary/EmptyItinerary";
 import Header from "./Header/Header";
 import ItinerarySplitWise from "./Feature/ItinerarySplitWise/ItinerarySplitWise";
-import ItineraryCard from "../../../../Common/Card/ItineraryCard/ItineraryCard";
+import ItineraryCard from "../../../../../Common/Card/ItineraryCard/ItineraryCard";
 
 const ItineraryPannel: React.FC<IItineraryPannel> = () => {
     const { finalItinerary } = useChatContext();

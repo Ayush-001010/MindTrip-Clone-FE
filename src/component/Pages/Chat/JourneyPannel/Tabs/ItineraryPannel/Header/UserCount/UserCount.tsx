@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type IUserCount from "./IUserCount";
 import { FaUser } from "react-icons/fa";
-import TripUser from "../../../../Header/TripUser/TripUser";
+import TripUser from "../../../../../Header/TripUser/TripUser";
 
 const UserCount: React.FC<IUserCount> = ({ countUserOnTrip }) => {
     const [isOpenTripUser , setIsOpenTripUser] = useState(false);

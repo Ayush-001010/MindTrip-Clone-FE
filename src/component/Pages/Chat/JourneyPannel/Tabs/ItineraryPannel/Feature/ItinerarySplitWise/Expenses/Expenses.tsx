@@ -1,10 +1,10 @@
 import React , {useEffect, useState} from "react";
 import type IExpenses from "./IExpenses";
-import type ITripExpense from "../../../../../../../../Interface/DataInterface/ITripExpense";
-import useTripAction from "../../../../../../../../customHooks/useTripAction";
-import type ITripSplitWiseAnalytics from "../../../../../../../../Interface/DataInterface/ITripSplitWiseAnalytics";
+import type ITripExpense from "../../../../../../../../../Interface/DataInterface/ITripExpense";
+import type ITripSplitWiseAnalytics from "../../../../../../../../../Interface/DataInterface/ITripSplitWiseAnalytics";
 import Header from "./Header/Header";
 import Expense from "./Expense/Expense";
+import useTripAction from "../../../../../../../../../CustomHooks/useTripAction";
 
 const Expenses: React.FC<IExpenses> = () => {
     const {fetchTripAnalytics, fetchExpenses} = useTripAction();

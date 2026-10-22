@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type IHotelPannel from "./IHotelPannel";
-import Map from "../../../../Common/Map/Map";
-import { useChatContext } from "../../Chat";
+import Map from "../../../../../Common/Map/Map";
+import { useChatContext } from "../../../Chat";
 import { DatePicker } from "antd";
 
 const HotelPannel: React.FC<IHotelPannel> = () => {

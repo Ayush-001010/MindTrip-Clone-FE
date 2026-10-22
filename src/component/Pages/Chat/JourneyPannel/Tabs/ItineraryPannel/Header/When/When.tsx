@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import type IWhen from "./IWhen";
 import { FaCalendarAlt } from "react-icons/fa";
-import TripWhen from "../../../../Header/TripWhen/TripWhen";
+import TripWhen from "../../../../../Header/TripWhen/TripWhen";
 
 const When: React.FC<IWhen> = ({ startDate, endDate }) => {
     const [isSet , setIsSet] = useState<boolean>(false);

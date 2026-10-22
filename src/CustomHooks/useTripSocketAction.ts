@@ -9,28 +9,20 @@ import type IFinalItineraryResponse from "../Interface/DataInterface/IFinalItine
 import APIService from "../Services/APIService";
 import type ITripHotelData from "../Interface/DataInterface/ITripHotel";
 
+const SERVER_URL = "http://localhost:3000"; // change to your server URL
+const socket = io(SERVER_URL);
+
 const useTripSocketAction = () => {
-  const [notificationConfig, setNotificationConfig] =
-    useState<INotificationConfig>({
-      open: false,
-      type: "",
-      message: "",
-      duration: undefined,
-    });
+  const [notificationConfig, setNotificationConfig] =useState<INotificationConfig>({open: false,type: "",message: "",duration: undefined});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [messages, setMessages] = useState<Array<IMessageTrip>>([]);
-  const [finalItinerary, setFinalItinerary] =
-    useState<IFinalItineraryResponse | null>(null);
-  const [isFinalItineraryReceived, setIsFinalItineraryReceived] =
-    useState<boolean>(false);
-
+  const [finalItinerary, setFinalItinerary] = useState<IFinalItineraryResponse | null>(null);
+  const [isFinalItineraryReceived, setIsFinalItineraryReceived] = useState<boolean>(false);
   const { tripId } = useParams();
   const userDetails = useSelector(
     (state: any) => state.userDetails as IUserInterface,
   );
   const userID = userDetails.userID;
-  const SERVER_URL = "http://localhost:3000"; // change to your server URL
-  const socket = io(SERVER_URL);
 
   socket.on("room:joined", (data: { userName: string }) => {
     const { userName } = data;

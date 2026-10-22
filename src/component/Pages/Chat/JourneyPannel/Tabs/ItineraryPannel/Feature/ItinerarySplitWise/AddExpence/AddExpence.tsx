@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useChatContext } from "../../../../../Chat";
+import { useChatContext } from "../../../../../../Chat";
 import type IAddExpence from "./IAddExpence";
 import ExpenceDetailsForm from "./ExpenceDetailsForm/ExpenceDetailsForm";
 import SplitExpenceUser from "./SplitExpenceUser/SplitExpenceUser";
-import type ITripUserDetails from "../../../../../../../../Interface/DataInterface/ITripUserDetails";
-import useTripAction from "../../../../../../../../customHooks/useTripAction";
+import type ITripUserDetails from "../../../../../../../../../Interface/DataInterface/ITripUserDetails";
 import { useSelector } from "react-redux";
-import type IUserInterface from "../../../../../../../../Interface/DataInterface/IUserDetails";
+import type IUserInterface from "../../../../../../../../../Interface/DataInterface/IUserDetails";
+import useTripAction from "../../../../../../../../../CustomHooks/useTripAction";
 
 type SplitType = "equal" | "ratio" | "percentage" | "custom";
 

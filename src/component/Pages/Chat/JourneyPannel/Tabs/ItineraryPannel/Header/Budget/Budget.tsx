@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type IBudget from "./IBudget";
 import { RiMoneyRupeeCircleLine } from "react-icons/ri";
-import TripBudget from "../../../../Header/TripBudget/TripBudget";
+import TripBudget from "../../../../../Header/TripBudget/TripBudget";
 
 const Budget: React.FC<IBudget> = ({ budget }) => {
     const [openBudget, setOpenBudget] = useState<boolean>(false);

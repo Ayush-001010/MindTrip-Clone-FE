@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import type IItineraryPlanInterface from "./IItineraryPlan";
-import { useChatContext } from "../../Chat";
-import type { IItineraryPlan } from "../../../../../Interface/DataInterface/IItineraryOptions";
-import type { IMapMarkerPoint } from "../../../../Common/Map/IMap";
+import { useChatContext } from "../../../Chat";
+import type { IItineraryPlan } from "../../../../../../Interface/DataInterface/IItineraryOptions";
+import type { IMapMarkerPoint } from "../../../../../Common/Map/IMap";
 import Header from "./Header/Header";
 import ItineraryActivitiesBox from "./ItineraryActivitiesBox/ItineraryActivitiesBox";
-import Map from "../../../../Common/Map/Map";
+import Map from "../../../../../Common/Map/Map";
 
 const ItineraryPlan: React.FC<IItineraryPlanInterface> = () => {
 
