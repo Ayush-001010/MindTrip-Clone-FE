@@ -71,7 +71,7 @@ const ItineraryPlan: React.FC<IItineraryPlanInterface> = () => {
             <section className="h-[40vh] min-h-[16rem] shrink-0 overflow-hidden rounded-[1.1rem] border border-slate-200 bg-white shadow-[0_12px_24px_rgba(148,163,184,0.14)]">
                 <Map markerPoints={placeCoordinates} longitude={longitude || 0} latitude={latitude || 0} />
             </section>
-            <section className="mt-4 min-h-0 flex-1 overflow-y-auto pb-4">
+            <section className="mt-4 min-h-0 flex-1 space-y-6 overflow-y-auto pb-4">
                 {itineraryPlanState?.itinerary.map((itineraryActivities, index) => <ItineraryActivitiesBox day={itineraryActivities.day} title={itineraryActivities.title} key={`itinerary-activities-box-${index}`} itineraryActivities={itineraryActivities.activities} setLongitude={setLongitude} setLatitude={setLatitude} />)}
             </section>
         </div>

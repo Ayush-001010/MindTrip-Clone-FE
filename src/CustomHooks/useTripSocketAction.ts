@@ -41,6 +41,7 @@ const useTripSocketAction = () => {
   socket.on("room:oldChatDetails", (oldMessages: any) => {
     // setMessages(oldMessages);
     const { response } = oldMessages;
+    const message1: IMessageTrip[] = []
     response.data.forEach((message: any) => {
       const obj: IMessageTrip = {
         ID: `${message.id}-messageKey`,
@@ -53,8 +54,9 @@ const useTripSocketAction = () => {
       if (obj.response && obj.response.type === "final-itinerary") {
         setIsFinalItineraryReceived(true);
       }
-      setMessages((prevMessages) => [...prevMessages, obj]);
+      message1.push(obj);
     });
+    setMessages(message1);
   });
 
   socket.on("room:chat-response", (response) => {

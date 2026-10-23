@@ -29,36 +29,36 @@ const ItineraryPlan: React.FC<IItineraryPlanInterface> = ({ plan }) => {
     }, [plan]);
     
     return (
-        <section className="mb-4 p-4 border border-gray-700 p-4 rounded-lg">
+        <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition-colors duration-200 hover:border-sky-300/30">
             {/* Plan Type */}
-            <section>
-                <p className="text-lg font-bold text-[#fff]">{planTypeGenration(plan.planType)}</p>
+            <section className="mb-1 flex items-center justify-between">
+                <p className="text-base font-bold text-[#f8f9fa]">{planTypeGenration(plan.planType)}</p>
             </section>
             {/* Plan Theme */}
-            <section className="mb-4">
+            <section className="mb-3">
                 <p className="text-xs text-[#adb5bd]">
-                    Theme: <span>{plan.theme}</span>
+                    Theme: <span className="text-[#dee2e6]">{plan.theme}</span>
                 </p>
             </section>
             {/* Unique Places */}
-            <section className="mb-4 ">
-                <p className="text-sm text-[#adb5bd] w-full">Places To Visit:</p>
-                <p className="flex flex-wrap">
-                    {uniquePlaces.map((place, index) => <span className="bg-[#ced4da] m-1 font-semibold text-[#343a40] p-1 rounded-full text-xs" key={`place${plan.planType}-${index}`}>{place}</span>)}
-                </p>
+            <section className="mb-3">
+                <p className="mb-1.5 text-xs font-medium text-[#adb5bd]">Places To Visit</p>
+                <div className="flex flex-wrap gap-1.5">
+                    {uniquePlaces.map((place, index) => <span className="rounded-full bg-[#ced4da] px-2 py-1 text-xs font-semibold text-[#343a40]" key={`place${plan.planType}-${index}`}>{place}</span>)}
+                </div>
             </section>
             {/* Unique Activities */}
-            <section className="mb-4">
-                <p className="text-sm text-[#adb5bd] w-full">Activities To Do:</p>
-                <p className="flex flex-wrap">
-                    {uniqueActivities.map((activity, index) => <span className="bg-[#ced4da] m-1 font-semibold text-[#343a40] p-1 rounded-full text-xs" key={`activity${plan.planType}-${index}`}>{activity}</span>)}
-                </p>
+            <section className="mb-3">
+                <p className="mb-1.5 text-xs font-medium text-[#adb5bd]">Activities To Do</p>
+                <div className="flex flex-wrap gap-1.5">
+                    {uniqueActivities.map((activity, index) => <span className="rounded-full bg-[#ced4da] px-2 py-1 text-xs font-semibold text-[#343a40]" key={`activity${plan.planType}-${index}`}>{activity}</span>)}
+                </div>
             </section>
             {/* See More Button */}
             <section>
                 <button onClick={() => {
                     if(setIsSelectedItineraryPlan) setIsSelectedItineraryPlan(true), setItineraryPlan && setItineraryPlan(plan);
-                }} className="m-1 rounded-full bg-[#f8f9fa] cursor-pointer p-1 text-xs font-semibold text-[#000] shadow transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#adb5bd] hover:shadow-md">See More</button>
+                }} className="cursor-pointer rounded-full bg-[#f8f9fa] px-3 py-1.5 text-xs font-semibold text-[#000] shadow transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#adb5bd] hover:shadow-md">See More</button>
             </section>
         </section>
     );

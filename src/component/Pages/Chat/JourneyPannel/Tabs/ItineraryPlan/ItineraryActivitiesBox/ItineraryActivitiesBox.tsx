@@ -5,9 +5,14 @@ import ActivityBox from "./ActivityBox/ActivityBox";
 const ItineraryActivitiesBox: React.FC<IItineraryActivitiesBox> = ({ itineraryActivities, day, title, setLongitude, setLatitude }) => {
     return (
         <section>
-            <section>
-                <p className="font-bold text-lg text-[#e9ecef]">Day {day.toString()}</p>
-                <p className="text-[#adb5bd] text-xs">{title}</p>
+            <section className="mb-3 flex items-center gap-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-400/10 text-sm font-bold text-sky-300">
+                    {day.toString()}
+                </span>
+                <div>
+                    <p className="text-sm font-bold text-[#e9ecef]">Day {day.toString()}</p>
+                    <p className="text-xs text-[#adb5bd]">{title}</p>
+                </div>
             </section>
             <section className="mt-2">
                 {itineraryActivities?.map((activity, index) => (

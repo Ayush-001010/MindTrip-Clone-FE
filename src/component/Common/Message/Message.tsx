@@ -49,7 +49,7 @@ const Message: React.FC<IIMessage> = ({ data }) => {
                 {!response && (
                     <section className="flex w-full justify-start">
                         <div className="flex max-w-[88%] items-end gap-2.5 sm:max-w-[74%]">
-                            <span className="mb-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-sky-200/80 bg-sky-50 text-sky-700 shadow-[0_10px_24px_rgba(125,211,252,0.16)] backdrop-blur-sm">
+                            <span className="mb-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border bg-[#dee2e6] text-[#000] opacity-80 shadow-lg">
                                 <LuBot className="h-4 w-4" />
                             </span>
                             <Loader />
@@ -60,20 +60,15 @@ const Message: React.FC<IIMessage> = ({ data }) => {
                     <>
                         <motion.section className="mt-1 flex w-full justify-start" variants={assistantVariant} initial="hidden" animate="show" transition={{ duration: 0.32 }}>
                             <div className="flex max-w-[88%] items-end gap-2.5 sm:max-w-[74%]">
-                                <span className="mb-1 border p-2 rounded-lg bg-[#dee2e6] opacity-80 shadow-lg text-[#000]">
+                                <span className="mb-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border bg-[#dee2e6] text-[#000] opacity-80 shadow-lg">
                                     <LuBot className="h-4 w-4" />
                                 </span>
-                                <div>
-                                    <div className="mb-3 h-px w-14"></div>
-                                    <div>
-                                        {generateAssistantResponse(response)}
-                                    </div>
+                                <div className="min-w-0 flex-1">
+                                    {generateAssistantResponse(response)}
                                 </div>
                             </div>
                         </motion.section>
-                        <div>
-                            <motion.p className="text-[10px] ml-12 mt-2 text-[#fff]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>{formattedTimestamp}</motion.p>
-                        </div>
+                        <motion.p className="mt-2 ml-11 text-[10px] text-[#adb5bd]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>{formattedTimestamp}</motion.p>
                     </>
                 )}
             </div>
