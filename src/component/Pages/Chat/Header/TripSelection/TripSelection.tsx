@@ -64,10 +64,9 @@ const TripSelection: React.FC<ITripSelection> = () => {
 
     useEffect(() => {
         fetchTripID().then(response => {
-            console.log("Fetched Trip IDs: ", response);
             if (response.success && response.data) {
                 setOptions((response.data as any).map((item: any) => ({
-                    label: item.name,
+                    label: item.name || item.id,
                     value: item.id
                 })))
             }

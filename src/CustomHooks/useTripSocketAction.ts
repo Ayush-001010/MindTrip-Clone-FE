@@ -8,6 +8,7 @@ import type IMessageTrip from "../Interface/DataInterface/IMessageTrip";
 import type IFinalItineraryResponse from "../Interface/DataInterface/IFinalItineraryResponse";
 import APIService from "../Services/APIService";
 import type ITripHotelData from "../Interface/DataInterface/ITripHotel";
+import type IGroupHubMessage from "../Interface/DataInterface/IGroupHubMessage";
 
 const SERVER_URL = "http://localhost:3000"; // change to your server URL
 const socket = io(SERVER_URL);
@@ -23,6 +24,7 @@ const useTripSocketAction = () => {
     (state: any) => state.userDetails as IUserInterface,
   );
   const userID = userDetails.userID;
+  const userName = userDetails.userName;
 
   socket.on("room:joined", (data: { userName: string }) => {
     const { userName } = data;
@@ -37,7 +39,6 @@ const useTripSocketAction = () => {
   });
 
   socket.on("room:oldChatDetails", (oldMessages: any) => {
-    console.log("Received old chat details from server:", oldMessages);
     // setMessages(oldMessages);
     const { response } = oldMessages;
     response.data.forEach((message: any) => {
@@ -152,6 +153,27 @@ const useTripSocketAction = () => {
     }
   });
 
+  socket.on("room:newGroupMessage-response", (response) => {
+    console.log("Received new group message response from server:", response);
+    if(response.success) {
+      const {type , userName} = response.data;
+      setNotificationConfig({
+        open: true,
+        type: "success",
+        message: `New group message of type "${type}" sent by ${userName}`,
+        duration: 3000,
+      });
+    }
+    else {
+      setNotificationConfig({
+        open: true,
+        type: "error",
+        message: "Failed to send new group message",
+        duration: 3000,
+      });
+    }
+  });
+
   const editTripName = (newTripName: string) => {
     socket.emit("room:editTripName", { tripID: tripId, newTripName });
   };
@@ -196,6 +218,16 @@ const useTripSocketAction = () => {
     socket.emit("room:hotelRequest", { tripID: tripId, userPrompt : "Suggest the hotels according to itinerary", userID });
   };
 
+  const sendNewMessage = (type : "announcement" | "medical-emergency" | "poll" | "opinion" , message: IGroupHubMessage) => {
+    socket.emit("room:newGroupMessage" , {
+      userID, userName, message : {
+        type,
+        content: message.content,
+        base62: tripId,
+      }
+    })
+  };
+
   useEffect(() => {
     if (userDetails.userName) {
       socket.emit("room:join", {
@@ -208,8 +240,6 @@ const useTripSocketAction = () => {
 
   useEffect(() => {
     const timeOutID = setTimeout(() => {
-      console.log("TripID ", tripId);
-      console.log("UserID ", userID);
       if (tripId && userID) {
         socket.emit("room:fetchOldChat", { tripID: tripId, userID: userID });
       }
@@ -268,7 +298,7 @@ const useTripSocketAction = () => {
     }
   }, [isFinalItineraryReceived]);
 
-  return { notificationConfig,sendMessageHandler,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName,addHotelToWishList, bookHotelHandler};
+  return { notificationConfig,sendMessageHandler,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName,addHotelToWishList, bookHotelHandler, sendNewMessage};
 };
 
 export default useTripSocketAction;

@@ -11,6 +11,11 @@ import type { IItineraryPlan } from '../../../Interface/DataInterface/IItinerary
 import useTripSocketAction from '../../../customHooks/useTripSocketAction';
 import type { IHotelDetail } from '../../../Interface/DataInterface/IHotelSearchResponse';
 import type ITripHotelData from '../../../Interface/DataInterface/ITripHotel';
+import useTripAction from '../../../CustomHooks/useTripAction';
+import { useParams } from 'react-router-dom';
+import type IUserInterface from '../../../Interface/DataInterface/IUserDetails';
+import { useSelector } from 'react-redux';
+import type IGroupHubMessage from '../../../Interface/DataInterface/IGroupHubMessage';
 
 export interface IChatContext {
     isSelectedLocation: boolean;
@@ -39,6 +44,9 @@ export interface IChatContext {
     setShowHotelDetails?: React.Dispatch<React.SetStateAction<IHotelDetail | null>>;
     addHotelToWishList?: (hotel : ITripHotelData) => void;
     bookHotelHandler?: (hotel : ITripHotelData) => void;
+    isTripAdmin: boolean;
+    sendNewMessage?: (type : "announcement" | "medical-emergency" | "poll" | "opinion" , message: IGroupHubMessage) => void;
+    groupHubPosts: IGroupHubMessage[];
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -48,13 +56,16 @@ const ChatContext = createContext<IChatContext>({
     destination:null,
     sendMessageHandler: async (_: string) => {},
     messages: [],
+    groupHubPosts: [],
     itineraryPlan: null,
     isSelectedItineraryPlan: false,
     isLoading: false,
     finalItinerary: null,
     addExpense: (_paidBy :{userId: number, userName: string} , _totalAmount:number, _title : string , _category : string, _spendAt: Date, _splitMethod: "equal" | "percentage" | "custom" | "ratio",   _splitAmong: {userId : number , userName : string , amount : number}[] ,  _notes?: string) => {},
     showHotelInLocationPannel: false,
-    showHotelDetails: null
+    showHotelDetails: null,
+    isTripAdmin: false,
+    sendNewMessage: async (_type : "announcement" | "medical-emergency" | "poll" | "opinion" , _message: IGroupHubMessage) => {}
 });
 
 export const useChatContext = () => {
@@ -66,7 +77,7 @@ export const useChatContext = () => {
 }
 
 const Chat : React.FC<IChat> = () => {
-    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , addHotelToWishList, bookHotelHandler } = useTripSocketAction();
+    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , addHotelToWishList, bookHotelHandler , sendNewMessage } = useTripSocketAction();
     const [isSelectedLocation, setIsSelectedLocation] = useState<boolean>(false);
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
@@ -75,7 +86,12 @@ const Chat : React.FC<IChat> = () => {
     const [destination, setDestination] = useState<ISuggestedDestination | null>(null);
     const [itineraryPlan , setItineraryPlan] = useState<IItineraryPlan | null>(null);
     const [isSelectedItineraryPlan, setIsSelectedItineraryPlan] = useState<boolean>(false);
+    const [isTripAdmin, setIsTripAdmin] = useState<boolean>(false);
     const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
+    const { isUserTripAdmin , fetchOldGroupHubPost } = useTripAction();
+    const { tripId } = useParams();
+    const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
+    const [groupHubPosts, setGroupHubPosts] = useState<IGroupHubMessage[]>([]);
 
     useEffect(() => {
         const aiMessage = localStorage.getItem("aiMessage");
@@ -95,8 +111,26 @@ const Chat : React.FC<IChat> = () => {
         }
     }, []);
 
+    useEffect(()=>{
+        if(!tripId || !userID) {
+            return;
+        }
+        isUserTripAdmin().then(response => {
+            console.log("Is user trip admin:", response);
+            if(response.success && response.data){
+                setIsTripAdmin(true);
+            }
+        });
+        fetchOldGroupHubPost().then((response:any) => {
+            console.log("Old Group Hub Post:", response);
+            if(response.success && response.data){
+                setGroupHubPosts(response.data);
+            }
+        });
+    },[tripId, userID])
+
     return (
-        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler }}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler , isTripAdmin , sendNewMessage , groupHubPosts }}>
             <div className="w-full ">
                 {notification}
                 <Header/>

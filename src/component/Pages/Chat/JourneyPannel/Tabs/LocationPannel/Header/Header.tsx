@@ -1,7 +1,7 @@
 import React from "react";
 import type IHeader from "./IHeader";
 import { CiLocationOn } from "react-icons/ci";
-import { useChatContext } from "../../../Chat";
+import { useChatContext } from "../../../../Chat";
 
 const Header: React.FC<IHeader> = ({ destinationName , longitude , latitude }) => {
     const {setIsSelectedLocation , setLocationLongitude , setLocationLatitude} = useChatContext();

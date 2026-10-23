@@ -1,7 +1,7 @@
 import React from "react";
 import type ILocationPannel from "./ILocationPannel";
-import Map from "../../../../Common/Map/Map";
-import { useChatContext } from "../../Chat";
+import Map from "../../../../../Common/Map/Map";
+import { useChatContext } from "../../../Chat";
 import Header from "./Header/Header";
 import BestTimeToVisit from "./BestTimeToVisit/BestTimeToVisit";
 import Activities from "./Activities/Activities";

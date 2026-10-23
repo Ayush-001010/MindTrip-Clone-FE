@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 import type IToggleSwitch from "./IToggleSwitch";
 import { LuMapPinned } from "react-icons/lu";
 import { GiJourney } from "react-icons/gi";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
+import { PiChatsBold } from "react-icons/pi";
 
 const ToggleSwitch: React.FC<IToggleSwitch> = ({active , setActive}) => {
     const activeCss = useRef("bg-[#fff] text-[#172121]");
@@ -13,6 +15,8 @@ const ToggleSwitch: React.FC<IToggleSwitch> = ({active , setActive}) => {
             <p className="m-0 flex cursor-pointer items-center rounded-full border border-[#fff] bg-[#172121] p-1 shadow-lg backdrop-blur-sm">
                 <span onClick={() => setActive("trip")} className={`${active === "trip" ? activeCss.current : inActiveCss.current} flex h-9 w-10 items-center justify-center rounded-full`}><GiJourney /></span>
                 <span onClick={() => setActive("location")} className={`${active === "location" ? activeCss.current : inActiveCss.current} flex h-9 w-10 items-center justify-center rounded-full transition`}><LuMapPinned /></span>
+                <span onClick={() => setActive("split-wise")} className={`${active === "split-wise" ? activeCss.current : inActiveCss.current} flex h-9 w-10 items-center justify-center rounded-full transition`}><FaMoneyBillTransfer /></span>
+                <span onClick={() => setActive("user-chats")} className={`${active === "user-chats" ? activeCss.current : inActiveCss.current} flex h-9 w-10 items-center justify-center rounded-full transition`}><PiChatsBold /></span>
             </p>
         </div>
     );

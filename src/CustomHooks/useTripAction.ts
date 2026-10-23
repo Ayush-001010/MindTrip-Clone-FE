@@ -123,8 +123,28 @@ const useTripAction = () => {
         );
         return response;
     };
+
+    const isUserTripAdmin = async () => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.getRequest<boolean>("/trip/isUserTripAdmin",
+            {
+                base62: tripId || "",
+                userID: userID || 2
+            }
+        );
+        console.log("Is user trip admin response:", tripId , userID, response);
+        return response;
+    };
+
+    const fetchOldGroupHubPost = async () => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.getRequest("/trip/fetchOldGroupHubPost",{
+            base62: tripId || ""
+        });
+        return response;
+    }
     
-    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , addCommentOnTripHotel , likeOrDislikeTripHotel };
+    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , addCommentOnTripHotel , likeOrDislikeTripHotel , isUserTripAdmin , fetchOldGroupHubPost };
 };
 
 export default useTripAction;
