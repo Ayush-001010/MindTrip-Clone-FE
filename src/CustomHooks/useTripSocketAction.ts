@@ -43,6 +43,7 @@ const useTripSocketAction = () => {
     const { response } = oldMessages;
     const message1: IMessageTrip[] = []
     response.data.forEach((message: any) => {
+      if(message.response === "") return;
       const obj: IMessageTrip = {
         ID: `${message.id}-messageKey`,
         userID: message.userID,
@@ -226,6 +227,7 @@ const useTripSocketAction = () => {
         type,
         content: message.content,
         base62: tripId,
+        options: message.options || [],
       }
     })
   };

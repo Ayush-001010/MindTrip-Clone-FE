@@ -13,7 +13,7 @@ import GroupHub from "./Tabs/GroupHub/GroupHub";
 
 const JourneyPannel: React.FC<IJourneyPannel> = () => {
     const [pannelType, setPannelType] = useState<"location" | "trip" | "split-wise" | "user-chats">("trip");
-    const { isSelectedLocation, locationLatitude, locationLongitude, isSelectedItineraryPlan, showHotelInLocationPannel } = useChatContext();
+    const { isSelectedLocation, locationLatitude, locationLongitude, isSelectedItineraryPlan, showHotelInLocationPannel , createAction } = useChatContext();
     const hasSelectedCoordinates = locationLatitude !== 0 || locationLongitude !== 0;
     const {tripId} = useParams(); 
 
@@ -23,11 +23,13 @@ const JourneyPannel: React.FC<IJourneyPannel> = () => {
         }
         switch (pannelType) {
             case "trip":
-                return isSelectedItineraryPlan ? <ItineraryPlan /> : <ItineraryPannel />;
+                return  <ItineraryPannel />
             case "location":
                 if (showHotelInLocationPannel) {
                     return <HotelPannel />;
                 }
+                if(isSelectedItineraryPlan)
+                    return <ItineraryPlan />;
                 return (isSelectedLocation || hasSelectedCoordinates) ? <LocationPannel /> : <EmptyPannel />;
             case "split-wise":
                 return <EmptyPannel />;
@@ -53,6 +55,12 @@ const JourneyPannel: React.FC<IJourneyPannel> = () => {
             setPannelType("location");
         }
     }, [showHotelInLocationPannel]);
+
+    useEffect(() => {
+        if (createAction) {
+            setPannelType("user-chats");
+        }
+    }, [createAction]);
 
 
     return (

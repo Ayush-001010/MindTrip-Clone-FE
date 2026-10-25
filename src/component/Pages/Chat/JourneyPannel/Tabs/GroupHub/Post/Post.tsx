@@ -2,12 +2,14 @@ import React from 'react';
 import type IPost from './IPost';
 import type IGroupHubMessage from '../../../../../../../Interface/DataInterface/IGroupHubMessage';
 import AnnouncementPost from './AnnouncementPost/AnnouncementPost';
+import PollPost from './PollPost/PollPost';
 
 const Post : React.FC<IPost> = ({ posts }) => {
 
     const genratedPostUI = (post : IGroupHubMessage) => {
         switch(post.type) {
             case "announcement" : return <AnnouncementPost post={post} />;
+            case "poll" : return <PollPost post={post} />;
             default : return null;
         }
     }

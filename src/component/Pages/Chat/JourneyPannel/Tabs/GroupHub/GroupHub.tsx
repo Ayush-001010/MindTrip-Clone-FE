@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type IGroupHub from './IGroupHub';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
@@ -7,9 +7,15 @@ import Post from './Post/Post';
 
 const GroupHub: React.FC<IGroupHub> = () => {
     const [activeTab, setActiveTab] = useState<"Poll" | "Announcement" | "Opinion" | "Check ins" | "Medical Assistance">("Announcement");
-    const { groupHubPosts } = useChatContext();
+    const { groupHubPosts , createAction } = useChatContext();
 
     console.log(groupHubPosts);
+    useEffect(() => {
+        if (createAction) {
+            setActiveTab("Poll");
+        }
+    }, [createAction]);
+    
     return (
         <section className="relative flex h-full w-full flex-col overflow-hidden rounded-lg border border-[#6c757d]">
             <Header activeTab={activeTab} setActiveTab={setActiveTab} />

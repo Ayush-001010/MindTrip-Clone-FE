@@ -12,7 +12,4 @@ export default interface ITripHotelData {
     isBooked?: boolean;
     toDate?: Date;
     fromDate?: Date;
-    likeCount?: number;
-    dislikeCount?: number;
-    comment?: string;
 }

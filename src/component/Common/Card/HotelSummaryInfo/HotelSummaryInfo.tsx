@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { HiOutlineUserGroup } from "react-icons/hi2";
 import type IHotelSummaryInfo from "./IHotelSummaryInfo";
 
 const MAX_VISIBLE_AMENITIES = 3;
@@ -10,7 +11,16 @@ const HotelSummaryInfo: React.FC<IHotelSummaryInfo> = ({ hotel }) => {
     const extraAmenitiesCount = amenities.length - visibleAmenities.length;
 
     return (
-        <div className="flex gap-3">
+        <div className="relative flex gap-3">
+            <div className="group/tooltip absolute right-0 top-0 z-10">
+                <button
+                    type="button"
+                    aria-label="Want to take opnion from other ?"
+                    className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-white/5 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                    <HiOutlineUserGroup className="h-3.5 w-3.5" />
+                </button>
+            </div>
             <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-lg bg-[#343a40]">
                 {hotel.image && !imageError ? (
                     <img
@@ -25,7 +35,7 @@ const HotelSummaryInfo: React.FC<IHotelSummaryInfo> = ({ hotel }) => {
                     </div>
                 )}
             </div>
-            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 pr-8">
                 <h3 className="line-clamp-1 text-sm font-semibold text-white">{hotel.name}</h3>
 
                 <div className="flex flex-wrap items-center gap-1.5 text-xs">

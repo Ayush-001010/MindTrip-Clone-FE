@@ -102,28 +102,6 @@ const useTripAction = () => {
         return response;
     };
 
-    const addCommentOnTripHotel = async (hotelID: string, comment: string) => {
-        const apiServiceInstance = new APIService();
-        const response = await apiServiceInstance.postRequest<null>(
-            "/trip/commentOnTripHotel",
-            {
-                base62 : tripId,
-                id: hotelID,
-                comment : JSON.stringify({name:userName , comment})
-            }
-        );
-        return response;
-    };
-
-    const likeOrDislikeTripHotel = async (hotelID: string, like: boolean) => {
-        const apiServiceInstance = new APIService();
-        const response = await apiServiceInstance.postRequest<null>(
-            "/trip/likeOrDislikeTripHotel",
-            { base62: tripId, id: hotelID, action: like ? "like" : "dislike"}
-        );
-        return response;
-    };
-
     const isUserTripAdmin = async () => {
         const apiServiceInstance = new APIService();
         const response = await apiServiceInstance.getRequest<boolean>("/trip/isUserTripAdmin",
@@ -143,8 +121,17 @@ const useTripAction = () => {
         });
         return response;
     }
+
+    const likeOrDislikeGroupHubPost = async (postID: string, like: boolean) => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.postRequest<any>("/trip/likeOrDislikePollOption",{
+            "optionID": postID,
+            like
+        });
+        return response;
+    }
     
-    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , addCommentOnTripHotel , likeOrDislikeTripHotel , isUserTripAdmin , fetchOldGroupHubPost };
+    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost };
 };
 
 export default useTripAction;

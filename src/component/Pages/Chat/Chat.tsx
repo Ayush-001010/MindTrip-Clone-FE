@@ -47,6 +47,9 @@ export interface IChatContext {
     isTripAdmin: boolean;
     sendNewMessage?: (type : "announcement" | "medical-emergency" | "poll" | "opinion" , message: IGroupHubMessage) => void;
     groupHubPosts: IGroupHubMessage[];
+    createActionHandler: (type: "poll" | "default", title: string, option1?: string, option2?: string, option3?: string, option4?: string) => void;
+    createAction: {type: "poll" | "default", title: string, option1?: string, option2?: string, option3?: string, option4?: string} | null;
+    likeOrDislikeGroupHubPost: (postID: string, like: boolean) => Promise<any>;
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -57,6 +60,7 @@ const ChatContext = createContext<IChatContext>({
     sendMessageHandler: async (_: string) => {},
     messages: [],
     groupHubPosts: [],
+    createAction: null,
     itineraryPlan: null,
     isSelectedItineraryPlan: false,
     isLoading: false,
@@ -65,7 +69,11 @@ const ChatContext = createContext<IChatContext>({
     showHotelInLocationPannel: false,
     showHotelDetails: null,
     isTripAdmin: false,
-    sendNewMessage: async (_type : "announcement" | "medical-emergency" | "poll" | "opinion" , _message: IGroupHubMessage) => {}
+    sendNewMessage: async (_type : "announcement" | "medical-emergency" | "poll" | "opinion" , _message: IGroupHubMessage) => {},
+    createActionHandler: (type: "poll" | "default", title: string, option1?: string, option2?: string, option3?: string, option4?: string) => {
+        console.log(type, title, option1, option2, option3, option4);
+    },
+    likeOrDislikeGroupHubPost: async (_postID: string, _like: boolean) => {},
 });
 
 export const useChatContext = () => {
@@ -88,10 +96,26 @@ const Chat : React.FC<IChat> = () => {
     const [isSelectedItineraryPlan, setIsSelectedItineraryPlan] = useState<boolean>(false);
     const [isTripAdmin, setIsTripAdmin] = useState<boolean>(false);
     const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
-    const { isUserTripAdmin , fetchOldGroupHubPost } = useTripAction();
+    const { isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost } = useTripAction();
     const { tripId } = useParams();
     const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
     const [groupHubPosts, setGroupHubPosts] = useState<IGroupHubMessage[]>([]);
+    const [createAction , setCreateAction] = useState<{
+        type: "poll",
+        title: string,
+        option1?: string,
+        option2?: string,
+        option3?: string,
+        option4?: string,
+    } | null>(null);
+
+    const createActionHandler = (type: "poll" | "default", title: string, option1?: string, option2?: string, option3?: string, option4?: string) => {
+        if(type === "default") {
+            setCreateAction(null);
+            return;
+        }
+        setCreateAction({type,title,option1,option2,option3,option4});
+    };
 
     useEffect(() => {
         const aiMessage = localStorage.getItem("aiMessage");
@@ -127,10 +151,10 @@ const Chat : React.FC<IChat> = () => {
                 setGroupHubPosts(response.data);
             }
         });
-    },[tripId, userID])
+    },[tripId, userID]);
 
     return (
-        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler , isTripAdmin , sendNewMessage , groupHubPosts }}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler , isTripAdmin , sendNewMessage , groupHubPosts, createActionHandler , createAction , likeOrDislikeGroupHubPost }}>
             <div className="w-full ">
                 {notification}
                 <Header/>
