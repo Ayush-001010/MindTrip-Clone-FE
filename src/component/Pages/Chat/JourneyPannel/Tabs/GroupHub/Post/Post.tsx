@@ -3,6 +3,7 @@ import type IPost from './IPost';
 import type IGroupHubMessage from '../../../../../../../Interface/DataInterface/IGroupHubMessage';
 import AnnouncementPost from './AnnouncementPost/AnnouncementPost';
 import PollPost from './PollPost/PollPost';
+import OpinionPost from './OpinionPost/OpinionPost';
 
 const Post : React.FC<IPost> = ({ posts }) => {
 
@@ -10,6 +11,7 @@ const Post : React.FC<IPost> = ({ posts }) => {
         switch(post.type) {
             case "announcement" : return <AnnouncementPost post={post} />;
             case "poll" : return <PollPost post={post} />;
+            case "opinion" : return <OpinionPost post={post} />;
             default : return null;
         }
     }

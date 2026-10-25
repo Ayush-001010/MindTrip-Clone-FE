@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import type IHotelSummaryInfo from "./IHotelSummaryInfo";
+import { useChatContext } from "../../../Pages/Chat/Chat";
 
 const MAX_VISIBLE_AMENITIES = 3;
 
@@ -9,14 +10,20 @@ const HotelSummaryInfo: React.FC<IHotelSummaryInfo> = ({ hotel }) => {
     const amenities = hotel.amenities ? hotel.amenities.split(",").map((amenity) => amenity.trim()).filter(Boolean) : [];
     const visibleAmenities = amenities.slice(0, MAX_VISIBLE_AMENITIES);
     const extraAmenitiesCount = amenities.length - visibleAmenities.length;
+    const { createActionHandler } = useChatContext();
+
+    const clickHandlerUsersOpinion = () => {
+        createActionHandler("opinion", `What do you think about ${hotel.name}?`, undefined, undefined, undefined, undefined, hotel.image);
+    };
 
     return (
         <div className="relative flex gap-3">
             <div className="group/tooltip absolute right-0 top-0 z-10">
                 <button
                     type="button"
-                    aria-label="Want to take opnion from other ?"
+                    aria-label="Want to take opinion from other ?"
                     className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-white/5 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+                onClick={clickHandlerUsersOpinion}
                 >
                     <HiOutlineUserGroup className="h-3.5 w-3.5" />
                 </button>

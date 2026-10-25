@@ -11,8 +11,10 @@ const GroupHub: React.FC<IGroupHub> = () => {
 
     console.log(groupHubPosts);
     useEffect(() => {
-        if (createAction) {
+        if (createAction?.type === "poll") {
             setActiveTab("Poll");
+        } else if(createAction?.type === "opinion") {
+            setActiveTab("Opinion");
         }
     }, [createAction]);
     

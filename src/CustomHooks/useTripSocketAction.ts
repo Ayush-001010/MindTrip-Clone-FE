@@ -228,6 +228,7 @@ const useTripSocketAction = () => {
         content: message.content,
         base62: tripId,
         options: message.options || [],
+        imageUrl: message.imageUrl || undefined,
       }
     })
   };

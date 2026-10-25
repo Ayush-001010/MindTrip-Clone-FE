@@ -130,8 +130,19 @@ const useTripAction = () => {
         });
         return response;
     }
+
+    const addCommentOnOpinion = async ( postId: string, comment: string, parentOpinionCommentId?: string) => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.postRequest<any>("/trip/addCommentOnOpinion",{
+            "postId": postId,
+            "comment": comment,
+            "userName": userName || "",
+            "parentOpinionCommentId": parentOpinionCommentId
+        });
+        return response;
+    };
     
-    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost };
+    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost , addCommentOnOpinion };
 };
 
 export default useTripAction;
