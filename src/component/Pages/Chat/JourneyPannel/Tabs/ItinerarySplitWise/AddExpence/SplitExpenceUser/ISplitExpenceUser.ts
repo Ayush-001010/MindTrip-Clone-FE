@@ -1,4 +1,4 @@
-import type ITripUserDetails from "../../../../../../../../../Interface/DataInterface/ITripUserDetails";
+import type ITripUserDetails from "../../../../../../../../Interface/DataInterface/ITripUserDetails";
 
 export default interface ISplitExpenceUser {
     users : ITripUserDetails[];

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useChatContext } from "../../../../../../Chat";
+import { useChatContext } from "../../../../Chat";
 import type IAddExpence from "./IAddExpence";
 import ExpenceDetailsForm from "./ExpenceDetailsForm/ExpenceDetailsForm";
 import SplitExpenceUser from "./SplitExpenceUser/SplitExpenceUser";
-import type ITripUserDetails from "../../../../../../../../../Interface/DataInterface/ITripUserDetails";
+import type ITripUserDetails from "../../../../../../../Interface/DataInterface/ITripUserDetails";
 import { useSelector } from "react-redux";
-import type IUserInterface from "../../../../../../../../../Interface/DataInterface/IUserDetails";
-import useTripAction from "../../../../../../../../../CustomHooks/useTripAction";
+import type IUserInterface from "../../../../../../../Interface/DataInterface/IUserDetails";
+import useTripAction from "../../../../../../../CustomHooks/useTripAction";
 
 type SplitType = "equal" | "ratio" | "percentage" | "custom";
 
@@ -17,7 +17,7 @@ interface ISplitArr {
     isActive: boolean;
 }
 
-const AddExpence: React.FC<IAddExpence> = () => {
+const AddExpence: React.FC<IAddExpence> = ({ clickHandler }) => {
     const { fetchTripMemberDetails } = useTripAction();
     const [tripMembers, setTripMembers] = useState<ITripUserDetails[]>([]);
     const [expenseTotalAmount, setExpenseTotalAmount] = useState<number>(0);
@@ -29,9 +29,25 @@ const AddExpence: React.FC<IAddExpence> = () => {
     const { userID , userName } = useSelector((state: any) => state.userDetails as IUserInterface);
     const [splitType, setSplitType] = useState<SplitType>("equal");
     const [splitArr, setSplitArr] = useState<ISplitArr[]>([]);
+    
+    
+    const parseNumericValue = (value: string, fallback = 0): number => {
+        const parsedValue = Number(value);
+
+        return Number.isFinite(parsedValue) ? parsedValue : fallback;
+    };
 
     const addExpenseHandler = () => {
         if(addExpense){
+
+            // Handle case of ratio split if needed
+            let splitArrCopy = [...splitArr];
+
+            if(splitType === "ratio"){
+                const totalRatio = splitArr.reduce((sum, item) => sum + parseNumericValue(item.shareValue, 1), 0);
+                splitArrCopy = splitArrCopy.map(item => item.isActive ? { ...item, shareValue: totalRatio ? ((expenseTotalAmount * parseNumericValue(item.shareValue, 1)) / totalRatio).toFixed(2) : "0.00" } : item);
+            }
+
             addExpense(
                 { userId: Number(userID) || 1, userName: userName || "" }, // Replace with actual userName if available
                 expenseTotalAmount,
@@ -39,10 +55,11 @@ const AddExpence: React.FC<IAddExpence> = () => {
                 expenseCategory,
                 new Date(expenseDate),
                 splitType,
-                splitArr.filter(item => item.isActive).map(item => ({ userId: item.id, userName: item.name, amount: Number(item.shareValue) })),
+                splitArrCopy.filter(item => item.isActive).map(item => ({ userId: item.id, userName: item.name, amount:Number(item.shareValue) })),
                 expenseDescription
             );
         }
+        clickHandler();
     }
     useEffect(() => {
         fetchTripMemberDetails().then((res: any) =>{

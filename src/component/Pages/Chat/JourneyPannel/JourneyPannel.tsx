@@ -10,6 +10,7 @@ import HotelPannel from "./Tabs/HotelPannel/HotelPannel";
 import { useParams } from "react-router-dom";
 import TripNotCreated from "./Tabs/ItineraryPannel/EmptyItinerary/TripNotCreated/TripNotCreated";
 import GroupHub from "./Tabs/GroupHub/GroupHub";
+import ItinerarySplitWise from "./Tabs/ItinerarySplitWise/ItinerarySplitWise";
 
 const JourneyPannel: React.FC<IJourneyPannel> = () => {
     const [pannelType, setPannelType] = useState<"location" | "trip" | "split-wise" | "user-chats">("trip");
@@ -32,7 +33,7 @@ const JourneyPannel: React.FC<IJourneyPannel> = () => {
                     return <ItineraryPlan />;
                 return (isSelectedLocation || hasSelectedCoordinates) ? <LocationPannel /> : <EmptyPannel />;
             case "split-wise":
-                return <EmptyPannel />;
+                return <ItinerarySplitWise />
             case "user-chats":
                 return <GroupHub />;
         }

@@ -141,8 +141,18 @@ const useTripAction = () => {
         });
         return response;
     };
+
+    const checkInUpdate = async (id: number, status: string, reachWhen?: string) => {
+        const apiServiceInstance = new APIService();
+        const response = await apiServiceInstance.postRequest<any>("/trip/checkInUpdate",{
+            "id": id,
+            "status": status,
+            "reachWhen": reachWhen
+        });
+        return response;
+    };
     
-    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost , addCommentOnOpinion };
+    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost , addCommentOnOpinion , checkInUpdate };
 };
 
 export default useTripAction;

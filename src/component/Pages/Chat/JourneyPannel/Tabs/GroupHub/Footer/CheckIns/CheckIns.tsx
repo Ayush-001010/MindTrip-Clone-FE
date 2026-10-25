@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type ICheckIns from './ICheckIns';
 import SentBox from '../SentBox/SentBox';
+import { useChatContext } from '../../../../../Chat';
 
 const CheckIns: React.FC<ICheckIns> = () => {
+    const { sendNewMessage} = useChatContext();
+    const [message, setMessage] = useState("");
 
     const submitHandler = async () => {
-        // Handle the check-in submission logic here
-        console.log("Check-in submitted");
+        setMessage("");
+        if(sendNewMessage)
+        sendNewMessage("check-ins", { content: message });
     };
     
     return (
         <section className="flex w-full flex-col gap-2 p-2">
             <input
                 type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type your message..."
                 className="h-12 w-full rounded-[1.45rem] border border-slate-200/90 px-4 text-[0.98rem] text-[#fff] outline-none transition-all duration-200 placeholder:text-[#e9ecef]"
             />

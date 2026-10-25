@@ -11,14 +11,16 @@ const ItinerarySplitWise: React.FC<IItinerarySplitWise> = () => {
         setOpenAddExpense((prev) => !prev);
     };
     return (
-        <section className="relative h-full w-full">
+        <section className="relative h-full w-full overflow-y-auto pb-4">
             {!openAddExpense && (
-                <section className="mt-4">
+                <section className="mt-4 space-y-3">
+                    <div className="flex justify-end">
+                        <AddBillIcon clickHandler={handleAddExpenseClick} />
+                    </div>
                     <Expenses />
-                    <AddBillIcon clickHandler={handleAddExpenseClick} />
                 </section>
             )}
-            {openAddExpense && <AddExpence />}
+            {openAddExpense && <AddExpence clickHandler={handleAddExpenseClick} />}
         </section>
     );
 };

@@ -17,9 +17,16 @@ const Expense: React.FC<IExpense> = ({ expense }) => {
                         </span>
                     </div>
                 </div>
-                <span className="shrink-0 rounded-full border border-[#334155] px-2.5 py-1 text-sm font-semibold text-[#e2e8f0]">
-                    {expense.totalAmount}
-                </span>
+                <div className="flex shrink-0 items-stretch gap-2">
+                    <div className="flex min-w-[4.5rem] flex-col items-end rounded-lg border border-[#334155] bg-[#0f172a]/60 px-2.5 py-1">
+                        <span className="text-[0.6rem] uppercase tracking-[0.12em] text-[#94a3b8]">Total</span>
+                        <span className="text-sm font-semibold text-[#e2e8f0]">{expense.totalAmount}</span>
+                    </div>
+                    <div className="flex min-w-[4.5rem] flex-col items-end rounded-lg border border-[#7dd3fc]/30 bg-[#7dd3fc]/10 px-2.5 py-1">
+                        <span className="text-[0.6rem] uppercase tracking-[0.12em] text-[#7dd3fc]">Your share</span>
+                        <span className="text-sm font-semibold text-[#f8fafc]">{expense.ownedAmount ?? 0}</span>
+                    </div>
+                </div>
             </div>
             {expense.notes && (
                 <p className="mt-2 pl-0.5 text-xs leading-5 text-[#94a3b8]">{expense.notes}</p>

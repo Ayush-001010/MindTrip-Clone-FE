@@ -11,4 +11,5 @@ export default interface ITripExpense {
     spendAt: string;
     createdAt: string;
     updatedAt: string;
+    ownedAmount?: number;
 }

@@ -4,6 +4,7 @@ import type IGroupHubMessage from '../../../../../../../Interface/DataInterface/
 import AnnouncementPost from './AnnouncementPost/AnnouncementPost';
 import PollPost from './PollPost/PollPost';
 import OpinionPost from './OpinionPost/OpinionPost';
+import CheckInPost from './CheckInPost/CheckInPost';
 
 const Post : React.FC<IPost> = ({ posts }) => {
 
@@ -12,6 +13,7 @@ const Post : React.FC<IPost> = ({ posts }) => {
             case "announcement" : return <AnnouncementPost post={post} />;
             case "poll" : return <PollPost post={post} />;
             case "opinion" : return <OpinionPost post={post} />;
+            case "check-ins" : return <CheckInPost post={post} />;
             default : return null;
         }
     }

@@ -233,7 +233,7 @@ const useTripSocketAction = () => {
     socket.emit("room:hotelRequest", { tripID: tripId, userPrompt : "Suggest the hotels according to itinerary", userID });
   };
 
-  const sendNewMessage = (type : "announcement" | "medical-emergency" | "poll" | "opinion" , message: IGroupHubMessage) => {
+  const sendNewMessage = (type : "announcement" | "medical-emergency" | "poll" | "opinion" | "check-ins" , message: IGroupHubMessage) => {
     socket.emit("room:newGroupMessage" , {
       userID, userName, message : {
         type,
