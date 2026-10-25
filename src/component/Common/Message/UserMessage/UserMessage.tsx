@@ -5,7 +5,6 @@ import { RiUser3Fill } from "react-icons/ri";
 import QuestionResponse from "./QuestionResponse/QuestionResponse";
 
 const UserMessage: React.FC<IUserMessage> = ({ message }) => {
-    console.log(message);
     const [isQuestionGatherResponse,setIsQuestionGatherResponse] = useState(false);
     const container = {
         hidden: {},

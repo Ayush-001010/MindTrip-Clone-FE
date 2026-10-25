@@ -19,6 +19,7 @@ const useTripSocketAction = () => {
   const [messages, setMessages] = useState<Array<IMessageTrip>>([]);
   const [finalItinerary, setFinalItinerary] = useState<IFinalItineraryResponse | null>(null);
   const [isFinalItineraryReceived, setIsFinalItineraryReceived] = useState<boolean>(false);
+  const [tripSuggestionsDate , setTripSuggestionsDate] = useState<{ startDate: Date | null, endDate: Date | null }>({ startDate: null, endDate: null });
   const { tripId } = useParams();
   const userDetails = useSelector(
     (state: any) => state.userDetails as IUserInterface,
@@ -156,6 +157,14 @@ const useTripSocketAction = () => {
     }
   });
 
+  socket.on("room:suggestedTripDates-response" , (response) => {
+   console.log("Received suggested trip dates response from server:", response);
+    if(response.success && response.data) {
+      const { startDate, endDate } = response.data;
+      setTripSuggestionsDate({ startDate: new Date(startDate), endDate: new Date(endDate) });
+    }
+  })
+
   socket.on("room:newGroupMessage-response", (response) => {
     console.log("Received new group message response from server:", response);
     if(response.success) {
@@ -204,7 +213,10 @@ const useTripSocketAction = () => {
     hotel.base62 = tripId;
     socket.emit("room:createTripHotel" , {
       tripHotelData: hotel,
-      type: "booked"
+      type: "booked",
+      id: hotel.id?.toString(),
+      userId : userID,
+      userName : userName,
     })
   };
 
@@ -303,7 +315,7 @@ const useTripSocketAction = () => {
     }
   }, [isFinalItineraryReceived]);
 
-  return { notificationConfig,sendMessageHandler,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName,addHotelToWishList, bookHotelHandler, sendNewMessage};
+  return { notificationConfig,sendMessageHandler,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName,addHotelToWishList, bookHotelHandler, sendNewMessage , tripSuggestionsDate };
 };
 
 export default useTripSocketAction;

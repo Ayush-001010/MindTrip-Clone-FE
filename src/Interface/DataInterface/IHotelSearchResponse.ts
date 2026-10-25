@@ -9,6 +9,7 @@ export interface IHotelImage {
 }
 
 export interface IHotelDetail {
+    id?: string;
     type: string;
     name: string;
     gps_coordinates: {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import type ITripWhen from "./ITripWhen";
 import { DatePicker, Modal } from "antd";
 import type { Dayjs } from "dayjs";
+import { HiOutlineSparkles } from "react-icons/hi2";
 import { useChatContext } from "../../Chat";
 import CloseBox from "../TripUser/CloseBox/CloseBox";
 import dayjs from "dayjs";
@@ -10,7 +11,14 @@ const TripWhen: React.FC<ITripWhen> = ({ open, closeHandler }) => {
     const [startDate, setStartDate] = useState<Dayjs | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [endDate, setEndDate] = useState<Dayjs | null>(null);
-    const { setTripDate , finalItinerary } = useChatContext();
+    const { setTripDate , finalItinerary , tripSuggestionsDate} = useChatContext();
+
+    const hasSuggestion = !!(tripSuggestionsDate?.startDate && tripSuggestionsDate?.endDate);
+    const suggestionAlreadyApplied = hasSuggestion
+        && finalItinerary?.startDate
+        && finalItinerary?.endDate
+        && dayjs(finalItinerary.startDate).isSame(tripSuggestionsDate?.startDate, "day")
+        && dayjs(finalItinerary.endDate).isSame(tripSuggestionsDate?.endDate, "day");
 
     const onDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
         if (dates) {
@@ -30,6 +38,13 @@ const TripWhen: React.FC<ITripWhen> = ({ open, closeHandler }) => {
         }
     }
 
+    const useSuggestedDatesHandler = () => {
+        if (tripSuggestionsDate?.startDate && tripSuggestionsDate?.endDate) {
+            setStartDate(dayjs(tripSuggestionsDate.startDate));
+            setEndDate(dayjs(tripSuggestionsDate.endDate));
+        }
+    }
+
     useEffect(() => {
         setIsOpen(open);
     }, [open]);
@@ -39,13 +54,37 @@ const TripWhen: React.FC<ITripWhen> = ({ open, closeHandler }) => {
                 <div className="p-2">
                     <CloseBox onClose={closeHandler} />
                 </div>
-                <section className="p-6">
+                <section className="p-6 pt-0">
                     <p className="text-lg font-semibold">
                         When are you planning your trip?
                     </p>
                     <p className="mt-2 text-sm leading-6 text-[#dee2e6]">
                         Select your start and end dates.
                     </p>
+
+                    {hasSuggestion && !suggestionAlreadyApplied && (
+                        <div className="mt-4 flex items-center gap-3 rounded-xl border border-sky-400/30 bg-sky-400/5 p-3">
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-400/15 text-sky-300">
+                                <HiOutlineSparkles size={18} />
+                            </span>
+                            <div className="min-w-0 flex-1">
+                                <span className="rounded-full bg-sky-400/15 px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide text-sky-300 uppercase">
+                                    Suggested dates
+                                </span>
+                                <p className="mt-1 text-sm font-medium text-white">
+                                    {dayjs(tripSuggestionsDate!.startDate).format("DD MMM YYYY")} – {dayjs(tripSuggestionsDate!.endDate).format("DD MMM YYYY")}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={useSuggestedDatesHandler}
+                                className="shrink-0 cursor-pointer rounded-full bg-sky-400/15 px-3 py-1.5 text-xs font-semibold text-sky-300 transition-colors duration-200 hover:bg-sky-400/25"
+                            >
+                                Use these
+                            </button>
+                        </div>
+                    )}
+
                     <div className="mt-5">
                         <DatePicker.RangePicker
                             className="!w-full"

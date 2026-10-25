@@ -51,6 +51,7 @@ export interface IChatContext {
     createAction: {type: "poll" | "opinion" | "default", title: string, option1?: string, option2?: string, option3?: string, option4?: string, imageUrl?: string} | null;
     likeOrDislikeGroupHubPost: (postID: string, like: boolean) => Promise<any>;
     addCommentOnOpinion: ( postId: string, comment: string, parentOpinionCommentId?: string) => Promise<any>;
+    tripSuggestionsDate? : { startDate: Date | null, endDate: Date | null };
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -87,7 +88,7 @@ export const useChatContext = () => {
 }
 
 const Chat : React.FC<IChat> = () => {
-    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , addHotelToWishList, bookHotelHandler , sendNewMessage } = useTripSocketAction();
+    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , addHotelToWishList, bookHotelHandler , sendNewMessage , tripSuggestionsDate } = useTripSocketAction();
     const [isSelectedLocation, setIsSelectedLocation] = useState<boolean>(false);
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
@@ -127,7 +128,6 @@ const Chat : React.FC<IChat> = () => {
         const aiMessage = localStorage.getItem("aiMessage");
         if (aiMessage) {
             const obj = JSON.parse(aiMessage);
-            console.log("Object from localStorage:", obj);
             if(obj.createdAt ) {
                 // Please check createdAt much be lessthan 1 minute from the current time
                 const date = new Date(obj.createdAt);
@@ -160,7 +160,7 @@ const Chat : React.FC<IChat> = () => {
     },[tripId, userID]);
 
     return (
-        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler , isTripAdmin , sendNewMessage , groupHubPosts, createActionHandler , createAction , likeOrDislikeGroupHubPost, addCommentOnOpinion }}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler , isTripAdmin , sendNewMessage , groupHubPosts, createActionHandler , createAction , likeOrDislikeGroupHubPost, addCommentOnOpinion , tripSuggestionsDate }}>
             <div className="w-full ">
                 {notification}
                 <Header/>

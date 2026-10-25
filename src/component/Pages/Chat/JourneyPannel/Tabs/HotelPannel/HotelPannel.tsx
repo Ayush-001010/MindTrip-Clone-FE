@@ -9,10 +9,12 @@ const HotelPannel: React.FC<IHotelPannel> = () => {
     if (!showHotelDetails) {
         return null;
     }
-    const { name, gps_coordinates, rate_per_night , amenities } = showHotelDetails;
+    const { name, gps_coordinates, rate_per_night , amenities , id } = showHotelDetails;
     const { longitude, latitude } = gps_coordinates;
     const [fromDate , setFromDate] = useState<Date | null>(null);
     const [toDate , setToDate] = useState<Date | null>(null);
+
+    console.log("ID", id)
 
     const submitHandler = () => {
         if (bookHotelHandler && fromDate && toDate) {
@@ -27,6 +29,7 @@ const HotelPannel: React.FC<IHotelPannel> = () => {
                 reviews: showHotelDetails.reviews,
                 toDate: toDate,
                 fromDate: fromDate,
+                id: id ? parseInt(id) : undefined,
             });
         }
     };

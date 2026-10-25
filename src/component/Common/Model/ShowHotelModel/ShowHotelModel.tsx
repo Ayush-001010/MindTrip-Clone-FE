@@ -60,7 +60,7 @@ const ShowHotelModel: React.FC<IShowHotelModel> = ({ open, onClose }) => {
                 </header>
                 {hotels.length > 0 ? (
                     <section className="pt-4">
-                        <TripHotelList hotels={hotels} />
+                        <TripHotelList hotels={hotels} onClose={onClose} />
                     </section>
                 ) : (
                     <section className="flex flex-col items-center justify-center gap-2 py-10 text-center">

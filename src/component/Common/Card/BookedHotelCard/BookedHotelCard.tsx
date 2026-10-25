@@ -14,10 +14,10 @@ const formatDate = (date?: Date | string | null) => {
     return parsed.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 };
 
-const BookedHotelCard: React.FC<IBookedHotelCard> = ({ hotel }) => {
+const BookedHotelCard: React.FC<IBookedHotelCard> = ({ hotel, onClose }) => {
     return (
         <div className="flex flex-col gap-3 rounded-xl border border-emerald-400/20 bg-emerald-500/5 p-3">
-            <HotelSummaryInfo hotel={hotel} />
+            <HotelSummaryInfo hotel={hotel} onClose={onClose} />
             <div className="flex items-center gap-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
                 <BsCheckCircleFill className="shrink-0 text-sm" />
                 <span>

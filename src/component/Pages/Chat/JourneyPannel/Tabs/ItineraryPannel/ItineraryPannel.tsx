@@ -12,7 +12,6 @@ const ItineraryPannel: React.FC<IItineraryPannel> = () => {
     if (!finalItinerary) {
         return <EmptyItinerary />;
     }
-    console.log("Final Itinerary: ", finalItinerary);
 
     const genratedSectionDependingOnFeature = () => {
         switch (featureSelected) {

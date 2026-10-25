@@ -13,7 +13,6 @@ const char = {
 };
 
 const FinalResponse: React.FC<IFinalResponse> = ({ message }) => {
-    console.log("Message:", message);
     return (
         <section className="mb-2 max-w-[85%] rounded-2xl rounded-tl-sm border border-white/10 bg-white/5 px-4 py-2.5 text-sm leading-relaxed text-[#f8f9fa] shadow-sm">
             <motion.p key={message} variants={container} initial="hidden" animate="show" aria-label={message}>

@@ -25,7 +25,6 @@ const Message: React.FC<IIMessage> = ({ data }) => {
         if (typeof response === "string") {
             response = JSON.parse(response as unknown as string) as ITripAPIResponse;
         }
-        console.log("Response Type:", response.type);
         switch (response.type) {
             case "destination": return <DestinationResponse data={response} />;
             case "question-gather": return <QuestionGatherResponse data={response} />;
