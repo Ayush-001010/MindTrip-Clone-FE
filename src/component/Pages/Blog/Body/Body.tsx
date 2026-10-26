@@ -58,8 +58,7 @@ const Body: React.FC<IBody> = ({ }) => {
                         if(activity.index > activityItem.index) lastActivity = false;
                     });
                     // a saved blog only shows the transfer between two activities when one was recorded
-                    const hasTravel = (blogValue?.travel ?? []).some(item => item.day === selectedDay && item.activityNumber === activityItem.index);
-                    const showTravelConnector = !lastActivity && (mode === "create" || hasTravel);
+                    const showTravelConnector = !lastActivity;
                     return (
                         <section>
                             <Activity indexNumber={index} key={index} blogActivity={activityItem} />
@@ -67,6 +66,7 @@ const Body: React.FC<IBody> = ({ }) => {
                                 <section className="mt-2 flex items-center gap-3">
                                     <section className="my-1 flex w-28 shrink-0 flex-col items-center cursor-pointer">
                                         <span className="h-20 w-0.5 border-l-2 border-dashed border-[#6c757d]" />
+                                        { mode !== "preview" && (
                                         <Tooltip title="Travel Options">
                                             <span onClick={() => selectTravelHandler(index)} className="flex h-14 w-14 shrink-0 items-center justify-center gap-1.5 rounded-full border border-[#343a40] bg-[#212529] text-base text-white transition-all duration-300 hover:bg-[#343a40] hover:font-bold">
                                                 <MdFlightTakeoff />
@@ -74,6 +74,7 @@ const Body: React.FC<IBody> = ({ }) => {
                                                 <TbBus />
                                             </span>
                                         </Tooltip>
+                                        )}
                                         <span className="h-20 w-0.5 border-l-2 border-dashed border-[#6c757d]" />
                                     </section>
                                     {((mode === "preview") || (isTravelSectionVisible.isVisible && isTravelSectionVisible.indexNumber === index)) && (

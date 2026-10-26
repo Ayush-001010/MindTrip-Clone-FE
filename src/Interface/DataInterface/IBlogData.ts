@@ -15,6 +15,7 @@ export default interface IBlogData {
     metaData: string[];
     numberOfLikes?: number;
     id?: string;
+    userID?: string;
 }
 
 export interface IBlogActivite {
@@ -34,6 +35,7 @@ export interface IBlogActivite {
     sideActivities: IBlogActivite[];
     amountSpent: number;
     itemOrder : string[];
+    userID: string;
 }
 
 export interface IBlogTravel{

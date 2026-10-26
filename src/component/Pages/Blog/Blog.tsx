@@ -53,11 +53,7 @@ const Blog: React.FC<IBlog> = () => {
     const [selectedLatitude, setSelectedLatitude] = useState<number>(0);
     const [currentEditActivityIndex, setCurrentEditActivityIndex] = useState<number | null>(0);
 
-    const calculateTotalSpent = (
-        activities: IBlogActivite[],
-        hotels: IBlogHotel[],
-        travel: IBlogTravel[]
-    ) => {
+    const calculateTotalSpent = (activities: IBlogActivite[],hotels: IBlogHotel[],travel: IBlogTravel[]) => {
         const activityTotal = activities.reduce((sum, activity) => sum + (activity.amountSpent ?? 0), 0);
         const hotelTotal = hotels.reduce((sum, hotel) => sum + (hotel.amountSpent ?? 0), 0);
         const travelTotal = travel.reduce((sum, travelItem) => sum + (travelItem.amountSpent ?? 0), 0);

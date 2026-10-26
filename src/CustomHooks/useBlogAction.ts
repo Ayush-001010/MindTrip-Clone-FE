@@ -1,13 +1,17 @@
+import { useSelector } from "react-redux";
 import type IBlogData from "../Interface/DataInterface/IBlogData";
 import type IFetchBlogFilter from "../Interface/DataInterface/IFetchBlogFilter";
 import type IFetchBlogResult from "../Interface/DataInterface/IFetchBlogResult";
 import APIService from "../Services/APIService";
+import type IUserInterface from "../Interface/DataInterface/IUserDetails";
 
 const API_HIT_DELAY_MS = 1000;
 const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 
 const useBlogAction = () => {
+    const {  userID } = useSelector((state: any) => state.userDetails as IUserInterface);
+    
     const getMetaData = async () => {
         const apiInstance = new APIService();
         const response = await apiInstance.getRequest("/common/getMetaDataForBlog");
@@ -28,7 +32,7 @@ const useBlogAction = () => {
             if(fileUploadResponse.success) {
                 const url = fileUploadResponse.data as string;
                 await delay(API_HIT_DELAY_MS);
-                const uploadResponse = await apiInstance.uploadFileToS3(url, file, fileType);
+                await apiInstance.uploadFileToS3(url, file, fileType);
             }
         }
         blogData.profileImages = profileImages;
@@ -49,7 +53,7 @@ const useBlogAction = () => {
                 imageURLs.push(fileName);
                 if (fileUploadResponse.success) {
                     const url = fileUploadResponse.data as string;
-                    const uploadResponse = await apiInstance.uploadFileToS3(url, image, fileType);
+                    await apiInstance.uploadFileToS3(url, image, fileType);
                 }
             }));
             activity.images = imageURLs;
@@ -69,14 +73,14 @@ const useBlogAction = () => {
                     sideImageURLs.push(fileName);
                     if (fileUploadResponse.success) {
                         const url = fileUploadResponse.data as string;
-                        const uploadResponse = await apiInstance.uploadFileToS3(url, image, fileType);
+                        await apiInstance.uploadFileToS3(url, image, fileType);
                     }
                 }));
                 sideActivity.images = sideImageURLs;
             }));
         }));
 
-        const saveResponse = await apiInstance.postRequest("/blog/create", {blogData});
+        const saveResponse = await apiInstance.postRequest("/blog/create", {blogData , userID });
         return saveResponse;
     };
     

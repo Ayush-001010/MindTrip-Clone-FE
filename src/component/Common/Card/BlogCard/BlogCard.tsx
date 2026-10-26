@@ -3,7 +3,7 @@ import type IBlogCard from "./IBlogCard";
 import useCommonAction from "../../../../customHooks/useCommonAction";
 import ShowImages from "../ActivityCard/ActivityImage/ShowImages/ShowImages";
 import { IoIosImages } from "react-icons/io";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { MdOutlineAccessTime, MdOutlineTravelExplore } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { PiMountainsDuotone } from "react-icons/pi";
@@ -12,8 +12,11 @@ import { RiEBike2Fill } from "react-icons/ri";
 import { FaSnowflake } from "react-icons/fa";
 import { FaShareFromSquare } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { useGetAppContext } from "../../../../App";
-import type { IFavouritesBlog } from "../../../../Interface/DataInterface/IFavouritesBlog";
+// import { useGetAppContext } from "../../../../App";
+// import type { IFavouritesBlog } from "../../../../Interface/DataInterface/IFavouritesBlog";
+import { useSelector } from "react-redux";
+import type IUserInterface from "../../../../Interface/DataInterface/IUserDetails";
+import { Tooltip } from "antd";
 
 const profileIconMap: Record<string, React.ReactNode> = {
     travel: <MdOutlineTravelExplore />,
@@ -24,11 +27,13 @@ const profileIconMap: Record<string, React.ReactNode> = {
     snowflake: <FaSnowflake />,
 };
 
-const BlogCard: React.FC<IBlogCard> = ({ blogData }) => {
-    const { getImages } = useCommonAction();
+const BlogCard: React.FC<IBlogCard> = ({ blogData, following, setFollowing, likeBlogIds, setLikeBlogIds }) => {
+    const { getImages, followUser , likeBlog , userActivity , dislikeBlog } = useCommonAction();
     const [imageURLs, setImageURLs] = useState<string[]>([]);
+    const [numberOfLikes, setNumberOfLikes] = useState<number>(blogData?.numberOfLikes || 0);
     const profileImages = blogData?.profileImages;
-    const { changeFavoritesConfig } = useGetAppContext();
+    // const { changeFavoritesConfig } = useGetAppContext();
+    const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
 
     useEffect(() => {
         let cancelled = false;
@@ -45,21 +50,62 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData }) => {
         };
     }, [profileImages]);
 
+    const handleFollow = async () => {
+        if (userID !== blogData?.userID) {
+            await followUser(parseInt(blogData?.userID || "0"));
+            setFollowing((prev) => [...prev, parseInt(blogData?.userID || "0")]);
+        }
+    };
+
+    const likeHandler = async () => {
+        if (!likeBlogIds.includes(Number(blogData.id))) {
+            await likeBlog(Number(blogData.id));
+            await userActivity("like", Number(blogData.id));
+            setLikeBlogIds((prev) => [...prev, Number(blogData.id)]);
+            setNumberOfLikes((prev) => prev + 1);
+        }
+    };
+
+    const dislikeHandler = async () => {
+        if (likeBlogIds.includes(Number(blogData.id))) {
+            await dislikeBlog(Number(blogData.id));
+            await userActivity("dislike", Number(blogData.id));
+            setLikeBlogIds((prev) => prev.filter((id) => id !== Number(blogData.id)));
+            setNumberOfLikes((prev) => prev - 1);
+        }
+    };
+
+    useEffect(() => {
+        setNumberOfLikes(blogData?.numberOfLikes || 0);
+    }, [blogData?.numberOfLikes]);
+
     if (!blogData) {
         return null;
     }
 
-    const { tripTitle, tripOverview, tripDuration, totalSpent, numberOfLikes, profileTitle, profileIcon } = blogData;
+    const { tripTitle, tripOverview, tripDuration, totalSpent, profileTitle, profileIcon } = blogData;
+    console.log("Following:", following);
 
     return (
         <section className="group relative flex h-[420px] w-[300px] shrink-0 flex-col overflow-hidden rounded-2xl border border-gray-700 bg-[#111418] transition-all duration-300 hover:-translate-y-1 hover:border-gray-500 hover:shadow-[0_16px_40px_rgba(0,0,0,0.55)]">
-            <p className="absolute left-3 top-3 z-10 max-w-[240px] truncate rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
-                {tripTitle || "Untitled trip"}
-            </p>
+            <Tooltip title={tripTitle || "Untitled trip"}>
+                <p className="absolute left-3 top-3 z-10 max-w-[100px] truncate rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
+                    {tripTitle || "Untitled trip"}
+                </p>
+            </Tooltip>
+            {following?.includes(parseInt(blogData?.userID || "0")) ? (
+                <p className="absolute right-15 top-3 z-10 max-w-[150px] truncate rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
+                    Following
+                </p>
+            ) : (
+            <button onClick={handleFollow} className="absolute cursor-pointer right-15 top-3 z-10 max-w-[240px] text-xs truncate rounded-full border border-white/20 bg-black/40 px-3 py-1.5  font-semibold text-white backdrop-blur-md">
+                {userID === blogData?.userID ? "Me" : "Follow"}
+            </button>
+            )}
             <Link to={`/inspiration/blog/${blogData?.id}`}> 
-            <p className="absolute cursor-pointer right-3 top-3 z-10 max-w-[240px] text-md truncate rounded-full border border-white/20 bg-black/40 px-3 py-1.5  font-semibold text-white backdrop-blur-md">
-                <FaShareFromSquare />
-            </p>
+                <p className="absolute cursor-pointer right-3 top-3 z-10 max-w-[240px] text-md truncate rounded-full border border-white/20 bg-black/40 px-3 py-1.5  font-semibold text-white backdrop-blur-md">
+                    <FaShareFromSquare />
+                </p>
             </Link>
 
             {imageURLs.length > 0 ? (
@@ -85,21 +131,21 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData }) => {
 
                 <div className="flex items-center gap-2 text-xs text-gray-200">
                     <span onClick={()=>{
-                        changeFavoritesConfig({
-                            openFavorites: true,
-                            uiType: "show-collection-for-add-purpose",
-                            data: {
-                                blogID: Number(blogData.id) || 0,
-                                blogTitle: blogData?.tripTitle || "",
-                                blogImage: imageURLs[0] || "",
-                                blogDescription: blogData?.tripOverview || "",
-                                rating: 0,
-                                reviews: 0,
-                            } as IFavouritesBlog,
-                            mode: "blog"
-                        });
+                        // changeFavoritesConfig({
+                        //     openFavorites: true,
+                        //     uiType: "show-collection-for-add-purpose",
+                        //     data: {
+                        //         blogID: Number(blogData.id) || 0,
+                        //         blogTitle: blogData?.tripTitle || "",
+                        //         blogImage: imageURLs[0] || "",
+                        //         blogDescription: blogData?.tripOverview || "",
+                        //         rating: 0,
+                        //         reviews: 0,
+                        //     } as IFavouritesBlog,
+                        //     mode: "blog"
+                        // });
                     }} className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1">
-                        <AiOutlineHeart size={14} />
+                        {likeBlogIds?.includes(Number(blogData.id)) ? <AiFillHeart size={14} onClick={dislikeHandler} /> : <AiOutlineHeart size={14} onClick={likeHandler} />}
                         {numberOfLikes ?? 0}
                     </span>
                     <span className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1">

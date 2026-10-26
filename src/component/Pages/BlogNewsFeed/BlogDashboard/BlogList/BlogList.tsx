@@ -8,7 +8,7 @@ import type IBlogData from "../../../../../Interface/DataInterface/IBlogData";
 import useBlogAction from "../../../../../customHooks/useBlogAction";
 import BlogCard from "../../../../Common/Card/BlogCard/BlogCard";
 
-const BlogList: React.FC<IBlogList> = ({ filters }) => {
+const BlogList: React.FC<IBlogList> = ({ filters , following , setFollowing  , likeBlogIds , setLikeBlogIds }) => {
     const { fetchBlogs } = useBlogAction();
     const [blogs, setBlogs] = useState<IBlogData[]>([]);
     const [page, setPage] = useState(1);
@@ -86,7 +86,7 @@ const BlogList: React.FC<IBlogList> = ({ filters }) => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
                             >
-                                <BlogCard blogData={blog} />
+                                <BlogCard blogData={blog} following={following} setFollowing={setFollowing} likeBlogIds={likeBlogIds} setLikeBlogIds={setLikeBlogIds} />
                             </motion.div>
                         ))}
                     </motion.div>
