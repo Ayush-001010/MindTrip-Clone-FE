@@ -8,6 +8,7 @@ import { useSideNavBarContext } from "../../SideNavBar";
 import { FaSearch } from "react-icons/fa";
 import { LuInstagram } from "react-icons/lu";
 import { MdFavoriteBorder } from "react-icons/md";
+import { LuNewspaper } from "react-icons/lu";
 
 const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
     const { isCollapsed } = useSideNavBarContext();
@@ -36,6 +37,8 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
                 return <LuInstagram />;
             case "favorites":
                 return <MdFavoriteBorder />;
+            case "blog":
+                return <LuNewspaper />;
             default:
                 return null;
         }

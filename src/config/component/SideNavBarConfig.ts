@@ -20,6 +20,11 @@ export default class SideNavBarConfig {
         {
             title:"Favorites",
             icon: "favorites"
+        },
+        {
+            title: "Blog",
+            icon: "blog",
+            link: "/blog"
         }
     ]
 }

@@ -4,9 +4,9 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoIosImages } from "react-icons/io";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import type IBlogList from "./IBlogList";
-import type IBlogData from "../../../../../../Interface/DataInterface/IBlogData";
-import useBlogAction from "../../../../../../customHooks/useBlogAction";
-import BlogCard from "../../../../../Common/Card/BlogCard/BlogCard";
+import type IBlogData from "../../../../../Interface/DataInterface/IBlogData";
+import useBlogAction from "../../../../../customHooks/useBlogAction";
+import BlogCard from "../../../../Common/Card/BlogCard/BlogCard";
 
 const BlogList: React.FC<IBlogList> = ({ filters }) => {
     const { fetchBlogs } = useBlogAction();

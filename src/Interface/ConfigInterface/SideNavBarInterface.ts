@@ -1,5 +1,5 @@
 export default interface SideNavItemInterface {
     title : string;
-    icon : "chat" | "explore" | "inspiration" | "favorites";
+    icon : "chat" | "explore" | "inspiration" | "favorites" | "blog";
     link? : string;
 }

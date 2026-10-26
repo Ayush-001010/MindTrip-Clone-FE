@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import type IBlogs from "./IBlogs";
-import type IBlogData from "../../../../Interface/DataInterface/IBlogData";
+import React , {useState, useEffect} from "react";
+import type IBlogNewsFeed from "./IBlogNewsFeed";
+import type IBlogData from "../../../Interface/DataInterface/IBlogData";
 import Header from "./Header/Header";
 import TextBanner from "./TextBanner/TextBanner";
-import useBlogAction from "../../../../customHooks/useBlogAction";
-import ShowCards from "../../../Common/ShowCards/ShowCards";
+import useBlogAction from "../../../customHooks/useBlogAction";
+import ShowCards from "../../Common/ShowCards/ShowCards";
 import BlogDashboard from "./BlogDashboard/BlogDashboard";
 
-const Blogs: React.FC<IBlogs> = () => {
+const BlogNewsFeed : React.FC<IBlogNewsFeed> = () => {
     const { getTopFiveBlogs } = useBlogAction();
     const [topFiveBlogs, setTopFiveBlogs] = useState<IBlogData[]>([]);
 
@@ -35,4 +35,4 @@ const Blogs: React.FC<IBlogs> = () => {
     );
 };
 
-export default Blogs;
+export default BlogNewsFeed;
