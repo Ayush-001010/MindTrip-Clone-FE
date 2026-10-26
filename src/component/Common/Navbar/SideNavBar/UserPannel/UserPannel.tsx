@@ -4,12 +4,17 @@ import { BsThreeDots } from "react-icons/bs";
 import { useSideNavBarContext } from "../SideNavBar";
 import { useSelector } from "react-redux";
 import type IUserInterface from "../../../../../Interface/DataInterface/IUserDetails";
+import UserProfileCard from "../../../Card/UserProfileCard/UserProfileCard";
 
 const UserPannel: React.FC<IUserPannel> = () => {
     const { isCollapsed } = useSideNavBarContext();
     const userDetails = useSelector((state: any) => state.userDetails as IUserInterface);
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
+    const [openUserProfileCard, setOpenUserProfileCard] = useState(false);
+
+    const openUserProfileCardHandler = () => setOpenUserProfileCard(true);
+    const closeUserProfileCardHandler = () => setOpenUserProfileCard(false);
 
 
     useEffect(() => {
@@ -30,7 +35,7 @@ const UserPannel: React.FC<IUserPannel> = () => {
                         <p className="m-0 truncate text-sm font-medium text-white">{userName}</p>
                         <p className="m-0 truncate text-xs text-[#9a9a9f]">{userEmail}</p>
                     </div>
-                    <button type="button" aria-label="User menu" className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#C9BFB5] transition hover:bg-[#212529] hover:text-white">
+                    <button onClick={openUserProfileCardHandler} type="button" aria-label="User menu" className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#C9BFB5] transition hover:bg-[#212529] hover:text-white">
                         <BsThreeDots />
                     </button>
                 </section>
@@ -42,6 +47,8 @@ const UserPannel: React.FC<IUserPannel> = () => {
                     </div>
                 </section>
             )}
+
+            {openUserProfileCard && <UserProfileCard open={openUserProfileCard} closeHandler={closeUserProfileCardHandler} />}  
         </div>
     );
 };
