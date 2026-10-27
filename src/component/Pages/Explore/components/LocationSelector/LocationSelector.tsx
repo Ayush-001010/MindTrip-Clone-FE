@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as maptilerClient from "@maptiler/client";
+import useCommonAction from "../../../../../customHooks/useCommonAction";
 
 interface Location {
   name: string;
@@ -17,6 +18,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [results, setResults] = useState<any[]>([]);
+  const { userActivity } = useCommonAction();
 
   const [selectedLocation, setSelectedLocation] = useState<Location>({
     name: "Pune",
@@ -61,12 +63,15 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
       longitude,
     };
 
+
     setSelectedLocation(location);
     setSearchValue("");
     setResults([]);
     setIsOpen(false);
 
     onLocationSelect(location);
+
+    userActivity("search" , undefined , location.name);
   };
 
   const handleCurrentLocation = () => {

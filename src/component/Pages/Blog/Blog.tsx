@@ -42,7 +42,7 @@ export const useGetBlogContext = () => {
 const Blog: React.FC<IBlog> = () => {
     const { blogId } = useParams();
     const { fetchBlogById } = useBlogAction();
-    const { getImages } = useCommonAction();
+    const { getImages , userActivity } = useCommonAction();
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [mode, setMode] = useState<"create" | "preview">("preview");
     const [blogValue, setBlogValue] = useState<IBlogData | null>(null);
@@ -322,6 +322,14 @@ const Blog: React.FC<IBlog> = () => {
     if (fetchError) {
         return <p className="p-8 text-center text-[#ced4da]">{fetchError}</p>;
     }
+
+    useEffect(() => {
+        if(mode === "preview" && blogId){
+            userActivity("blog", blogId ? parseInt(blogId) : 0);
+        }
+    }, [mode , blogId]);
+
+    console.log("Blog Values ",blogValue);
 
     return (
         <blogContext.Provider value={{ mode, blogValue: blogValue!, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay, mapMarkerPoints, selectedLongitude, selectedLatitude, addingHotel, addTravel , currentEditActivityIndex, setCurrentEditActivityIndex , setMode }}>

@@ -113,7 +113,7 @@ const useCommonAction = () => {
     return response;
   };
 
-  const userActivity = async (activity: "blog" | "place" | "dislike" | "like" | "search", blogId?: number, place?: number) => {
+  const userActivity = async (activity: "blog" | "place" | "dislike" | "like" | "search", blogId?: number, place?: string) => {
     const apiInstance = new APIService();
     const response = await apiInstance.postRequest(`/user/activity`, {
       userID: userID || 2,
