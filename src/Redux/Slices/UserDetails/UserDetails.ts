@@ -14,7 +14,7 @@ const UserDetailsSlice = createSlice({
       state.userName = action.payload.name;
       state.isLoggedIn = true;
       state.userID = action.payload.id.toString();
-      console.log("Setting user details:", action.payload);
+      // console.log("Setting user details:", action.payload);
       state.userEmail = action.payload.email;
     },
   },

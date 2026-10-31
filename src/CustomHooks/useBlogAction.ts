@@ -4,6 +4,15 @@ import type IFetchBlogFilter from "../Interface/DataInterface/IFetchBlogFilter";
 import type IFetchBlogResult from "../Interface/DataInterface/IFetchBlogResult";
 import APIService from "../Services/APIService";
 import type IUserInterface from "../Interface/DataInterface/IUserDetails";
+import type { IPhotoOrVideoBlogVideo, IThumbnailBlogVideo } from "../component/Pages/BlogVideoCreation/BlogVideoCreation";
+
+import type { IGenerateVideoResponse } from "../component/Pages/BlogVideoCreation/Reel/IStoryboard";
+
+export interface IGenerateVideoPayload {
+    blogId: string;
+    photosOrVideos: IPhotoOrVideoBlogVideo[];
+    thumbnails: IThumbnailBlogVideo[];
+}
 
 const API_HIT_DELAY_MS = 1000;
 const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -108,7 +117,7 @@ const useBlogAction = () => {
         return response.success && response.data ? response.data : [];
     }
 
-    const fetchBlogs = async (filter: IFetchBlogFilter) => {
+    const fetchBlogs = async (_: IFetchBlogFilter) => {
         console.log("User ID:", userID)
         const apiInstance = new APIService();
         const response = await apiInstance.getRequest<IFetchBlogResult>("/blog/fetch", {
@@ -124,7 +133,35 @@ const useBlogAction = () => {
         return response;
     }
 
-    return { getMetaData, saveBlog, getTopFiveBlogs, getProfileAndTitle, searchMetaData, fetchBlogs, fetchBlogById };
+    const getBlogPlaces = async (blogId: string) => {
+        const apiInstance = new APIService();
+        const response = await apiInstance.getRequest<string[]>(`/blog/activity-name`,{
+            blogId
+        });
+        return response.success && response.data ? response.data : [];
+    }
+
+    const genrateVideo = async ({ blogId, photosOrVideos, thumbnails }: IGenerateVideoPayload) => {
+        const apiInstance = new APIService();
+        const formData = new FormData();
+        formData.append("blogId", blogId);
+
+        // Files go under "photos" / "videos"; metadata is sent as JSON in the same order as the files.
+        const photos = photosOrVideos.filter((item) => item.file?.type.startsWith("image/"));
+        const videos = photosOrVideos.filter((item) => item.file?.type.startsWith("video/"));
+        const toMeta = ({ duration, description, where }: IPhotoOrVideoBlogVideo) => ({ duration, description, where });
+
+        photos.forEach((item) => formData.append("photos", item.file as File));
+        videos.forEach((item) => formData.append("videos", item.file as File));
+        formData.append("photosMeta", JSON.stringify(photos.map(toMeta)));
+        formData.append("videosMeta", JSON.stringify(videos.map(toMeta)));
+        formData.append("thumbnails", JSON.stringify(thumbnails));
+
+        // The backend returns the result at the top level rather than under `data`.
+        const response = await apiInstance.postRequest<unknown>("/blogVideoGenration/genrate", formData);
+        return response as unknown as Partial<IGenerateVideoResponse> & { success: boolean; error?: string };
+    }
+    return { getMetaData, saveBlog, getTopFiveBlogs, getProfileAndTitle, searchMetaData, fetchBlogs, fetchBlogById, getBlogPlaces, genrateVideo };
 }
 
 export default useBlogAction;

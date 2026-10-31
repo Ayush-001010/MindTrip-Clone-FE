@@ -19,6 +19,7 @@ import type { IFavouritesBlog } from "./Interface/DataInterface/IFavouritesBlog"
 import { useDispatch } from "react-redux";
 import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 import BlogNewsFeed from "./component/Pages/BlogNewsFeed/BlogNewsFeed";
+import BlogVideoCreation from "./component/Pages/BlogVideoCreation/BlogVideoCreation";
 
 
 export interface IAppContext {
@@ -126,6 +127,7 @@ const AppContent: React.FC = () => {
           <Route path="/inspiration" element={<Inspiration />} />
           <Route path="/blog" element={<BlogNewsFeed />} />
           <Route path="/inspiration/blog/:blogId" element={<Blog key="blog-preview" />} />
+          <Route path="/blog/create-video/:blogId" element={<BlogVideoCreation key="blog-video-creation" />} />
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/chat" element={<Chat />} />

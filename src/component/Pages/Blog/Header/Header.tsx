@@ -6,12 +6,17 @@ import { GoShare } from "react-icons/go";
 import { MdFavoriteBorder } from "react-icons/md";
 import TravelAgency from "./TravelAgency/TravelAgency";
 import Publish from "./Publish/Publish";
+import { IoVideocamOutline } from "react-icons/io5";
+import { Tooltip } from "antd";
+import { Link, useParams } from "react-router-dom";
 
 const Header: React.FC<IHeader> = ({ selectedDay }) => {
     const { mode, blogValue, saveChangeToBlog, setMode } = useGetBlogContext();
     const [isTravelAgency, setTravelAgency] = useState(false);
     const { totalSpent } = blogValue ?? { totalSpent: 0 };
     const [isPublish, setPublish] = useState(false);
+    const {blogId} = useParams();
+
 
     const openTravelAgency = () => {
         setTravelAgency(true);
@@ -114,6 +119,15 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                             </button>
                         )}
                     </>
+                )}
+                {mode === "preview"  && (
+                    <Tooltip title="Turn into Video">
+                        <Link to={`/blog/create-video/${blogId}`}>
+                            <button  className="cursor-pointer flex h-9 w-9 items-center justify-center rounded-full border border-slate-600/70 text-[#ced4da] transition-colors hover:border-slate-300/70 hover:text-[#dee2e6]">
+                                <IoVideocamOutline className="inline-block text-lg" />
+                            </button>
+                        </Link>
+                    </Tooltip>
                 )}
                 <button className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-600/70 text-[#ced4da] transition-colors hover:border-slate-300/70 hover:text-[#dee2e6]">
                     <GoShare className={mode === "create" ? "disabled cursor-not-allowed " + "inline-block text-lg" : "cursor-pointer " + "inline-block text-lg"} />
