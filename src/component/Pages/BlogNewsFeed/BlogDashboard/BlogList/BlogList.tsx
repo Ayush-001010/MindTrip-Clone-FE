@@ -33,11 +33,11 @@ const BlogList: React.FC<IBlogList> = ({ filters , following , setFollowing  , l
         const loadBlogs = async () => {
             setIsLoading(true);
             setHasError(false);
-            const response = await fetchBlogs({ page, ...filters });
+            const response : any = await fetchBlogs({ page, ...filters });
             if (cancelled) return;
 
             if (response.success && response.data) {
-                setBlogs(response.data.blogs);
+                setBlogs([...response.data[0]]);
                 setTotalPages(response.data.totalPages || 1);
             } else {
                 setBlogs([]);
@@ -52,6 +52,8 @@ const BlogList: React.FC<IBlogList> = ({ filters , following , setFollowing  , l
             cancelled = true;
         };
     }, [filters, page]);
+
+    console.log("Blogs:", blogs);
 
     return (
         <section className="mt-8 flex w-full flex-col items-center gap-6">

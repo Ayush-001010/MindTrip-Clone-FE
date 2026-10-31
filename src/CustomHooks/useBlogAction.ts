@@ -109,16 +109,12 @@ const useBlogAction = () => {
     }
 
     const fetchBlogs = async (filter: IFetchBlogFilter) => {
+        console.log("User ID:", userID)
         const apiInstance = new APIService();
-        const { page, placeName, budget, noOfPlaces, profileOrTitle, metaData } = filter;
-        const queryParams: Record<string, string | number> = { page };
-        if (placeName) queryParams.placeName = placeName;
-        if (budget !== undefined) queryParams.budget = budget;
-        if (noOfPlaces !== undefined) queryParams.noOfPlaces = noOfPlaces;
-        if (profileOrTitle) queryParams.profileOrTitle = profileOrTitle;
-        if (metaData && metaData.length > 0) queryParams.metaData = metaData.join(",");
-
-        const response = await apiInstance.getRequest<IFetchBlogResult>("/blog/fetch", queryParams);
+        const response = await apiInstance.getRequest<IFetchBlogResult>("/blog/fetch", {
+            "userId" : userID?.toString() || ""
+        });
+        console.log("Fetch Blogs Response:", response); 
         return response;
     }
 

@@ -7,7 +7,6 @@ import { useCallback } from "react";
 
 const useCommonAction = () => {
   const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
-  console.log("Current userID:", userID);
 
   const getImages = async (key: string) => {
     const apiInstance = new APIService();

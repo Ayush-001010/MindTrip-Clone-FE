@@ -39,6 +39,10 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData, following, setFollowing, like
         let cancelled = false;
 
         const loadImages = async () => {
+            if(typeof profileImages === "string"){
+                setImageURLs([await getImages(profileImages).then(response => typeof response?.data === "string" ? response.data : "").catch(() => "")]);
+                return;
+            }
             const responses = await Promise.all((profileImages ?? []).map((imageKey) => getImages(imageKey)));
             if (cancelled) return;
             setImageURLs(responses.flatMap((response) => (typeof response?.data === "string" ? [response.data] : [])));
@@ -153,7 +157,7 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData, following, setFollowing, like
                         {tripDuration} {tripDuration === 1 ? "day" : "days"}
                     </span>
                     <span className="ml-auto rounded-full bg-white/10 px-2 py-1 font-medium">
-                        ₹{totalSpent.toLocaleString("en-IN")}
+                        ₹{totalSpent?.toLocaleString("en-IN") || "0"}
                     </span>
                 </div>
             </div>
