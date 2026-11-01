@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type IShowCollections from "./IShowCollections";
-import useFavouritesAction from "../../../../customHooks/useFavouritesAction";
+import useFavouritesAction from "../../../../CustomHooks/useFavouritesAction";
 import type IFaviouritesCollection from "../../../../Interface/DataInterface/IFavouritesCollection";
 import CollectionCard from "../../Card/CollectionCard/CollectionCard";
 import { CiCirclePlus } from "react-icons/ci";

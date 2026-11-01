@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import useBlogAction from "../../../../customHooks/useBlogAction";
+import useBlogAction from "../../../../CustomHooks/useBlogAction";
 import type IForm from "./IForm";
 import { ConfigProvider, theme } from "antd";
 import { useGetBlogVideoCreationContext } from "../BlogVideoCreation";

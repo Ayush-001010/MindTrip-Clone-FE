@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { useParams } from "react-router-dom";
-import useBlogAction from "../../../customHooks/useBlogAction";
-import useCommonAction from "../../../customHooks/useCommonAction";
+import useBlogAction from "../../../CustomHooks/useBlogAction";
+import useCommonAction from "../../../CustomHooks/useCommonAction";
 import CommonConfig from "../../../config/CommonConfig";
 import Body from "./Body/Body";
 import type IBlog from "./IBlog";

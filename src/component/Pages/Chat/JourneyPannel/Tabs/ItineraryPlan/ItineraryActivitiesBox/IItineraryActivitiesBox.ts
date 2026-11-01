@@ -1,4 +1,4 @@
-import type { IItineraryActivity,  } from "../../../../../../Interface/DataInterface/IItineraryOptions";
+import type { IItineraryActivity } from "../../../../../../../Interface/DataInterface/IItineraryOptions";
 
 export default interface IItineraryActivitiesBox {
     itineraryActivities: IItineraryActivity [];

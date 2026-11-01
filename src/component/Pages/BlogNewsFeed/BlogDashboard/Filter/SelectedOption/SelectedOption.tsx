@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import type ISelectedOption from "./ISelectedOption";
-import useCommonAction from "../../../../../../customHooks/useCommonAction";
-import useBlogAction from "../../../../../../customHooks/useBlogAction";
+import useCommonAction from "../../../../../../CustomHooks/useCommonAction";
+import useBlogAction from "../../../../../../CustomHooks/useBlogAction";
 import Suggestion from "../../../../../Common/Suggestion/Suggestion";
 import RadioOption from "../../../../../Common/RadioOption/RadioOption";
 

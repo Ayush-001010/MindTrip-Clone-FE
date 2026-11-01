@@ -7,7 +7,7 @@ import { CiCirclePlus } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router-dom";
 import useTripAction from "../../../../../CustomHooks/useTripAction";
 import { Select } from "antd";
-import useTripSocketAction from "../../../../../customHooks/useTripSocketAction";
+import useTripSocketAction from "../../../../../CustomHooks/useTripSocketAction";
 
 const actions = [
     { label: "Edit trip", icon: <CiEdit />, hover: "hover:text-[#f8f9fa]" },

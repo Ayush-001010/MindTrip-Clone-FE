@@ -3,7 +3,7 @@ import type IBlogDashboard from "./IBlogDashboard";
 import type IBlogFilters from "./IBlogFilters";
 import Filter from "./Filter/Filter";
 import BlogList from "./BlogList/BlogList";
-import useCommonAction from "../../../../customHooks/useCommonAction";
+import useCommonAction from "../../../../CustomHooks/useCommonAction";
 
 const BlogDashboard: React.FC<IBlogDashboard> = () => {
     const [filters, setFilters] = useState<IBlogFilters>({});

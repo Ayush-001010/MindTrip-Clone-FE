@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as maptilerClient from "@maptiler/client";
-import useCommonAction from "../../../../../customHooks/useCommonAction";
+import useCommonAction from "../../../../../CustomHooks/useCommonAction";
 
 interface Location {
   name: string;

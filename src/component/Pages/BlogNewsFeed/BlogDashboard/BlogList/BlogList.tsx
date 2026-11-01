@@ -5,7 +5,7 @@ import { IoIosImages } from "react-icons/io";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import type IBlogList from "./IBlogList";
 import type IBlogData from "../../../../../Interface/DataInterface/IBlogData";
-import useBlogAction from "../../../../../customHooks/useBlogAction";
+import useBlogAction from "../../../../../CustomHooks/useBlogAction";
 import BlogCard from "../../../../Common/Card/BlogCard/BlogCard";
 
 const BlogList: React.FC<IBlogList> = ({ filters , following , setFollowing  , likeBlogIds , setLikeBlogIds }) => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type IBlogCard from "./IBlogCard";
-import useCommonAction from "../../../../customHooks/useCommonAction";
+import useCommonAction from "../../../../CustomHooks/useCommonAction";
 import ShowImages from "../ActivityCard/ActivityImage/ShowImages/ShowImages";
 import { IoIosImages } from "react-icons/io";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";

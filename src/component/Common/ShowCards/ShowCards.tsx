@@ -37,7 +37,11 @@ const ShowCards: React.FC<IShowCards> = ({ type, data }) => {
                             exit={{ opacity: 0, y: reduceMotion ? 0 : -16 }}
                             transition={{ duration: 0.5, ease: "easeInOut" }}
                         >
-                            <BlogCard blogData={data[activePage - 1]} />
+                            <BlogCard blogData={data[activePage - 1]} following={[]} setFollowing={function (_: React.SetStateAction<number[]>): void {
+                                throw new Error("Function not implemented.");
+                            } } likeBlogIds={[]} setLikeBlogIds={function (_: React.SetStateAction<number[]>): void {
+                                throw new Error("Function not implemented.");
+                            } } />
                         </motion.div>
                     </AnimatePresence>
                 </section>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type ICreateCollections from "./ICreateCollections";
-import useFavouritesAction from "../../../../customHooks/useFavouritesAction";
+import useFavouritesAction from "../../../../CustomHooks/useFavouritesAction";
 
 const CreateCollections: React.FC<ICreateCollections> = ({ onClose }) => {
     const { createCollection } = useFavouritesAction();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGetAppContext } from "../../../../../../../../App";
 import { motion } from "framer-motion";
 import type IEmptyPannel from "./IEmptyPannel";
-import useCommonAction from "../../../../../../../../customHooks/useCommonAction";
+import useCommonAction from "../../../../../../../../CustomHooks/useCommonAction";
 
 const MESSAGE = "Currently, you have not created any collections yet.";
 const CHAR_DELAY = 0.03;

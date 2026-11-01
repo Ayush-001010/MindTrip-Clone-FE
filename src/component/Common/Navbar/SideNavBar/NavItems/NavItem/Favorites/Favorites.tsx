@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useFavouritesAction from "../../../../../../../customHooks/useFavouritesAction";
+import useFavouritesAction from "../../../../../../../CustomHooks/useFavouritesAction";
 import type IFavorites from "./IFavorites";
 import { Drawer } from "antd";
 import type IFaviouritesCollection from "../../../../../../../Interface/DataInterface/IFavouritesCollection";

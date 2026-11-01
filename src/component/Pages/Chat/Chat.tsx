@@ -8,7 +8,7 @@ import type { ISuggestedDestination } from '../../../Interface/DataInterface/ITr
 import useNotification from '../../../customHookWithUI/useNotification';
 import type IMessageTrip from '../../../Interface/DataInterface/IMessageTrip';
 import type { IItineraryPlan } from '../../../Interface/DataInterface/IItineraryOptions';
-import useTripSocketAction from '../../../customHooks/useTripSocketAction';
+import useTripSocketAction from '../../../CustomHooks/useTripSocketAction';
 import type { IHotelDetail } from '../../../Interface/DataInterface/IHotelSearchResponse';
 import type ITripHotelData from '../../../Interface/DataInterface/ITripHotel';
 import useTripAction from '../../../CustomHooks/useTripAction';

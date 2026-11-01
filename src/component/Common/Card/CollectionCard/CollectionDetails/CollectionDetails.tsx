@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type ICollectionDetails from "./ICollectionDetails";
 import Header from "./Header/Header";
-import useFavouritesAction from "../../../../../customHooks/useFavouritesAction";
+import useFavouritesAction from "../../../../../CustomHooks/useFavouritesAction";
 import type { IFavouritesActivity } from "../../../../../Interface/DataInterface/IFavouritesActivity";
 import type { IFavouritesHotel } from "../../../../../Interface/DataInterface/IFavouritesHotel";
 import type { IFavouritesBlog } from "../../../../../Interface/DataInterface/IFavouritesBlog";

@@ -3,7 +3,7 @@ import type IBlogNewsFeed from "./IBlogNewsFeed";
 import type IBlogData from "../../../Interface/DataInterface/IBlogData";
 import Header from "./Header/Header";
 import TextBanner from "./TextBanner/TextBanner";
-import useBlogAction from "../../../customHooks/useBlogAction";
+import useBlogAction from "../../../CustomHooks/useBlogAction";
 import ShowCards from "../../Common/ShowCards/ShowCards";
 import BlogDashboard from "./BlogDashboard/BlogDashboard";
 

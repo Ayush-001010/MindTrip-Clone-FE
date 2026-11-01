@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type IUserProfileCard from "./IUserProfileCard";
 import { Modal } from "antd";
-import useCommonAction from "../../../../customHooks/useCommonAction";
+import useCommonAction from "../../../../CustomHooks/useCommonAction";
 import type IUserFriends from "../../../../Interface/DataInterface/IUserFriends";
 import type IUserFollowing from "../../../../Interface/DataInterface/IUserFollowing";
 import type IUserFollower from "../../../../Interface/DataInterface/IUserFollower";

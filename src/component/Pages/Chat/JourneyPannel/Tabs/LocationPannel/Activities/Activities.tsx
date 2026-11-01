@@ -6,7 +6,7 @@ import { Tooltip } from "antd";
 import ShowInfoModel from "../../../../../../Common/Model/ShowInfoModel/ShowInfoModel";
 import type { IActivity } from "../../../../../../../Interface/DataInterface/ITripAPIResponse";
 import { useChatContext } from "../../../../Chat";
-import useCommonActivities from "../../../../../../../customHooks/useCommonActivities";
+import useCommonActivities from "../../../../../../../CustomHooks/useCommonActivities";
 
 const Activities: React.FC<IActivities> = ({ activities }) => {
     const { setIsSelectedLocation , setLocationLatitude , setLocationLongitude } = useChatContext();

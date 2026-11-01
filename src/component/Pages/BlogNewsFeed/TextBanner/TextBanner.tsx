@@ -1,8 +1,8 @@
 import React from "react";
 import type ITextBanner from "./ITextBanner";
-import type IUserInterface from "../../../../../Interface/DataInterface/IUserDetails";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import type IUserInterface from "../../../../Interface/DataInterface/IUserDetails";
 
 const description = "Welcome to the Great Hall of Stories, where travellers from every corner of the world share their most magical adventures. Browse through countless tales, create your own travel journal, and inspire future explorers. Our enchanted search spell helps you uncover exactly the stories you're looking for.";
 

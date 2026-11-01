@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import type IActivityBox from "./IActivityBox";
-
 import { FaLocationDot } from "react-icons/fa6";
 import useCommonActivities from "../../../../../../../../CustomHooks/useCommonActivities";
 

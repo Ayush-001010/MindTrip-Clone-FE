@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type IProfile from "./IProfile";
 import ProfileSection from "./ProfileSection/ProfileSection";
 import ConfigrationSection from "./ConfigrationSection/ConfigrationSection";
-import useBlogAction from "../../../../../../customHooks/useBlogAction";
+import useBlogAction from "../../../../../../CustomHooks/useBlogAction";
 import { useGetBlogContext } from "../../../Blog";
 
 const Profile: React.FC<IProfile> = ({ metaData }) => {

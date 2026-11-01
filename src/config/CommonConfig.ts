@@ -48,6 +48,7 @@ export default class CommonConfig {
         sideActivities: [],
         amountSpent: 0,
         itemOrder: [],
+        userID:""
       },
     ],
     hotel: [],
@@ -75,5 +76,6 @@ export default class CommonConfig {
     sideActivities: [],
     amountSpent: 0,
     itemOrder: [],
+    userID: ""
   };
 }

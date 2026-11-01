@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type IMetaData from "./IMetaData";
-import useBlogAction from "../../../../../../customHooks/useBlogAction";
+import useBlogAction from "../../../../../../CustomHooks/useBlogAction";
 import { Select } from "antd";
 
 const MetaData: React.FC<IMetaData> = ({ saveMetadata }) => {
