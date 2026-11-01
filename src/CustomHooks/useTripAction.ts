@@ -53,7 +53,8 @@ const useTripAction = () => {
         const response = await apiServiceInstance.postRequest<null>(
             "/trip/joinTrip",
             {
-                tripID
+                tripID,
+                userID: userID || 2
             }
         );
     
@@ -80,7 +81,7 @@ const useTripAction = () => {
 
     const fetchTripID =  async () => {
         const apiServiceInstance = new APIService();
-        const response = await apiServiceInstance.getRequest("/trip/fetchTripIDs" ,{ "userId":  3 });
+        const response = await apiServiceInstance.getRequest("/trip/fetchTripIDs" ,{ "userId":  userID || 2 });
         return response;
     };
 

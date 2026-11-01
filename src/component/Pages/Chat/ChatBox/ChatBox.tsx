@@ -28,7 +28,7 @@ const ChatBox: React.FC<IChatBox> = () => {
         setValue("");
     }
     return (
-        <div className="w-1/2 flex flex-col justify-between h-185">
+        <div className="flex h-[calc(100dvh-8rem)] min-h-[420px] w-full flex-col justify-between lg:h-185 lg:w-1/2">
             { (messages.length !== 0 || isLoading) && (
             <div ref={scrollContainerRef} className="h-full mb-4 scrollbar-thin scrollbar-thumb-slate-900/60 scrollbar-track-slate-900/10 overflow-auto">
                 <MessageBox messages={messages} />

@@ -144,7 +144,7 @@ const Invite: React.FC = () => {
           <button
             type="button"
             onClick={handleJoinTrip}
-            className="rounded-full bg-[#335C4D] px-6 py-2 font-medium text-white transition hover:bg-[#294C40]"
+            className="rounded-full cursor-pointer bg-[#335C4D] px-6 py-2 font-medium text-white transition hover:bg-[#294C40]"
           >
             Yes
           </button>
@@ -152,7 +152,7 @@ const Invite: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate("/auth/signin")}
-            className="rounded-full border border-[#335C4D] px-6 py-2 font-medium text-[#335C4D] transition hover:bg-[#f0f7f4]"
+            className="rounded-full cursor-pointer border border-[#335C4D] px-6 py-2 font-medium text-[#335C4D] transition hover:bg-[#f0f7f4]"
           >
             No
           </button>

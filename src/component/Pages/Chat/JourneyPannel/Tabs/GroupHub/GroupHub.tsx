@@ -28,7 +28,7 @@ const GroupHub: React.FC<IGroupHub> = () => {
             {groupHubPosts.length > 0 && (
                 <Post posts={groupHubPosts} />
             )}
-            <Footer activeTab={activeTab} />
+            <Footer setActiveTab={setActiveTab} activeTab={activeTab} />
         </section>
     );
 }

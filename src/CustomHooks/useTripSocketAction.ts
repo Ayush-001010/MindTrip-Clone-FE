@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -13,7 +13,9 @@ import type IGroupHubMessage from "../Interface/DataInterface/IGroupHubMessage";
 const SERVER_URL = "http://localhost:3000"; // change to your server URL
 const socket = io(SERVER_URL, { autoConnect: false });
 
-const useTripSocketAction = () => {
+const useTripSocketAction = (onNewGroupMessage?: () => void) => {
+  const onNewGroupMessageRef = useRef(onNewGroupMessage);
+  onNewGroupMessageRef.current = onNewGroupMessage;
   const [notificationConfig, setNotificationConfig] =useState<INotificationConfig>({open: false,type: "",message: "",duration: undefined});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [messages, setMessages] = useState<Array<IMessageTrip>>([]);
@@ -105,7 +107,6 @@ const useTripSocketAction = () => {
 
   on("room:setTripBudget-response", (_) => {
     // const { budget } = response;
-    // console.log("Received trip budget from server:", budget);
     setNotificationConfig({
       open: true,
       type: "alert",
@@ -115,7 +116,6 @@ const useTripSocketAction = () => {
   });
 
   on("room:addExpense-response", (response) => {
-    // console.log("Received add expense response from server:", response);
     const { success, data } = response;
     if (success) {
       setNotificationConfig({
@@ -184,6 +184,7 @@ const useTripSocketAction = () => {
         message: `New group message of type "${type}" sent by ${userName}`,
         duration: 3000,
       });
+      onNewGroupMessageRef.current?.();
     }
     else {
       setNotificationConfig({

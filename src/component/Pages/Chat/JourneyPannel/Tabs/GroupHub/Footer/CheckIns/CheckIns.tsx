@@ -3,7 +3,7 @@ import type ICheckIns from './ICheckIns';
 import SentBox from '../SentBox/SentBox';
 import { useChatContext } from '../../../../../Chat';
 
-const CheckIns: React.FC<ICheckIns> = () => {
+const CheckIns: React.FC<ICheckIns> = ({ setActiveTab }) => {
     const { sendNewMessage} = useChatContext();
     const [message, setMessage] = useState("");
 
@@ -11,6 +11,8 @@ const CheckIns: React.FC<ICheckIns> = () => {
         setMessage("");
         if(sendNewMessage)
         sendNewMessage("check-ins", { content: message });
+        setActiveTab("Announcement");
+
     };
     
     return (
