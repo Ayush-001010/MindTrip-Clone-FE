@@ -21,8 +21,8 @@ const paragraphs: ISegment[][] = [
     [{ text: "What's on your mind today? 🌍💙" }],
     [{text: "Discover Upcoming Long Weekends ✈️"}],
     [{text:"Get Updates on Your Upcoming Trip ✈️"}],
-    [{text:"Splitwise Updates 🧾"}],
-    [{text:"Custom Agents 🤖"}]
+    // [{text:"Splitwise Updates 🧾"}],
+    // [{text:"Custom Agents 🤖"}]
 ];
 
 // Lengths are counted in code points so emoji are never split mid-character.
@@ -119,7 +119,7 @@ const LeftSection: React.FC<ILeftSection> = ({setSelectedOption}) => {
                         {renderTyped(paragraphs[3], visibleIn(3))}
                     </p>
                     <section className="grid w-full gap-3 sm:grid-cols-2">
-                        {[4, 5, 6, 7].map((index) => (
+                        {[4].map((index) => (
                             <button
                                 key={index}
                                 type="button"

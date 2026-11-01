@@ -4,7 +4,7 @@ import LeftSection from "./LeftSection/LeftSection";
 import RightSection from "./RightSection/RightSection";
 
 const Dashboard: React.FC<IDashboard> = () => {
-    const [selectedOption , setSelectedOption] = useState<"search-longweekends" | null>(null);
+    const [selectedOption , setSelectedOption] = useState<"search-longweekends" | null>("search-longweekends");
 
 
     return (

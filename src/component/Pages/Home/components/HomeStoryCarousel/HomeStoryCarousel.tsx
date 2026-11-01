@@ -102,7 +102,7 @@ const HomeStoryCarousel: React.FC = () => {
             type="button"
             onClick={previousSlide}
             aria-label="Previous slide"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/80 text-[#335C4D] backdrop-blur transition hover:bg-white"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/50 bg-white/80 text-[#335C4D] backdrop-blur transition hover:bg-white"
           >
             <FiChevronLeft />
           </button>
@@ -111,7 +111,7 @@ const HomeStoryCarousel: React.FC = () => {
             type="button"
             onClick={nextSlide}
             aria-label="Next slide"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/80 text-[#335C4D] backdrop-blur transition hover:bg-white"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/50 bg-white/80 text-[#335C4D] backdrop-blur transition hover:bg-white"
           >
             <FiChevronRight />
           </button>

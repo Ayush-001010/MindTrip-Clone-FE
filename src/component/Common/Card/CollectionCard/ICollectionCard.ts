@@ -4,4 +4,5 @@ export default interface ICollectionCard {
     image1: string;
     image2: string;
     image3: string;
+    isNotOpenDetails?: boolean;
 }

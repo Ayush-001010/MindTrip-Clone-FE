@@ -1,4 +1,5 @@
 import React from "react";
+import { message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../AuthLayout/AuthLayout";
 import Form from "../../../Components/UI/Forms/Form";
@@ -10,6 +11,7 @@ import { setUserDetailsData } from "../../../Redux/Slices/UserDetails/UserDetail
 const SignIn: React.FunctionComponent<ISignIn> = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [messageApi, contextHolder] = message.useMessage();
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const submitHandler = async (values: Record<string, any>) => {
@@ -62,11 +64,13 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
   };
 
   const handleGoogleSignIn = () => {
-    window.location.href = "http://localhost:3000/api/auth/google";
+    messageApi.error({ content: "Service is unavailable right now." });
+    // window.location.href = "http://localhost:3000/api/auth/google";
   };
 
   return (
     <AuthLayout>
+      {contextHolder}
       <div className="w-full">
         <p className="mb-3 text-center text-sm font-semibold uppercase tracking-[0.16em] text-[#6e9f9f]">
           Welcome back
@@ -83,7 +87,7 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
         <button
           type="button"
           onClick={handleGoogleSignIn}
-          className="mt-7 flex w-full items-center justify-center rounded-xl border border-[#dcebe5] bg-white px-4 py-3.5 text-sm font-medium text-[#4a625a] shadow-sm transition hover:border-[#bfd9d0] hover:bg-[#f7fbfa]"
+          className="mt-7 cursor-pointer flex w-full items-center justify-center rounded-xl border border-[#dcebe5] bg-white px-4 py-3.5 text-sm font-medium text-[#4a625a] shadow-sm transition hover:border-[#bfd9d0] hover:bg-[#f7fbfa]"
         >
           <span className="mr-3 font-semibold text-[#335c4d]">G</span>
           Sign in with Google

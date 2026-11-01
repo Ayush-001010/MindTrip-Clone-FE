@@ -1,8 +1,6 @@
-import React from "react";
-
+import React, { useEffect } from "react";
 import type IHome from "./IHome";
 import HomeConfig from "../../../config/component/HomeConfig";
-
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 import AuthRequiredModal from "../../Common/Auth/AuthRequiredModal/AuthRequiredModal";
@@ -13,19 +11,26 @@ import { useNavigate } from "react-router-dom";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa6";
 import { SiLeetcode } from "react-icons/si";
 import HomeStoryCarousel from "./components/HomeStoryCarousel/HomeStoryCarousel";
+
 const Home: React.FC<IHome> = () => {
   const [showAuthModal, setShowAuthModal] = React.useState(false);
   const navigate = useNavigate();
   const handleCreateTrip = () => {
     const token = localStorage.getItem("token");
-
     if (token) {
       navigate("/inspiration");
       return;
     }
-
     setShowAuthModal(true);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/inspiration");
+    }
+  }, []);
+
   const generateIcon = (icon: string) => {
     switch (icon) {
       case "linkedin":
@@ -38,6 +43,7 @@ const Home: React.FC<IHome> = () => {
         return null;
     }
   };
+  
   return (
     <main className="min-h-screen bg-[#f7fbfa] text-[#2f3e46]">
       <section className="px-4 pb-8 pt-10 sm:px-6 lg:px-8 lg:pb-16 lg:pt-14">

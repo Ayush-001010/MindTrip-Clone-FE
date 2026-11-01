@@ -19,7 +19,7 @@ const ProtectedRoute: React.FC = () => {
   if (!token) {
     return (
       <Navigate
-        to="/auth/signin"
+        to="/"
         replace
         state={{ from: location.pathname }}
       />

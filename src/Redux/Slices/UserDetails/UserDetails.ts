@@ -11,6 +11,7 @@ const UserDetailsSlice = createSlice({
   reducers: {
     setUserDetailsData: (state, action) => {
       action.payload = JSON.parse(JSON.stringify(action.payload));
+      if (!action.payload) return;
       state.userName = action.payload.name;
       state.isLoggedIn = true;
       state.userID = action.payload.id.toString();

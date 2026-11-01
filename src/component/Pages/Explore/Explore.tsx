@@ -62,7 +62,7 @@ const Explore: React.FC = () => {
     activityType
   );
 
-  const tabs = ["Things to do", "Restaurants", "Stays", "Activities", "Guides"];
+  const tabs = ["Things to do", "Restaurants", "Stays", "Activities"];
   const normalizedSearch = searchQuery.trim().toLowerCase();
 
   const filteredPlaces = places.filter((place) => {

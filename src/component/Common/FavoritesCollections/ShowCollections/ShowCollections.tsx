@@ -27,8 +27,9 @@ const ShowCollections: React.FC<IShowCollections> = ({ addFavoritesItem }) => {
         };
         getCollections();
     }, []);
+
     return (
-        <section className="flex flex-col gap-5">
+        <section className="flex flex-col gap-5" key={`show-collections-${Math.random()*1000}`}>
             <header className="flex items-center justify-between gap-3 pr-10">
                 <div className="flex flex-col">
                     <h2 className="text-xl font-semibold text-white">Your collections</h2>
@@ -53,7 +54,7 @@ const ShowCollections: React.FC<IShowCollections> = ({ addFavoritesItem }) => {
                 <section className="grid max-h-[60vh] grid-cols-2 gap-4 overflow-y-auto pr-1">
                     {collections.map((collection) => (
                         <section onClick={() => addFavoritesItem(collection.id)} key={collection.id}>
-                            <CollectionCard name={collection.name} id={collection.id} image1={collection.image1} image2={collection.image2} image3={collection.image3} />
+                            <CollectionCard  isNotOpenDetails={true} name={collection.name} id={collection.id} image1={collection.image1} image2={collection.image2} image3={collection.image3} />
                         </section>
                     ))}
                 </section>

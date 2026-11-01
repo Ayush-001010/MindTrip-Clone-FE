@@ -4,7 +4,7 @@ import { MdOutlineCollectionsBookmark } from "react-icons/md";
 import type ICollectionCard from "./ICollectionCard";
 import CollectionDetails from "./CollectionDetails/CollectionDetails";
 
-const CollectionCard: React.FC<ICollectionCard> = ({ name, id, image1, image2, image3 }) => {
+const CollectionCard: React.FC<ICollectionCard> = ({ name, id, image1, image2, image3, isNotOpenDetails }) => {
     const [openCollectionDetails, setOpenCollectionDetails] = useState(false);
 
     const openCollectionDetailsHandler = () => {
@@ -57,7 +57,7 @@ const CollectionCard: React.FC<ICollectionCard> = ({ name, id, image1, image2, i
                     <p className="truncate px-1 text-[#6c757d] text-base font-medium">{name}</p>
                 </motion.section>
             )}
-            {openCollectionDetails && <CollectionDetails id={id} />}
+            {(openCollectionDetails && !isNotOpenDetails) && <CollectionDetails id={id} />}
         </section>
     );
 };

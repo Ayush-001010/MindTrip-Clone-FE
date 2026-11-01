@@ -238,15 +238,14 @@ const steps = [
 
 const HowItWorks: React.FC = () => {
   return (
-    <section className="mt-18 overflow-hidden px-2 py-20 text-[#2f3e46] sm:px-4 lg:px-6">
+    <section className="mt-6 overflow-hidden px-2 py-20 text-[#2f3e46] sm:px-4 lg:px-6">
       <div className="mx-auto max-w-7xl">
         {/* SECTION HEADER */}
         <motion.div
           className="mx-auto max-w-3xl text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1.1, delay: 0.2 }}
         >
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-[#6e9f9f]">
             How it works
@@ -275,10 +274,10 @@ const HowItWorks: React.FC = () => {
                 className={`grid items-center gap-10 lg:grid-cols-2 lg:gap-20 ${
                   isReversed ? "lg:[&>*:first-child]:order-2" : ""
                 }`}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 1.1 }}
               >
                 {/* TEXT */}
                 <div>

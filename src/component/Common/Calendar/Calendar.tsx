@@ -135,7 +135,7 @@ const Calendar: React.FC<ICalendar> = ({ date , rangeClickHandler }) => {
                 <button
                     type="button"
                     aria-label="Previous month"
-                    className="px-2 text-lg hover:text-[#8b8c89]"
+                    className="px-2 text-lg cursor-pointer hover:text-[#8b8c89]"
                     onClick={() => changeMonth(-1)}
                 >
                     &lt;
@@ -146,7 +146,7 @@ const Calendar: React.FC<ICalendar> = ({ date , rangeClickHandler }) => {
                 <button
                     type="button"
                     aria-label="Next month"
-                    className="px-2 text-lg hover:text-[#8b8c89]"
+                    className="px-2 text-lg cursor-pointer hover:text-[#8b8c89]"
                     onClick={() => changeMonth(1)}
                 >
                     &gt;

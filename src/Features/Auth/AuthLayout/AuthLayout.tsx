@@ -1,12 +1,16 @@
 import React, { type PropsWithChildren } from "react";
+import { motion } from "framer-motion";
 
 const AuthLayout: React.FunctionComponent<PropsWithChildren> = ({
   children,
 }) => {
   return (
     <div className="flex min-h-screen items-center justify-center overflow-hidden bg-[#f7fbfa] px-4 py-4">
-    <div className="flex h-full max-h-[calc(100vh-2rem)] w-full max-w-6xl overflow-hidden rounded-[32px] ...">
-        {/* ================= LEFT SECTION ================= */}
+    <motion.div
+    initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+    transition={{ duration: 1.1 }}
+    className="flex h-full max-h-[calc(100vh-2rem)] w-full max-w-6xl overflow-hidden rounded-[32px] ...">        {/* ================= LEFT SECTION ================= */}
         <div className="relative hidden overflow-hidden bg-[#dfeee8] p-14 text-[#335c4d] md:flex md:w-1/2">
           {/* Soft background decoration */}
           <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-[#c6dfd6]" />
@@ -89,7 +93,7 @@ const AuthLayout: React.FunctionComponent<PropsWithChildren> = ({
         <div className="flex w-full items-center justify-center bg-[#fffefd] px-8 py-12 md:w-1/2 md:px-12 lg:px-16">
           <div className="w-full max-w-md">{children}</div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

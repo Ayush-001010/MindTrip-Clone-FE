@@ -6,15 +6,21 @@ import Calendar from "../../../../Common/Calendar/Calendar";
 import useTripAction from "../../../../../CustomHooks/useTripAction";
 import type IImportantDateResponse from "../../../../../Interface/DataInterface/IImportantDateResponse";
 import moment from "moment";
+import UserProfileCard from "../../../../Common/Card/UserProfileCard/UserProfileCard";
+import type IUserInterface from "../../../../../Interface/DataInterface/IUserDetails";
+import { useSelector } from "react-redux";
 
 const RightSection: React.FC<IRightSection> = ({ selectedOption }) => {
     if (!selectedOption) {
         return null;
     }
+    const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
+    const [openUserProfile, setOpenUserProfile] = useState(false);
     const { fetchImportanDates, createNewTrip } = useTripAction();
     const [loading, setLoading] = useState(false);
     const [loaderText, setLoaderText] = useState("");
     const [dateRange, setDateRange] = useState<IImportantDateResponse[] | null>(null);
+    
     const rangeClickHandler = (startDate: Date, endDate: Date, type: "long-weekend" | "long-birthday-weekend" | "long-anniversary-weekend" | "birthday" | "anniversary") => {
         console.log(startDate, endDate, type);
         let aiMessage = {
@@ -43,8 +49,17 @@ const RightSection: React.FC<IRightSection> = ({ selectedOption }) => {
         createNewTrip();
     };
 
+    const closeUserProfileHandler = async () => {
+        setOpenUserProfile(false);
+        if(selectedOption === "search-longweekends") {
+            const res = await fetchImportanDates();
+            setDateRange(Array.isArray(res?.data) ? (res.data as IImportantDateResponse[]) : []);
+        }
+    };
+
 
     useEffect(() => {
+        if(!userID) return;
         if (selectedOption === "search-longweekends") {
             setLoading(true);
             setLoaderText("Searching Long Weekends...");
@@ -52,7 +67,7 @@ const RightSection: React.FC<IRightSection> = ({ selectedOption }) => {
                 setDateRange(Array.isArray(res?.data) ? (res.data as IImportantDateResponse[]) : []);
             }).finally(() => setLoading(false));
         }
-    }, [selectedOption]);
+    }, [selectedOption , userID]);
 
     return (
         <section className="h-[400px] w-full">
@@ -68,9 +83,22 @@ const RightSection: React.FC<IRightSection> = ({ selectedOption }) => {
                             </p>
                         </header>
                         <Calendar date={dateRange} rangeClickHandler={rangeClickHandler} />
+                        {dateRange.length === 0 && (
+                            <p className="mt-2 rounded-xl border border-dashed border-zinc-700 bg-zinc-900/80 px-3 py-2 text-center text-sm leading-snug text-zinc-400">
+                                <span>No important dates found for long weekends.</span>{" "}
+                                <button
+                                    type="button"
+                                    onClick={() => setOpenUserProfile(true)}
+                                    className="cursor-pointer font-medium text-violet-300 underline underline-offset-4 transition hover:text-violet-200 focus-visible:rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-violet-400/50"
+                                >
+                                    Click here to add important dates.
+                                </button>
+                            </p>
+                        )}
                     </section>
                 )}
             </section>
+            {openUserProfile && <UserProfileCard open={openUserProfile} closeHandler={()=>closeUserProfileHandler()} />}
         </section>
     );
 };

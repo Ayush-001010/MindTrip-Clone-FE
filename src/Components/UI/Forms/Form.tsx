@@ -67,7 +67,7 @@ const Form: React.FunctionComponent<IForm> = ({
              type="submit"
              className={
                  buttonClassName ||
-                 "rounded-lg bg-black px-6 py-3 text-white transition hover:opacity-90"
+                 "rounded-lg cursor-pointer bg-black px-6 py-3 text-white transition hover:opacity-90"
              }
          >
              {buttonText}

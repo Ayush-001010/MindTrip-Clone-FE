@@ -7,9 +7,13 @@ import type IUserFollowing from "../../../../Interface/DataInterface/IUserFollow
 import type IUserFollower from "../../../../Interface/DataInterface/IUserFollower";
 import { FaUser, FaTimes, FaHeart, FaBirthdayCake, FaUmbrellaBeach, FaUserFriends, FaUserPlus, FaUserCheck } from "react-icons/fa";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import type IUserInterface from "../../../../Interface/DataInterface/IUserDetails";
 
 const UserProfileCard: React.FC<IUserProfileCard> = ({ open, closeHandler }) => {
     const { fetchUserDetails, fetchUserFriends, fetchUserFollowing, fetchUserFollowers , updateUserDetails } = useCommonAction();
+    const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
+
     const [userDetails, setUserDetails] = useState<{
         name : string;
         email : string;
@@ -17,6 +21,7 @@ const UserProfileCard: React.FC<IUserProfileCard> = ({ open, closeHandler }) => 
         birthdayDate : string | null;
         holidayDate : string | null;
     } | null>(null);
+
     const [userFriends, setUserFriends] = useState<IUserFriends[]>([]);
     const [userFollowing, setUserFollowing] = useState<IUserFollowing[]>([]);
     const [userFollowers, setUserFollowers] = useState<IUserFollower[]>([]);
@@ -51,8 +56,9 @@ const UserProfileCard: React.FC<IUserProfileCard> = ({ open, closeHandler }) => 
     };
     
     useEffect(() => {
+        if(!userID) return;
         fetchData();
-    }, []);
+    }, [userID]);
 
     console.log("User Friends:", userFriends);
     console.log("User Following:", userFollowing);
@@ -65,7 +71,7 @@ const UserProfileCard: React.FC<IUserProfileCard> = ({ open, closeHandler }) => 
                 anniversaryDate: anniversaryDate ?? undefined,
                 birthdayDate: birthdayDate ?? undefined,
             });
-            fetchData();
+            // fetchData();
         }
     }, [anniversaryDate, birthdayDate]);
 

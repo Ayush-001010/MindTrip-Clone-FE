@@ -4,18 +4,18 @@ import type IFaviouritesCollection from "../Interface/DataInterface/IFavouritesC
 import APIService from "../Services/APIService";
 
 const useFavouritesAction = () => {
-    const { } = useSelector((state:any) => state.userDetails as IUserDetails);
+    const { userEmail } = useSelector((state:any) => state.userDetails as IUserDetails);
 
     const fetchCollection = async () => {
         const apiInstance = new APIService();
-        const response = await apiInstance.getRequest<IFaviouritesCollection[]>(`/faviourites/collections?userEmail=${"testing@gmail.com"}`);
+        const response = await apiInstance.getRequest<IFaviouritesCollection[]>(`/faviourites/collections?userEmail=${userEmail}`);
         return response;
     };
 
     const createCollection = async (collectionName: string) => {
         const apiInstance = new APIService();
         const response = await apiInstance.postRequest<IFaviouritesCollection>("/faviourites/createCollections", {
-            userEmail:"testing@gmail.com",
+            userEmail: userEmail,
             name:collectionName
         });
         return response;

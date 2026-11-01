@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Form from "../../../Components/UI/Forms/Form";
 import type ISignUp from "./ISignUp";
 import signUpFields from "./SignUpFields";
 import { Link, useNavigate } from "react-router-dom";
+import { message } from "antd";
+import { motion } from "framer-motion";
 
 const SignUp: React.FunctionComponent<ISignUp> = () => {
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [messageApi, contextHolder] = message.useMessage();
 
   const submitHandler = async (values: Record<string, any>) => {
     setErrorMessage("");
@@ -37,16 +40,7 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
       }
 
       console.log("Registration successful:", data);
-
-      if (!data.token) {
-        setErrorMessage(
-          "Account created, but authentication token was not received."
-        );
-        return;
-      }
-
-      localStorage.setItem("token", data.token);
-      navigate("/chat", { replace: true });
+      navigate("/auth/signin");
     } catch (error) {
       console.error("Registration error:", error);
 
@@ -57,12 +51,19 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
   };
 
   const handleGoogleSignUp = () => {
-    window.location.href = "http://localhost:3000/api/auth/google";
+    messageApi.error({ content: "Service is unavailable right now." });
+    // window.location.href = "http://localhost:3000/api/auth/google";
   };
 
   return (
     <div className="min-h-screen bg-[#f7fbfa] px-4 py-8">
-      <div className="mx-auto flex min-h-[700px] w-full max-w-6xl overflow-hidden rounded-[32px] border border-[#dcebe5] bg-white shadow-[0_30px_80px_rgba(79,129,117,0.12)]">
+      {contextHolder}
+      <motion.div
+        initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 1.1 }}
+        className="mx-auto flex min-h-[700px] w-full max-w-6xl overflow-hidden rounded-[32px] border border-[#dcebe5] bg-white shadow-[0_30px_80px_rgba(79,129,117,0.12)]"
+      >
         <div className="relative hidden overflow-hidden bg-[#dfeee8] px-10 py-12 md:flex md:w-1/2 md:px-14">
           <div className="pointer-events-none absolute -bottom-32 -right-24 h-80 w-80 rounded-full bg-[#b7d5ca]" />
 
@@ -143,7 +144,7 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
             <button
               type="button"
               onClick={handleGoogleSignUp}
-              className="mt-7 flex w-full items-center justify-center rounded-xl border border-[#dcebe5] bg-white px-4 py-3.5 text-sm font-medium text-[#4a625a] shadow-sm transition hover:border-[#bfd9d0] hover:bg-[#f7fbfa]"
+              className="mt-7 flex w-full cursor-pointer items-center justify-center rounded-xl border border-[#dcebe5] bg-white px-4 py-3.5 text-sm font-medium text-[#4a625a] shadow-sm transition hover:border-[#bfd9d0] hover:bg-[#f7fbfa]"
             >
               <span className="mr-3 font-semibold text-[#335c4d]">G</span>
               Sign up with Google
@@ -185,7 +186,7 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
