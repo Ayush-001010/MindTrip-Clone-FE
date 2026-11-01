@@ -15,7 +15,6 @@ const Poll : React.FC<IPoll> = () => {
 
         sendNewMessage("poll",{content: title,options: options});
         
-        console.log("Poll submitted");
     };
     useEffect(() => {
         if (createAction) {

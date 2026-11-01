@@ -39,7 +39,6 @@ const SignUp: React.FunctionComponent<ISignUp> = () => {
         return;
       }
 
-      console.log("Registration successful:", data);
       navigate("/auth/signin");
     } catch (error) {
       console.error("Registration error:", error);

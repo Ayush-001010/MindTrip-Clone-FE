@@ -32,7 +32,6 @@ const useFavorites = (open: boolean, uiType: "create-collection" | "show-collect
             data: data,
             collectionId: collectionId,
         });
-        console.log(response);
         
     },[data, mode])
 

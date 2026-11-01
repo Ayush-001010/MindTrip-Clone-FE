@@ -10,7 +10,6 @@ const AddPlaceName: React.FC<IAddPlaceName> = ({ setPlaceName , placeName, place
     const { indexNumber } = useGetActivityCardData();
 
     const handleOptionClick = (option: IPlaceOption) => {
-        console.log(option);
         saveChangeToBlog("activities", option.place_name , indexNumber , "placeName");
         saveChangeToBlog("activities", option.longitude , indexNumber , "longitude");
         saveChangeToBlog("activities", option.latitude , indexNumber , "latitude");

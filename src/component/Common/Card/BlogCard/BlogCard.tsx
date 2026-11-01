@@ -88,7 +88,6 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData, following, setFollowing, like
     }
 
     const { tripTitle, tripOverview, tripDuration, totalSpent, profileTitle, profileIcon } = blogData;
-    console.log("Following:", following);
 
     return (
         <section className="group relative flex h-[420px] w-[300px] shrink-0 flex-col overflow-hidden rounded-2xl border border-gray-700 bg-[#111418] transition-all duration-300 hover:-translate-y-1 hover:border-gray-500 hover:shadow-[0_16px_40px_rgba(0,0,0,0.55)]">

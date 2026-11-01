@@ -9,7 +9,6 @@ const GroupHub: React.FC<IGroupHub> = () => {
     const [activeTab, setActiveTab] = useState<"Poll" | "Announcement" | "Opinion" | "Check ins" | "Medical Assistance">("Announcement");
     const { groupHubPosts , createAction } = useChatContext();
 
-    console.log(groupHubPosts);
     useEffect(() => {
         if (createAction?.type === "poll") {
             setActiveTab("Poll");

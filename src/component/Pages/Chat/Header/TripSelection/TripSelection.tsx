@@ -27,7 +27,6 @@ const TripSelection: React.FC<ITripSelection> = () => {
     const clickHandler = (actionLabel: string) => {
         if (actionLabel === "Create new trip") {
             createNewTrip().then((response: any) => {
-                console.log("Create New Trip Response: ", response);
                 navigate(`/chat/${response.data.url}`);
             });
         } else if (actionLabel === "Edit trip") {
@@ -56,7 +55,6 @@ const TripSelection: React.FC<ITripSelection> = () => {
 
     useEffect(() => {
         const path = location.pathname;
-        console.log("Path    ", path);
         if (path !== '/chat') {
             setTripID(path.substring(path.lastIndexOf("/") + 1));
         }

@@ -50,7 +50,6 @@ const useCommonAction = () => {
   };
 
   const fetchUserFollowing = useCallback(async () => {
-    console.log("Fetching user following for userID:", userID);
     const apiInstance = new APIService();
     const response = await apiInstance.getRequest(`/common/fetchUserFollowing`,{
       userID : userID || 2,

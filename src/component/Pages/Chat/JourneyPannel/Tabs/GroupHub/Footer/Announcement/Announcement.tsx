@@ -9,7 +9,6 @@ const Announcement: React.FC<IAnnouncement> = () => {
 
     const submitHandler = () => {
         // Handle the announcement submission logic here
-        console.log(announcement);
         if(sendNewMessage) {
             sendNewMessage("announcement",{
                 content: announcement

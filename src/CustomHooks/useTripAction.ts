@@ -21,8 +21,6 @@ const useTripAction = () => {
     
     const createNewTrip = async () => {
         const apiServiceInstance = new APIService();
-        console.log("User ID : ", userID);
-
         const response = await apiServiceInstance.postRequest<{url:string}>("/trip/createNewTrip",{
             "userID" : userID
         })
@@ -110,7 +108,6 @@ const useTripAction = () => {
                 userID: userID || 2
             }
         );
-        console.log("Is user trip admin response:", tripId , userID, response);
         return response;
     };
 

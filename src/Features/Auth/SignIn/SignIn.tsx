@@ -31,7 +31,6 @@ const SignIn: React.FunctionComponent<ISignIn> = () => {
 
       const data = await response.json();
 
-      console.log("Data : ",data);
 
       if (!response.ok) {
         setErrorMessage(

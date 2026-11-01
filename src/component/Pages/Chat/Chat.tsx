@@ -136,7 +136,6 @@ const Chat : React.FC<IChat> = () => {
                 const now = new Date();
                 const diffInMinutes = (now.getTime() - date.getTime()) / (1000 * 60);
                 if(diffInMinutes < 1) {
-                    console.log("AI message is less than 1 minute old:", obj);
                     sendMessageHandler(obj.text);
                 }
             }
@@ -148,13 +147,11 @@ const Chat : React.FC<IChat> = () => {
             return;
         }
         isUserTripAdmin().then(response => {
-            console.log("Is user trip admin:", response);
             if(response.success && response.data){
                 setIsTripAdmin(true);
             }
         });
         fetchOldGroupHubPost().then((response:any) => {
-            console.log("Old Group Hub Post:", response);
             if(response.success && response.data){
                 setGroupHubPosts(response.data);
             }

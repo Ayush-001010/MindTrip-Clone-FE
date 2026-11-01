@@ -20,7 +20,6 @@ const BlogDashboard: React.FC<IBlogDashboard> = () => {
             });
             userLikedBlogs().then((res: any) => {
                 if (res.success) {
-                    console.log("User liked blogs:", res.data);
                     setLikeBlogIds(res.data);
                 }
             });

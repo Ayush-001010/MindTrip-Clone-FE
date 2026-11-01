@@ -12,7 +12,6 @@ const When: React.FC<IWhen> = ({ startDate, endDate }) => {
         setOpenTripWhen(true);
     }
     const closeTripWhen = () => {
-        console.log("Closing TripWhen modal");
         setOpenTripWhen(()=> false);
     }
     useEffect(()=>{

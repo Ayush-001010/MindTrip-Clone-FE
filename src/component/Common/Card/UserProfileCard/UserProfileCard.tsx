@@ -60,11 +60,6 @@ const UserProfileCard: React.FC<IUserProfileCard> = ({ open, closeHandler }) => 
         fetchData();
     }, [userID]);
 
-    console.log("User Friends:", userFriends);
-    console.log("User Following:", userFollowing);
-    console.log("User Followers:", userFollowers);
-    console.log("User Details:", userDetails);
-
     useEffect(() => {
         if (anniversaryDate || birthdayDate) {
             updateUserDetails({

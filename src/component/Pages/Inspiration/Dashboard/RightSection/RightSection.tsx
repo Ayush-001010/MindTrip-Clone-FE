@@ -22,7 +22,6 @@ const RightSection: React.FC<IRightSection> = ({ selectedOption }) => {
     const [dateRange, setDateRange] = useState<IImportantDateResponse[] | null>(null);
     
     const rangeClickHandler = (startDate: Date, endDate: Date, type: "long-weekend" | "long-birthday-weekend" | "long-anniversary-weekend" | "birthday" | "anniversary") => {
-        console.log(startDate, endDate, type);
         let aiMessage = {
             text: "",
             createdAt: new Date()
