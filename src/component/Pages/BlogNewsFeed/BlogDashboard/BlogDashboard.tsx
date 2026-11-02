@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import type IBlogDashboard from "./IBlogDashboard";
 import type IBlogFilters from "./IBlogFilters";
-import Filter from "./Filter/Filter";
+// import Filter from "./Filter/Filter";
 import BlogList from "./BlogList/BlogList";
 import useCommonAction from "../../../../CustomHooks/useCommonAction";
 
 const BlogDashboard: React.FC<IBlogDashboard> = () => {
-    const [filters, setFilters] = useState<IBlogFilters>({});
+    const [filters] = useState<IBlogFilters>({});
     const [following, setFollowing] = useState<number[]>([]);
     const [likeBlogIds, setLikeBlogIds] = useState<number[]>([]);
     const { fetchUserFollowing, userLikedBlogs} = useCommonAction();
@@ -29,7 +29,7 @@ const BlogDashboard: React.FC<IBlogDashboard> = () => {
 
     return (
         <section className="mt-10">
-            <Filter onFiltersChange={setFilters} />
+            {/* <Filter onFiltersChange={setFilters} /> */}
             <BlogList filters={filters} following={following} setFollowing={setFollowing} likeBlogIds={likeBlogIds} setLikeBlogIds={setLikeBlogIds} />
         </section>
     );

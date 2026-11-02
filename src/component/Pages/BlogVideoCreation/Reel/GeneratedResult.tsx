@@ -19,7 +19,7 @@ const tabActive = `${tabBase} border-violet-500 bg-violet-500 text-white`;
 const GeneratedResult: React.FC<IGeneratedResult> = ({ result, photosOrVideos }) => {
     // Nothing is shown until the user picks a view.
     const [view, setView] = useState<View | null>(null);
-    const mediaUrls = useReelMedia(result, photosOrVideos);
+    const { mediaUrls, mediaFiles } = useReelMedia(result, photosOrVideos);
 
     const toggle = (next: View) => setView((current) => (current === next ? null : next));
 
@@ -40,7 +40,7 @@ const GeneratedResult: React.FC<IGeneratedResult> = ({ result, photosOrVideos })
             {view === "reel" && <ReelPreview result={result} mediaUrls={mediaUrls} />}
             {view === "stories" && (
                 <section className="w-full">
-                    <StoryPreview result={result} mediaUrls={mediaUrls} />
+                    <StoryPreview result={result} mediaUrls={mediaUrls} mediaFiles={mediaFiles} />
                 </section>
             )}
         </section>

@@ -18,18 +18,23 @@ const buildMediaFiles = (result: IGenerateVideoResponse, photosOrVideos: IPhotoO
     return map;
 };
 
-const useReelMedia = (result: IGenerateVideoResponse, photosOrVideos: IPhotoOrVideoBlogVideo[]): Record<string, string> => {
-    const [mediaUrls, setMediaUrls] = useState<Record<string, string>>({});
+export interface IReelMedia {
+    mediaUrls: Record<string, string>;
+    mediaFiles: Record<string, File>;
+}
+
+const useReelMedia = (result: IGenerateVideoResponse, photosOrVideos: IPhotoOrVideoBlogVideo[]): IReelMedia => {
+    const [media, setMedia] = useState<IReelMedia>({ mediaUrls: {}, mediaFiles: {} });
 
     // URLs are created and revoked in the same effect so StrictMode's extra cleanup can't leave dead URLs.
     useEffect(() => {
         const files = buildMediaFiles(result, photosOrVideos);
         const urls = Object.fromEntries(Object.entries(files).map(([id, file]) => [id, URL.createObjectURL(file)]));
-        setMediaUrls(urls);
+        setMedia({ mediaUrls: urls, mediaFiles: files });
         return () => Object.values(urls).forEach((url) => URL.revokeObjectURL(url));
     }, [result, photosOrVideos]);
 
-    return mediaUrls;
+    return media;
 };
 
 export default useReelMedia;

@@ -27,7 +27,7 @@ const useFavorites = (open: boolean, uiType: "create-collection" | "show-collect
         setType(undefined);
         setFavoritesOpen(false);
         const apiInstance = new APIService();
-        const response = await apiInstance.postRequest("/faviourites/addFavourites",{
+        await apiInstance.postRequest("/faviourites/addFavourites",{
             type:mode,
             data: data,
             collectionId: collectionId,

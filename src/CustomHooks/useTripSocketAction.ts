@@ -139,7 +139,7 @@ const useTripSocketAction = (onNewGroupMessage?: () => void) => {
     setMessages((prevMessages) => [...prevMessages, response]);
   });
 
-  on("room:editTripName-response", (res)=>{
+  on("room:editTripName-response", ()=>{
     setNotificationConfig({
       open: true,
       type: "alert",

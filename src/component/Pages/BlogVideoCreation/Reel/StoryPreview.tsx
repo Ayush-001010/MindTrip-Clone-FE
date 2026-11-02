@@ -1,12 +1,54 @@
 import React from "react";
 import type { IGenerateVideoResponse, IInstaStorySuggestion } from "./IStoryboard";
+import { downloadBlob } from "./downloadFile";
 
 interface IStoryPreview {
     result: IGenerateVideoResponse;
     mediaUrls: Record<string, string>;
+    mediaFiles: Record<string, File>;
 }
 
-const StoryCard: React.FC<{ suggestion: IInstaStorySuggestion; type: "image" | "video" | undefined; src: string | undefined; index: number }> = ({ suggestion, type, src, index }) => (
+const Sticker: React.FC<{ sticker: NonNullable<IInstaStorySuggestion["sticker"]> }> = ({ sticker }) => {
+    if (sticker.type === "question") {
+        return (
+            <section className="absolute inset-x-4 bottom-6 overflow-hidden rounded-xl bg-white/95 shadow-lg">
+                <p className="bg-violet-500 px-3 py-1 text-center text-[10px] font-bold uppercase tracking-wider text-white">Question</p>
+                <section className="p-3 text-center">
+                    <p className="text-xs font-bold text-zinc-900">{sticker.text}</p>
+                    <p className="mt-2 rounded-lg bg-zinc-100 py-1.5 text-[11px] text-zinc-400">Type something...</p>
+                </section>
+            </section>
+        );
+    }
+
+    return (
+        <section className="absolute inset-x-4 bottom-6 rounded-xl bg-white/95 p-3 text-center shadow-lg">
+            <p className="text-xs font-bold text-zinc-900">{sticker.text}</p>
+            {sticker.type === "poll" && (
+                <section className="mt-2 flex gap-2 text-[11px] font-semibold">
+                    <span className="flex-1 rounded-lg bg-violet-100 py-1 text-violet-700">YES</span>
+                    <span className="flex-1 rounded-lg bg-zinc-100 py-1 text-zinc-600">NO</span>
+                </section>
+            )}
+            {sticker.type === "emoji_slider" && (
+                <section className="relative mt-3 h-2 rounded-full bg-zinc-200">
+                    <span className="absolute inset-y-0 left-0 w-3/4 rounded-full bg-linear-to-r from-violet-400 to-pink-400" />
+                    <span className="absolute left-3/4 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl leading-none">😍</span>
+                </section>
+            )}
+        </section>
+    );
+};
+
+interface IStoryCard {
+    suggestion: IInstaStorySuggestion;
+    type: "image" | "video" | undefined;
+    src: string | undefined;
+    file: File | undefined;
+    index: number;
+}
+
+const StoryCard: React.FC<IStoryCard> = ({ suggestion, type, src, file, index }) => (
     <article className="flex w-60 shrink-0 flex-col gap-2">
         <section className="relative aspect-9/16 overflow-hidden rounded-2xl border border-zinc-800 bg-black shadow-md shadow-black/30">
             {src && type === "video" && (
@@ -21,25 +63,23 @@ const StoryCard: React.FC<{ suggestion: IInstaStorySuggestion; type: "image" | "
                     📍 {suggestion.location_tag}
                 </span>
             )}
-            {suggestion.sticker && (
-                <section className="absolute inset-x-4 bottom-6 rounded-xl bg-white/95 p-3 text-center shadow-lg">
-                    <p className="text-xs font-bold text-zinc-900">{suggestion.sticker.text}</p>
-                    {suggestion.sticker.type === "poll" && (
-                        <section className="mt-2 flex gap-2 text-[11px] font-semibold">
-                            <span className="flex-1 rounded-lg bg-violet-100 py-1 text-violet-700">YES</span>
-                            <span className="flex-1 rounded-lg bg-zinc-100 py-1 text-zinc-600">NO</span>
-                        </section>
-                    )}
-                </section>
-            )}
+            {suggestion.sticker && <Sticker sticker={suggestion.sticker} />}
         </section>
         <p className="text-sm text-zinc-200">{suggestion.caption}</p>
         <p className="text-xs text-violet-300">{suggestion.hashtags.join(" ")}</p>
         {suggestion.music_mood && <p className="text-xs text-zinc-500">Music mood: {suggestion.music_mood}</p>}
+        <button
+            type="button"
+            disabled={!file}
+            onClick={() => file && downloadBlob(file, `story-${index + 1}-${file.name}`)}
+            className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-zinc-200 transition hover:border-violet-400 hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+            ⬇ Download {type === "video" ? "video" : "photo"}
+        </button>
     </article>
 );
 
-const StoryPreview: React.FC<IStoryPreview> = ({ result, mediaUrls }) => {
+const StoryPreview: React.FC<IStoryPreview> = ({ result, mediaUrls, mediaFiles }) => {
     const { instaStory, media } = result;
 
     if (!instaStory || instaStory.suggestions.length === 0) {
@@ -62,6 +102,7 @@ const StoryPreview: React.FC<IStoryPreview> = ({ result, mediaUrls }) => {
                         suggestion={suggestion}
                         type={media.find((m) => m.media_id === suggestion.media_id)?.type}
                         src={mediaUrls[suggestion.media_id]}
+                        file={mediaFiles[suggestion.media_id]}
                         index={index}
                     />
                 ))}

@@ -40,8 +40,8 @@ const Body: React.FC<IBody> = ({ }) => {
 
 
     return (
-        <div className="w-full flex p-4">
-            <section className="w-1/2 h-[630px] overflow-y-auto pr-2">
+        <div className="flex w-full flex-col gap-4 p-3 sm:p-4 lg:flex-row">
+            <section className="h-[60dvh] min-h-[320px] w-full overflow-y-auto pr-2 lg:h-[630px] lg:w-1/2">
                 {isLoading && <Loader />}
                 {(mode === "create" || (blogValue?.hotel ?? []).length > 0) && (
                 <section className="flex justify-end">
@@ -64,7 +64,7 @@ const Body: React.FC<IBody> = ({ }) => {
                             <Activity indexNumber={index} key={index} blogActivity={activityItem} />
                             { showTravelConnector && (
                                 <section className="mt-2 flex items-center gap-3">
-                                    <section className="my-1 flex w-28 shrink-0 flex-col items-center cursor-pointer">
+                                    <section className="my-1 flex w-16 shrink-0 flex-col items-center cursor-pointer sm:w-28">
                                         <span className="h-20 w-0.5 border-l-2 border-dashed border-[#6c757d]" />
                                         { mode !== "preview" && (
                                         <Tooltip title="Travel Options">
@@ -86,7 +86,7 @@ const Body: React.FC<IBody> = ({ }) => {
                     )
                 })}
             </section>
-            <section className="w-1/2 shadow-lg rounded-lg p-2 h-[630px] bg-[#212529]">
+            <section className="h-[320px] w-full rounded-lg bg-[#212529] p-2 shadow-lg sm:h-[420px] lg:h-[630px] lg:w-1/2">
                 <Map markerPoints={mapMarkerPoints} longitude={selectedLongitude} latitude={selectedLatitude} />
             </section>
             <Hotel open={isHotelModalOpen} onClose={() => setIsHotelModalOpen(false)} />

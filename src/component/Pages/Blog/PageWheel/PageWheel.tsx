@@ -86,7 +86,7 @@ const PageWheel: React.FC<IPageWheel> = ({  changeSelectedDay }) => {
     });
 
     return (
-        <section className="absolute right-0 bottom-10 w-[180px] overflow-visible">
+        <section className="absolute right-0 bottom-10 w-[180px] origin-bottom-right scale-[0.7] overflow-visible sm:scale-100">
             <section
                 ref={boxRef}
                 className="relative h-100 overflow-y-auto overflow-x-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
