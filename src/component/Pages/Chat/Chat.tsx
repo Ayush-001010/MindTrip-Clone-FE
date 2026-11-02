@@ -90,7 +90,16 @@ export const useChatContext = () => {
 }
 
 const Chat : React.FC<IChat> = () => {
-    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , addHotelToWishList, bookHotelHandler , sendNewMessage , tripSuggestionsDate } = useTripSocketAction();
+    const { isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost , addCommentOnOpinion , checkInUpdate } = useTripAction();
+    const [groupHubPosts, setGroupHubPosts] = useState<IGroupHubMessage[]>([]);
+    const loadGroupHubPosts = () => {
+        fetchOldGroupHubPost().then((response:any) => {
+            if(response.success && response.data){
+                setGroupHubPosts(response.data);
+            }
+        });
+    };
+    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , addHotelToWishList, bookHotelHandler , sendNewMessage , tripSuggestionsDate } = useTripSocketAction(loadGroupHubPosts);
     const [isSelectedLocation, setIsSelectedLocation] = useState<boolean>(false);
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
@@ -101,10 +110,8 @@ const Chat : React.FC<IChat> = () => {
     const [isSelectedItineraryPlan, setIsSelectedItineraryPlan] = useState<boolean>(false);
     const [isTripAdmin, setIsTripAdmin] = useState<boolean>(false);
     const notification = useNotification(notificationConfig.type, notificationConfig.message, notificationConfig.open, notificationConfig.duration);
-    const { isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost , addCommentOnOpinion , checkInUpdate } = useTripAction();
     const { tripId } = useParams();
     const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
-    const [groupHubPosts, setGroupHubPosts] = useState<IGroupHubMessage[]>([]);
     const [createAction , setCreateAction] = useState<{
         type: "poll" | "opinion",
         title: string,
@@ -136,7 +143,6 @@ const Chat : React.FC<IChat> = () => {
                 const now = new Date();
                 const diffInMinutes = (now.getTime() - date.getTime()) / (1000 * 60);
                 if(diffInMinutes < 1) {
-                    console.log("AI message is less than 1 minute old:", obj);
                     sendMessageHandler(obj.text);
                 }
             }
@@ -148,17 +154,11 @@ const Chat : React.FC<IChat> = () => {
             return;
         }
         isUserTripAdmin().then(response => {
-            console.log("Is user trip admin:", response);
             if(response.success && response.data){
                 setIsTripAdmin(true);
             }
         });
-        fetchOldGroupHubPost().then((response:any) => {
-            console.log("Old Group Hub Post:", response);
-            if(response.success && response.data){
-                setGroupHubPosts(response.data);
-            }
-        });
+        loadGroupHubPosts();
     },[tripId, userID]);
 
     return (
@@ -166,7 +166,7 @@ const Chat : React.FC<IChat> = () => {
             <div className="w-full ">
                 {notification}
                 <Header/>
-                <div className="flex w-full">
+                <div className="flex w-full flex-col lg:flex-row">
                     <ChatBox/>
                     <JourneyPannel/>
                 </div>

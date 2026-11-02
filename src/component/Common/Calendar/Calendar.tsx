@@ -95,11 +95,9 @@ const Calendar: React.FC<ICalendar> = ({ date , rangeClickHandler }) => {
         to: number;
         type: "long-weekend" | "long-birthday-weekend" | "long-anniversary-weekend" | "birthday" | "anniversary";
     }) => {
-        console.log(range);
         // convert Time to date
         const fromDate = new Date(range.from);
         const toDate = new Date(range.to);
-        console.log({ fromDate, toDate });
         rangeClickHandler(fromDate, toDate, range.type);
     }
 

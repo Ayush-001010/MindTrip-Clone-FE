@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -11,9 +11,11 @@ import type ITripHotelData from "../Interface/DataInterface/ITripHotel";
 import type IGroupHubMessage from "../Interface/DataInterface/IGroupHubMessage";
 
 const SERVER_URL = "http://localhost:3000"; // change to your server URL
-const socket = io(SERVER_URL);
+const socket = io(SERVER_URL, { autoConnect: false });
 
-const useTripSocketAction = () => {
+const useTripSocketAction = (onNewGroupMessage?: () => void) => {
+  const onNewGroupMessageRef = useRef(onNewGroupMessage);
+  onNewGroupMessageRef.current = onNewGroupMessage;
   const [notificationConfig, setNotificationConfig] =useState<INotificationConfig>({open: false,type: "",message: "",duration: undefined});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [messages, setMessages] = useState<Array<IMessageTrip>>([]);
@@ -27,7 +29,21 @@ const useTripSocketAction = () => {
   const userID = userDetails.userID;
   const userName = userDetails.userName;
 
-  socket.on("room:joined", (data: { userName: string }) => {
+  useEffect(() => {
+    socket.connect();
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+  const registered: Array<[string, (...args: any[]) => void]> = [];
+  const on = (event: string, handler: (...args: any[]) => void) => {
+    socket.on(event, handler);
+    registered.push([event, handler]);
+  };
+
+  on("room:joined", (data: { userName: string }) => {
     const { userName } = data;
     if (userName !== userDetails.userName) {
       setNotificationConfig({
@@ -39,7 +55,7 @@ const useTripSocketAction = () => {
     }
   });
 
-  socket.on("room:oldChatDetails", (oldMessages: any) => {
+  on("room:oldChatDetails", (oldMessages: any) => {
     // setMessages(oldMessages);
     const { response } = oldMessages;
     const message1: IMessageTrip[] = []
@@ -61,13 +77,13 @@ const useTripSocketAction = () => {
     setMessages(message1);
   });
 
-  socket.on("room:chat-response", (response) => {
+  on("room:chat-response", (response) => {
     const { data } = response;
     setMessages((prevMessages) => [...prevMessages, data]);
     setIsLoading(false);
   });
 
-  socket.on("room:setTripStartAndEnd-response", (response) => {
+  on("room:setTripStartAndEnd-response", (response) => {
     const { startDate, endDate } = response;
     setFinalItinerary((prev) => {
       if (!prev) {
@@ -89,9 +105,8 @@ const useTripSocketAction = () => {
     });
   });
 
-  socket.on("room:setTripBudget-response", (_) => {
+  on("room:setTripBudget-response", (_) => {
     // const { budget } = response;
-    // console.log("Received trip budget from server:", budget);
     setNotificationConfig({
       open: true,
       type: "alert",
@@ -100,8 +115,7 @@ const useTripSocketAction = () => {
     });
   });
 
-  socket.on("room:addExpense-response", (response) => {
-    // console.log("Received add expense response from server:", response);
+  on("room:addExpense-response", (response) => {
     const { success, data } = response;
     if (success) {
       setNotificationConfig({
@@ -120,14 +134,12 @@ const useTripSocketAction = () => {
     }
   });
 
-  socket.on("room:hotelRequest-response", (response) => {
+  on("room:hotelRequest-response", (response) => {
     setIsLoading(false);
-    console.log("Received hotel request response from server:", response);
     setMessages((prevMessages) => [...prevMessages, response]);
   });
 
-  socket.on("room:editTripName-response", (res)=>{
-    console.log("Received edit trip name response from server:", res);
+  on("room:editTripName-response", (res)=>{
     setNotificationConfig({
       open: true,
       type: "alert",
@@ -136,8 +148,7 @@ const useTripSocketAction = () => {
     });
   });
 
-  socket.on("room:createTripHotel-response", (response) => {
-    console.log("Response : ", response);
+  on("room:createTripHotel-response", (response) => {
     if(response.success) {
       if(response.data === "wishlist") {
         setNotificationConfig({
@@ -157,16 +168,14 @@ const useTripSocketAction = () => {
     }
   });
 
-  socket.on("room:suggestedTripDates-response" , (response) => {
-   console.log("Received suggested trip dates response from server:", response);
+  on("room:suggestedTripDates-response" , (response) => {
     if(response.success && response.data) {
       const { startDate, endDate } = response.data;
       setTripSuggestionsDate({ startDate: new Date(startDate), endDate: new Date(endDate) });
     }
   })
 
-  socket.on("room:newGroupMessage-response", (response) => {
-    console.log("Received new group message response from server:", response);
+  on("room:newGroupMessage-response", (response) => {
     if(response.success) {
       const {type , userName} = response.data;
       setNotificationConfig({
@@ -175,6 +184,7 @@ const useTripSocketAction = () => {
         message: `New group message of type "${type}" sent by ${userName}`,
         duration: 3000,
       });
+      onNewGroupMessageRef.current?.();
     }
     else {
       setNotificationConfig({
@@ -185,6 +195,11 @@ const useTripSocketAction = () => {
       });
     }
   });
+
+  return () => {
+    registered.forEach(([event, handler]) => socket.off(event, handler));
+  };
+  }, [userDetails.userName]);
 
   const editTripName = (newTripName: string) => {
     socket.emit("room:editTripName", { tripID: tripId, newTripName });

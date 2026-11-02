@@ -5,17 +5,17 @@ import SentBox from "../SentBox/SentBox";
 
 const POLL_OPTIONS = [1, 2, 3, 4];
 
-const Poll : React.FC<IPoll> = () => {
+const Poll : React.FC<IPoll> = ({ setActiveTab }) => {
     const [title, setTitle] = useState("");
     const [options, setOptions] = useState(Array(POLL_OPTIONS.length).fill(""));
     const {createAction,sendNewMessage} = useChatContext();
 
     const submitHandler = async () => {
+        console.log("Submitting poll with title:", title, "and options:", options);
         if(!sendNewMessage) return;
 
         sendNewMessage("poll",{content: title,options: options});
-        
-        console.log("Poll submitted");
+        setActiveTab("Announcement");
     };
     useEffect(() => {
         if (createAction) {

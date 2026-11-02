@@ -14,8 +14,6 @@ const HotelPannel: React.FC<IHotelPannel> = () => {
     const [fromDate , setFromDate] = useState<Date | null>(null);
     const [toDate , setToDate] = useState<Date | null>(null);
 
-    console.log("ID", id)
-
     const submitHandler = () => {
         if (bookHotelHandler && fromDate && toDate) {
             bookHotelHandler({

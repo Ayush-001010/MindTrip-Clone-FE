@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import type IActivityBox from "./IActivityBox";
 import { FaLocationDot } from "react-icons/fa6";
 import useCommonActivities from "../../../../../../../../CustomHooks/useCommonActivities";
+import { SiYoutubemusic } from "react-icons/si";
+import { Tooltip } from "antd";
 
 const ActivityBox: React.FC<IActivityBox> = ({ activity, setLongitude, setLatitude }) => {
     const [placeImageURL, setPlaceImageURL] = useState<string>("https://d2uqdcpehc2tdl.cloudfront.net/ExploreTrip/Manali.jpg");
@@ -25,6 +27,11 @@ const ActivityBox: React.FC<IActivityBox> = ({ activity, setLongitude, setLatitu
                 return "No Time Specified";
         }
     }
+    const onYoutubeSuggestionClick = () => {
+        const query = encodeURIComponent(`${activity?.cityName ?? "Unknown City"} ${activity?.activityName ?? ""} travel guide`);
+        const youtubeUrl = `https://www.youtube.com/results?search_query=${query}`;
+        window.open(youtubeUrl, "_blank");
+    }
 
     useEffect(() => {
         if (activity?.cityName) {
@@ -36,7 +43,18 @@ const ActivityBox: React.FC<IActivityBox> = ({ activity, setLongitude, setLatitu
 
     return (
         <section className="group flex gap-4 rounded-2xl border border-white/10 bg-white/6 p-3 shadow-[0_14px_40px_rgba(15,23,42,0.24)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-sky-300/30 hover:bg-white/10 hover:shadow-[0_22px_56px_rgba(14,165,233,0.18)]">
-            <section className="h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-slate-800 shadow-lg ring-1 ring-white/10 sm:h-32 sm:w-32">
+            <section className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-slate-800 shadow-lg ring-1 ring-white/10 sm:h-32 sm:w-32">
+                <Tooltip title="Youtube Video">
+                    <button
+                        type="button"
+                        onClick={onYoutubeSuggestionClick}
+                        aria-label={`Watch travel guides for ${activity?.cityName ?? "this place"} on YouTube`}
+                        title="Watch travel guides on YouTube"
+                        className="absolute right-1.5 top-1.5 z-10 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-[#ff0000] text-white shadow-md transition-all duration-300 hover:scale-110 hover:bg-[#cc0000] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 active:scale-95"
+                    >
+                        <SiYoutubemusic className="h-4 w-4" />
+                    </button>
+                </Tooltip>
                 <img
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     src={placeImageURL}

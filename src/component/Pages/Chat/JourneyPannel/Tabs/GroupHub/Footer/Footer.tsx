@@ -5,14 +5,14 @@ import Poll from './Poll/Poll';
 import Opinion from './Opinion/Opinion';
 import CheckIns from './CheckIns/CheckIns';
 
-const Footer : React.FC<IFooter> = ({ activeTab }) => {
+const Footer : React.FC<IFooter> = ({ activeTab, setActiveTab }) => {
 
     const genratedUI = () => {
         switch(activeTab) {
-            case "Announcement": return <Announcement />;
-            case "Poll": return <Poll />;
-            case "Opinion": return <Opinion />;
-            case "Check ins" : return <CheckIns />;
+            case "Announcement": return <Announcement setActiveTab={setActiveTab} />;
+            case "Poll": return <Poll setActiveTab={setActiveTab} />;
+            case "Opinion": return <Opinion setActiveTab={setActiveTab} />;
+            case "Check ins" : return <CheckIns setActiveTab={setActiveTab} />;
             default : return null;
         }
     }

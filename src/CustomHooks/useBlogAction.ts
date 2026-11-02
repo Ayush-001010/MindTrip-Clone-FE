@@ -118,12 +118,10 @@ const useBlogAction = () => {
     }
 
     const fetchBlogs = async (_: IFetchBlogFilter) => {
-        console.log("User ID:", userID)
         const apiInstance = new APIService();
         const response = await apiInstance.getRequest<IFetchBlogResult>("/blog/fetch", {
             "userId" : userID?.toString() || ""
         });
-        console.log("Fetch Blogs Response:", response); 
         return response;
     }
 

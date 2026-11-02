@@ -117,8 +117,6 @@ const AppContent: React.FC = () => {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/chat/:tripId" element={<Chat />} />
-          <Route path="/explore" element={<Explore />} />
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={< SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
@@ -132,6 +130,7 @@ const AppContent: React.FC = () => {
             <Route path="/chat" element={<Chat />} />
             <Route path="/explore" element={<Explore />} />
           <Route path="/inspiration" element={<Inspiration />} />
+          <Route path="/chat/:tripId" element={<Chat />} />
           </Route>
         </Routes>
       </div>

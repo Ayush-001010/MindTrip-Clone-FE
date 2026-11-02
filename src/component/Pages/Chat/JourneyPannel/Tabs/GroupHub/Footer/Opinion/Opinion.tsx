@@ -3,7 +3,7 @@ import type IOpinion from './IOpinion';
 import SentBox from '../SentBox/SentBox';
 import { useChatContext } from '../../../../../Chat';
 
-const Opinion: React.FC<IOpinion> = () => {
+const Opinion: React.FC<IOpinion> = ({ setActiveTab }) => {
     const { createAction, sendNewMessage } = useChatContext();
     const [opinionText, setOpinionText] = useState("");
 
@@ -28,6 +28,7 @@ const Opinion: React.FC<IOpinion> = () => {
         if (!opinionText.trim()) return;
         sendNewMessage("opinion", { content: opinionText });
         setOpinionText("");
+        setActiveTab("Announcement");
     };
 
     return (

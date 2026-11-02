@@ -53,8 +53,6 @@ const BlogList: React.FC<IBlogList> = ({ filters , following , setFollowing  , l
         };
     }, [filters, page]);
 
-    console.log("Blogs:", blogs);
-
     return (
         <section className="mt-8 flex w-full flex-col items-center gap-6">
             {isLoading ? (

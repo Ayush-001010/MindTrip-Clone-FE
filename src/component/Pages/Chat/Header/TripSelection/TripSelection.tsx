@@ -8,6 +8,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useTripAction from "../../../../../CustomHooks/useTripAction";
 import { Select } from "antd";
 import useTripSocketAction from "../../../../../CustomHooks/useTripSocketAction";
+import { useSelector } from "react-redux";
+import type IUserInterface from "../../../../../Interface/DataInterface/IUserDetails";
 
 const actions = [
     { label: "Edit trip", icon: <CiEdit />, hover: "hover:text-[#f8f9fa]" },
@@ -23,12 +25,14 @@ const TripSelection: React.FC<ITripSelection> = () => {
     const [options, setOptions] = useState<ISuggestionOption[]>([]);
     const [isEdit, setIsEdit] = useState(false);
     const [editValue, setEditValue] = useState("");
+    const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
+    
 
     const clickHandler = (actionLabel: string) => {
         if (actionLabel === "Create new trip") {
             createNewTrip().then((response: any) => {
-                console.log("Create New Trip Response: ", response);
                 navigate(`/chat/${response.data.url}`);
+                window.location.reload();
             });
         } else if (actionLabel === "Edit trip") {
             if (!isEdit) {
@@ -50,19 +54,23 @@ const TripSelection: React.FC<ITripSelection> = () => {
     };
     const onValueChange = (value: string) => {
         setTripID(value);
+        setIsEdit(false);
+        setEditValue(value);
         navigate(`/chat/${value}`);
-
+        window.location.reload();
     };
 
     useEffect(() => {
         const path = location.pathname;
-        console.log("Path    ", path);
         if (path !== '/chat') {
             setTripID(path.substring(path.lastIndexOf("/") + 1));
+            setEditValue(path.substring(path.lastIndexOf("/") + 1));
         }
     }, [location]);
 
     useEffect(() => {
+        if(!userID) return;
+        console.log("User ID    ", userID)
         fetchTripID().then(response => {
             if (response.success && response.data) {
                 setOptions((response.data as any).map((item: any) => ({
@@ -71,14 +79,14 @@ const TripSelection: React.FC<ITripSelection> = () => {
                 })))
             }
         });
-    }, []);
+    }, [userID]);
 
     return (
         <section className="flex items-center gap-2">
             <section>
                 {!isEdit && (
                     <Select
-                        className="trip-selection-select !h-9 min-w-[200px]"
+                        className="trip-selection-select !h-9 min-w-[200px] max-w-[300px]"
                         classNames={{ popup: { root: "trip-selection-dropdown" } }}
                         value={tripID || undefined}
                         onChange={onValueChange}
@@ -88,7 +96,7 @@ const TripSelection: React.FC<ITripSelection> = () => {
                 )}
                 {isEdit && (
                     <input
-                        className="trip-selection-input !h-9 min-w-[200px] border-[#6c757d] text-[#dee2e6] border-b-1"
+                        className="trip-selection-input !h-9 min-w-[200px] max-w-[300px] border-[#6c757d] text-[#dee2e6] border-b-1"
                         value={editValue || ""}
                         onChange={(e) => setEditValue(e.target.value)}
                         placeholder="You Haven’t Selected a Trip Yet"

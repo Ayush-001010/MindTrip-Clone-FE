@@ -317,7 +317,6 @@ const Blog: React.FC<IBlog> = () => {
         return () => clearTimeout(timeOutObj);
     }, [blogValue?.tripDuration]);
 
-    console.log("Blog value:", blogValue);
 
     if (fetchError) {
         return <p className="p-8 text-center text-[#ced4da]">{fetchError}</p>;
@@ -328,8 +327,6 @@ const Blog: React.FC<IBlog> = () => {
             userActivity("blog", blogId ? parseInt(blogId) : 0);
         }
     }, [mode , blogId]);
-
-    console.log("Blog Values ",blogValue);
 
     return (
         <blogContext.Provider value={{ mode, blogValue: blogValue!, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay, mapMarkerPoints, selectedLongitude, selectedLatitude, addingHotel, addTravel , currentEditActivityIndex, setCurrentEditActivityIndex , setMode }}>

@@ -27,7 +27,7 @@ const TripUser: React.FC<ITripUser> = ({ open, onClose }) => {
         }
     }, [open]);
     return (
-        <Modal open={open} footer={null} onCancel={onClose} centered>
+        <Modal open={open} footer={null} onCancel={onClose} closeIcon={null} centered>
             <section className="bg-[#161a1d] h-100 rounded-lg border-none p-4">
                 <CloseBox onClose={onClose} />
                 <InviteBox />

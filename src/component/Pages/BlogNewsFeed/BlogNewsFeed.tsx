@@ -13,7 +13,6 @@ const BlogNewsFeed : React.FC<IBlogNewsFeed> = () => {
 
     useEffect(() => {
         getTopFiveBlogs().then(response => {
-            console.log(response);
             if(response.success && response.data){
             setTopFiveBlogs(response.data as IBlogData[]);
             }

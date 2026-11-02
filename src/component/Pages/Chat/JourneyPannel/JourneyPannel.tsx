@@ -65,7 +65,7 @@ const JourneyPannel: React.FC<IJourneyPannel> = () => {
 
 
     return (
-        <main className="m-3 flex h-185 w-1/2 flex-col p-4 bg-[#121113] rounded-xl ">
+        <main className="m-3 flex h-[85dvh] min-h-[480px] flex-col rounded-xl bg-[#121113] p-3 sm:p-4 lg:h-185 lg:w-1/2">
             <section className="flex justify-end">
                 <ToggleSwitch active={pannelType} setActive={setPannelType} />
             </section>
