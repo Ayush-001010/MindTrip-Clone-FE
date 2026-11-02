@@ -9,18 +9,42 @@ import FavouritesCard from "../../FavouritesCard/FavouritesCard";
 
 const CollectionDetails: React.FC<ICollectionDetails> = ({ id }) => {
     const [activeTab, setActiveTab] = useState<"Activity" | "Hotel" | "Blog">("Activity");
-    const [collectionDetails, setCollectionDetails] = useState<IFavouritesActivity[] | IFavouritesHotel[] | IFavouritesBlog[]>([]);
-    const { fetchCollectionDetails } = useFavouritesAction();
-
+    const [collectionDetails, setCollectionDetails] = useState<
+    Array<IFavouritesActivity | IFavouritesHotel | IFavouritesBlog>
+>([]);
+    const { fetchCollectionDetails,removeFavourite } = useFavouritesAction();
+    
     const clickHandler = (str: "Activity" | "Hotel" | "Blog") => {
         setActiveTab(str);
+    };
+    const handleRemoveFavourite = async (
+        favouriteId: number,
+        type: "Activity" | "Hotel"
+    ) => {
+        try {
+            const response = await removeFavourite(id, favouriteId, type);
+    
+            if (response.success && response.data) {
+                setCollectionDetails(previous =>
+                    previous.filter(item => item.id !== favouriteId)
+                );
+    
+                console.log("Favourite removed successfully");
+            } else {
+                console.error("Failed to remove favourite:", response);
+            }
+        } catch (error) {
+            console.error("Error removing favourite:", error);
+        }
     };
     useEffect(()=>{
         const timeOutID = setTimeout(() => {
             if(id){
             fetchCollectionDetails(id, activeTab).then(response => {
                 if(response.success){
-                    setCollectionDetails(response.data as IFavouritesActivity[] | IFavouritesHotel[] | IFavouritesBlog[]);
+                    setCollectionDetails(
+                        response.data as Array<IFavouritesActivity | IFavouritesHotel | IFavouritesBlog>
+                    );
                 }
             });
         }
@@ -35,13 +59,41 @@ const CollectionDetails: React.FC<ICollectionDetails> = ({ id }) => {
             {collectionDetails.map((item : IFavouritesActivity | IFavouritesHotel | IFavouritesBlog, index: number) => {
                 const key = `${activeTab}-${item.id ?? index}`;
                 switch(activeTab){
-                    case "Activity" : {
+                    case "Activity": {
                         const data = item as IFavouritesActivity;
-                        return <FavouritesCard key={key} title={data.activityName} imageUrl={data.activityImage} description={data.activityDescription} address={data.activityAddress} />;
+                    
+                        return (
+                            <FavouritesCard
+                                key={key}
+                                title={data.activityName}
+                                imageUrl={data.activityImage}
+                                description={data.activityDescription}
+                                address={data.activityAddress}
+                                onRemove={() => {
+                                    if (data.id !== undefined) {
+                                        void handleRemoveFavourite(data.id, "Activity");
+                                    }
+                                }}
+                            />
+                        );
                     }
-                    case "Hotel" : {
+                    case "Hotel": {
                         const data = item as IFavouritesHotel;
-                        return <FavouritesCard key={key} title={data.hotelName} imageUrl={data.hotelImage} description={data.hotelDescription} price={data.price} />;
+                    
+                        return (
+                            <FavouritesCard
+                                key={key}
+                                title={data.hotelName}
+                                imageUrl={data.hotelImage}
+                                description={data.hotelDescription}
+                                price={data.price}
+                                onRemove={() => {
+                                    if (data.id !== undefined) {
+                                        void handleRemoveFavourite(data.id, "Hotel");
+                                    }
+                                }}
+                            />
+                        );
                     }
                     case "Blog" : {
                         const data = item as IFavouritesBlog;

@@ -29,8 +29,30 @@ const useFavouritesAction = () => {
         });
         return response;
     };
-
-    return { fetchCollection, createCollection, fetchCollectionDetails };
+    
+    const removeFavourite = async (
+        collectionId: number,
+        favouriteId: number,
+        type: "Activity" | "Hotel"
+    ) => {
+        const apiInstance = new APIService();
+    
+        return await apiInstance.postRequest<boolean>(
+            "/faviourites/removeFavourite",
+            {
+                collectionId,
+                favouriteId,
+                type,
+                userEmail
+            }
+        );
+    };
+    return {
+        fetchCollection,
+        createCollection,
+        fetchCollectionDetails,
+        removeFavourite
+    };
 };
 
 export default useFavouritesAction;
