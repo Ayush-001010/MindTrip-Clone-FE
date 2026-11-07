@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 import BlogNewsFeed from "./component/Pages/BlogNewsFeed/BlogNewsFeed";
 import BlogVideoCreation from "./component/Pages/BlogVideoCreation/BlogVideoCreation";
+import GlobleFeed from "./component/Pages/GlobleFeed/GlobleFeed";
 
 
 export interface IAppContext {
@@ -58,8 +59,9 @@ const AppContent: React.FC = () => {
   const isExploreLink = location.pathname.includes("/explore");
   const isBlogLink = location.pathname.includes("/blog");
   const isInspirationLink = location.pathname.includes("/inspiration");
+  const isGlobeFeedLink = location.pathname.includes("/globefeed");
   const { favoritesConfig, data: favoritesData, mode: favoritesMode } = useGetAppContext();
-  const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink;
+  const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink || isGlobeFeedLink;
   const faviorites = useFavorites(favoritesConfig.openFavorites, favoritesConfig.uiType ?? "show-collection-for-add-purpose", favoritesData, favoritesMode);
 
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -121,6 +123,7 @@ const AppContent: React.FC = () => {
           <Route path="/auth/signup" element={< SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/invite/:inviteId" element={<Invite />} />
+          <Route path="/globefeed" element={<GlobleFeed />} />
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/chat" element={<Chat />} />
