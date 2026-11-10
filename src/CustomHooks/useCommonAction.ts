@@ -122,8 +122,45 @@ const useCommonAction = () => {
     return response;
   };
 
+  const fetchFreindsDetails = async () => {
+    if(!userID) return {success : false };
+    const apiInstance = new APIService();
+    const response = await apiInstance.getRequest(`/user/friends`, {
+      userId: userID || 2,
+    });
+    return response;
+  }
 
-  return { getImages, getPlaceName, fetchUserDetails, fetchUserFriends, fetchUserFollowing, fetchUserFollowers, updateUserDetails, followUser, userLikedBlogs, dislikeBlog, likeBlog, userActivity };
+  const searchUserProfile = async (searchStr: string) => {
+    const apiInstance = new APIService();
+    const response = await apiInstance.getRequest(`/user/search`, {
+      searchName : searchStr,
+      userId : userID || 2
+    });
+    return response;
+  };
+
+  const addFriend = async (friendID: number) => {
+    const apiInstance = new APIService();
+    const response = await apiInstance.postRequest(`/user/add-friend`, {
+      userID: userID || 2,
+      friendID,
+    });
+    return response;
+  }
+
+  const takeFriendRequestAction = async (friendID: number, action: "Accept" | "Reject") => {
+    const apiInstance = new APIService();
+    const response = await apiInstance.postRequest(`/user/take-action-on-friend-request`, {
+      userID: userID || 2,
+      friendID,
+      action,
+    });
+    return response;
+  };
+
+
+  return { getImages, getPlaceName, fetchUserDetails, fetchUserFriends, fetchUserFollowing, fetchUserFollowers, updateUserDetails, followUser, userLikedBlogs, dislikeBlog, likeBlog, userActivity, fetchFreindsDetails, searchUserProfile, addFriend , takeFriendRequestAction };
 };
 
 export default useCommonAction;

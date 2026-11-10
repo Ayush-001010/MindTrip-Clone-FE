@@ -6,6 +6,8 @@ import { FaInstagram } from "react-icons/fa";
 import UserInfoCard from "../../../Common/Card/UserInfoCard/UserInfoCard";
 import { FaEdit } from "react-icons/fa";
 import ProfileMediaModal from "./ProfileMediaModal/ProfileMediaModal";
+import { FaUserFriends } from "react-icons/fa";
+import FriendDashboardModel from "../../../Common/Model/FriendDashboardModel/FriendDashboardModel";
 
 const ProfileCard: React.FC<IProfileCard> = ({ profile, mode, imageFile, onImageChange, changeProfileFields }) => {
     const [userInfoCardOpen, setUserInfoCardOpen] = useState(false);
@@ -13,6 +15,7 @@ const ProfileCard: React.FC<IProfileCard> = ({ profile, mode, imageFile, onImage
     const instagramUrl = profile?.instagramUrl ?? "";
     const storedImage = profile?.userImage || "";
     const [resolvedImage, setResolvedImage] = useState("");
+    const [friendDashboardModalOpen, setFriendDashboardModalOpen] = useState(false);
     const isImageURL = /^(https?:|data:|blob:)/.test(storedImage);
     const userImage = isImageURL ? storedImage : resolvedImage;
 
@@ -71,7 +74,11 @@ const ProfileCard: React.FC<IProfileCard> = ({ profile, mode, imageFile, onImage
             return `${months} months on MindTrip`;
         }
         return `${years} years on MindTrip`;
-    }
+    };
+    const clickFriendsButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        setFriendDashboardModalOpen(true);
+    };
 
     const displayName = profile?.name ? `${profile.name[0].toUpperCase()}${profile.name.slice(1)}` : "";
 
@@ -85,6 +92,14 @@ const ProfileCard: React.FC<IProfileCard> = ({ profile, mode, imageFile, onImage
                 onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setUserInfoCardOpen(true); } }}
                 className="relative w-full max-w-md self-start cursor-pointer rounded-3xl border border-zinc-800 bg-zinc-900 p-6 text-zinc-100 shadow-xl shadow-black/40 transition duration-300 hover:-translate-y-0.5 hover:border-zinc-700 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/50 sm:p-8"
             >
+                <button
+                    type="button"
+                    aria-label="Friends"
+                    onClick={clickFriendsButton}
+                    className="absolute cursor-pointer top-4 right-14 rounded-full bg-zinc-800 p-2 text-zinc-300 transition hover:bg-zinc-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/50 active:scale-95"
+                >
+                    <FaUserFriends />
+                </button>
                 {mode === "edit" ? <button
                     type="button"
                     aria-label="Edit profile photo and Instagram"
@@ -129,6 +144,7 @@ const ProfileCard: React.FC<IProfileCard> = ({ profile, mode, imageFile, onImage
                     onSave={(file, url) => { onImageChange(file); changeProfileFields("instagramUrl", url); }}
                 />
             )}
+            <FriendDashboardModel openModal={friendDashboardModalOpen} closeFunc={() => setFriendDashboardModalOpen(false)} />
         </>
     );
 };
