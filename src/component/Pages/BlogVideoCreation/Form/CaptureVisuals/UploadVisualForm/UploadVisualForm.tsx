@@ -25,25 +25,11 @@ const UploadVisualForm: React.FC<IUploadVisualForm> = ({ item, blogPlaces, onCha
 
     const canSave = item.duration !== "" && item.where !== "";
 
-    const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selected = event.target.files?.[0];
-        if (selected) onChange({ ...item, file: selected });
-        event.target.value = "";
-    };
-
     const isVideo = file?.type.startsWith("video/");
 
     return (
         <section className="flex flex-col gap-3 rounded-xl border border-zinc-800 bg-zinc-900/80 p-3 shadow-md shadow-black/30 transition hover:border-zinc-700">
-            {file === null ? (
-                <label className="group flex h-64 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-zinc-700 bg-zinc-800/40 text-center transition hover:border-violet-400 hover:bg-violet-500/10">
-                    <svg className="h-6 w-6 text-zinc-500 transition group-hover:text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 16V4m0 0L8 8m4-4 4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
-                    </svg>
-                    <span className="text-xs font-medium text-zinc-300">Upload photo / video</span>
-                    <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFile} />
-                </label>
-            ) : (
+            {file !== null && (
                 <>
                     <section className="relative overflow-hidden rounded-lg bg-black">
                         {previewUrl && (isVideo ? (

@@ -10,6 +10,7 @@ import BlogDashboard from "./BlogDashboard/BlogDashboard";
 const BlogNewsFeed : React.FC<IBlogNewsFeed> = () => {
     const { getTopFiveBlogs } = useBlogAction();
     const [topFiveBlogs, setTopFiveBlogs] = useState<IBlogData[]>([]);
+    
 
     useEffect(() => {
         getTopFiveBlogs().then(response => {

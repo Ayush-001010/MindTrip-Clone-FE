@@ -3,8 +3,6 @@ import { useGetBlogContext } from "../Blog";
 import { MdOutlineSurfing } from "react-icons/md";
 import type ISpeedDial from "./ISpeedDial";
 import { MdOutlineTipsAndUpdates } from "react-icons/md";
-import { TbSailboat } from "react-icons/tb";
-import { IoIosImages } from "react-icons/io";
 import { GrNotes } from "react-icons/gr";
 
 interface ISpeedDialAction {
@@ -28,20 +26,20 @@ const actions: ISpeedDialAction[] = [
             <MdOutlineTipsAndUpdates size={24} />
         )
     },
-    {
-        id:"Side-Activity",
-        label: "Sub Activity",
-        path: (
-            <TbSailboat size={24} />
-        )
-    },
-    {
-        id:"Images",
-        label: "Images",
-        path: (
-            <IoIosImages size={24} />
-        )
-    },
+    // {
+    //     id:"Side-Activity",
+    //     label: "Sub Activity",
+    //     path: (
+    //         <TbSailboat size={24} />
+    //     )
+    // },
+    // {
+    //     id:"Images",
+    //     label: "Images",
+    //     path: (
+    //         <IoIosImages size={24} />
+    //     )
+    // },
     {
         id:"Notes",
         label: "Notes",
@@ -60,7 +58,7 @@ const SpeedDial: React.FC<ISpeedDial> = () => {
     };
 
     return (
-        <div className="group fixed bottom-6 left-30 z-40">
+        <div className="group fixed bottom-6 left-4 z-40 sm:left-30">
             <div
                 id="speed-dial-menu-default"
                 className={`mb-4 flex-col items-center space-y-2 ${isOpen ? "flex" : "hidden"}`}

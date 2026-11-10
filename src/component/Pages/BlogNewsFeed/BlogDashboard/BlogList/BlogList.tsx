@@ -7,6 +7,8 @@ import type IBlogList from "./IBlogList";
 import type IBlogData from "../../../../../Interface/DataInterface/IBlogData";
 import useBlogAction from "../../../../../CustomHooks/useBlogAction";
 import BlogCard from "../../../../Common/Card/BlogCard/BlogCard";
+import type IUserInterface from "../../../../../Interface/DataInterface/IUserDetails";
+import { useSelector } from "react-redux";
 
 const BlogList: React.FC<IBlogList> = ({ filters , following , setFollowing  , likeBlogIds , setLikeBlogIds }) => {
     const { fetchBlogs } = useBlogAction();
@@ -16,6 +18,7 @@ const BlogList: React.FC<IBlogList> = ({ filters , following , setFollowing  , l
     const [isLoading, setIsLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
     const filtersRef = useRef(filters);
+    const {  userID } = useSelector((state: any) => state.userDetails as IUserInterface);
 
     useEffect(() => {
         let cancelled = false;
@@ -31,14 +34,16 @@ const BlogList: React.FC<IBlogList> = ({ filters , following , setFollowing  , l
         }
 
         const loadBlogs = async () => {
+            if(!userID) return;
+
             setIsLoading(true);
             setHasError(false);
             const response : any = await fetchBlogs({ page, ...filters });
             if (cancelled) return;
 
             if (response.success && response.data) {
-                setBlogs([...response.data[0]]);
-                setTotalPages(response.data.totalPages || 1);
+                setBlogs([...response.data]);
+                setTotalPages(1);
             } else {
                 setBlogs([]);
                 setTotalPages(1);
@@ -51,7 +56,7 @@ const BlogList: React.FC<IBlogList> = ({ filters , following , setFollowing  , l
         return () => {
             cancelled = true;
         };
-    }, [filters, page]);
+    }, [filters, page , userID]);
 
     return (
         <section className="mt-8 flex w-full flex-col items-center gap-6">

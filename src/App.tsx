@@ -20,6 +20,8 @@ import { useDispatch } from "react-redux";
 import { setUserDetailsData } from "./Redux/Slices/UserDetails/UserDetails";
 import BlogNewsFeed from "./component/Pages/BlogNewsFeed/BlogNewsFeed";
 import BlogVideoCreation from "./component/Pages/BlogVideoCreation/BlogVideoCreation";
+import GlobleFeed from "./component/Pages/GlobleFeed/GlobleFeed";
+import Profile from "./component/Pages/Profile/Profile";
 
 
 export interface IAppContext {
@@ -58,8 +60,10 @@ const AppContent: React.FC = () => {
   const isExploreLink = location.pathname.includes("/explore");
   const isBlogLink = location.pathname.includes("/blog");
   const isInspirationLink = location.pathname.includes("/inspiration");
+  const isGlobeFeedLink = location.pathname.includes("/globefeed");
+  const isProfileLink = location.pathname.includes("/profile");
   const { favoritesConfig, data: favoritesData, mode: favoritesMode } = useGetAppContext();
-  const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink;
+  const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink || isGlobeFeedLink || isProfileLink;
   const faviorites = useFavorites(favoritesConfig.openFavorites, favoritesConfig.uiType ?? "show-collection-for-add-purpose", favoritesData, favoritesMode);
 
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -121,16 +125,18 @@ const AppContent: React.FC = () => {
           <Route path="/auth/signup" element={< SignUp />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/invite/:inviteId" element={<Invite />} />
-          <Route path="/blog/create" element={<Blog key="blog-create" />} />
-          <Route path="/blog" element={<BlogNewsFeed />} />
-          <Route path="/inspiration/blog/:blogId" element={<Blog key="blog-preview" />} />
-          <Route path="/blog/create-video/:blogId" element={<BlogVideoCreation key="blog-video-creation" />} />
+          <Route path="/globefeed" element={<GlobleFeed />} />
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/chat" element={<Chat />} />
             <Route path="/explore" element={<Explore />} />
-          <Route path="/inspiration" element={<Inspiration />} />
-          <Route path="/chat/:tripId" element={<Chat />} />
+            <Route path="/inspiration" element={<Inspiration />} />
+            <Route path="/chat/:tripId" element={<Chat />} />
+            <Route path="/blog" element={<BlogNewsFeed />} />
+            <Route path="/blog/create" element={<Blog key="blog-create" />} />
+            <Route path="/inspiration/blog/:blogId" element={<Blog key="blog-preview" />} />
+            <Route path="/blog/create-video/:blogId" element={<BlogVideoCreation key="blog-video-creation" />} />
+            <Route path="/profile/:userId" element={<Profile />} />
           </Route>
         </Routes>
       </div>

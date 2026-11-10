@@ -25,6 +25,11 @@ export default class SideNavBarConfig {
             title: "Blog",
             icon: "blog",
             link: "/blog"
+        },
+        {
+            title:"Profile",
+            icon: "profile",
+            link: "/profile/about"
         }
     ]
 }
