@@ -30,9 +30,9 @@ const CollectionCard: React.FC<ICollectionCard> = ({
   const [deleteError, setDeleteError] = useState("");
 
   const openCollectionDetailsHandler = () => {
-    if (!isEditing) {
-      setOpenCollectionDetails(true);
-    }
+    if (isNotOpenDetails || isEditing) return;
+  
+    setOpenCollectionDetails(true);
   };
 
   const handleSaveRename = async () => {
@@ -98,7 +98,7 @@ const CollectionCard: React.FC<ICollectionCard> = ({
   };
   return (
     <section className="w-full">
-      {!openCollectionDetails && (
+      {(!openCollectionDetails || isNotOpenDetails) && (
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
