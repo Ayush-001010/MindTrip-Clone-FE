@@ -29,7 +29,28 @@ const useFavouritesAction = () => {
         });
         return response;
     };
+    const renameCollection = async (
+        collectionId: number,
+        newName: string
+    ): Promise<boolean> => {
+        try {
+            const apiInstance = new APIService();
     
+            const response = await apiInstance.postRequest<boolean>(
+                "/faviourites/renameCollection",
+                {
+                    collectionId,
+                    newName,
+                    userEmail
+                }
+            );
+    
+            return response.success && response.data === true;
+        } catch (error) {
+            console.error("Error renaming collection:", error);
+            return false;
+        }
+    };
     const removeFavourite = async (
         collectionId: number,
         favouriteId: number,
@@ -47,11 +68,31 @@ const useFavouritesAction = () => {
             }
         );
     };
+    const deleteCollection = async (collectionId: number): Promise<boolean> => {
+        try {
+            const apiInstance = new APIService();
+    
+            const response = await apiInstance.postRequest<boolean>(
+                "/faviourites/deleteCollection",
+                {
+                    collectionId,
+                    userEmail
+                }
+            );
+    
+            return response.success && response.data === true;
+        } catch (error) {
+            console.error("Error deleting collection:", error);
+            return false;
+        }
+    };
     return {
         fetchCollection,
         createCollection,
         fetchCollectionDetails,
-        removeFavourite
+        renameCollection,
+        removeFavourite,
+        deleteCollection
     };
 };
 

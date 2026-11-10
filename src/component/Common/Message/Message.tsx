@@ -23,14 +23,31 @@ const Message: React.FC<IIMessage> = ({ data }) => {
             response = JSON.parse(response as unknown as string) as ITripAPIResponse;
         }
         switch (response.type) {
-            case "destination": return <DestinationResponse data={response} />;
-            case "question-gather": return <QuestionGatherResponse data={response} />;
-            case "itinerary-options": return <ItineraryOptions itineraryOptions={response} />;
-            case "fallback": return <FallBackResponse message={response.message} />;
-            case "final-itinerary" : return <FinalResponse message={(response as IItineraryFinalResponse).message} />;
-            case "hotel-information-gather" : return <QuestionGatherResponse data={response} />;
-            case "hotel-search" : return <ShowHotelSearchResponse data={response} />;
-            default: return null;
+            case "destination":
+                return <DestinationResponse data={response} />;
+        
+            case "question-gather":
+            case "favourite-information-gather-round1":
+            case "favourite-information-gather-round2":
+                return <QuestionGatherResponse data={response} />;
+        
+            case "itinerary-options":
+                return <ItineraryOptions itineraryOptions={response} />;
+        
+            case "fallback":
+                return <FallBackResponse message={response.message} />;
+        
+            case "final-itinerary":
+                return <FinalResponse message={(response as IItineraryFinalResponse).message} />;
+        
+            case "hotel-information-gather":
+                return <QuestionGatherResponse data={response} />;
+        
+            case "hotel-search":
+                return <ShowHotelSearchResponse data={response} />;
+        
+            default:
+                return null;
         }
     }
     const assistantVariant = {

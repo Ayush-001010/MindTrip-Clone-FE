@@ -8,8 +8,12 @@ export interface IQuestion {
 }
 
 export default interface IQuestionGatherResponse {
-    type:"question-gather";
-    missingFields : Array<string>;
+    type:
+        | "question-gather"
+        | "favourite-information-gather-round1"
+        | "favourite-information-gather-round2";
+
+    missingFields?: Array<string>;
     questionDescription: string;
-    questions:Array<IQuestion>;
+    questions: Array<IQuestion>;
 }

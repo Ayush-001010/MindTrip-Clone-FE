@@ -79,9 +79,25 @@ const useTripSocketAction = (onNewGroupMessage?: () => void) => {
 
   on("room:chat-response", (response) => {
     const { data } = response;
+
     setMessages((prevMessages) => [...prevMessages, data]);
     setIsLoading(false);
-  });
+
+    let assistantResponse = data?.response;
+
+    if (typeof assistantResponse === "string") {
+        try {
+            assistantResponse = JSON.parse(assistantResponse);
+        } catch {
+            assistantResponse = null;
+        }
+    }
+
+    if (assistantResponse?.type === "final-itinerary") {
+        console.log("Final itinerary received from AI");
+        setIsFinalItineraryReceived(true);
+    }
+});
 
   on("room:setTripStartAndEnd-response", (response) => {
     const { startDate, endDate } = response;

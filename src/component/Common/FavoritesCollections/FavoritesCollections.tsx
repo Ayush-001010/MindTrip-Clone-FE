@@ -33,7 +33,7 @@ const FavoritesCollections: React.FC<IFavoritesCollections> = ({ open, onClose, 
             }}>
             <div className="rounded-2xl bg-black/65 p-6 text-white shadow-2xl ring-1 ring-white/10 backdrop-blur-md">
                 {uiType === "create-collection" && <CreateCollections onClose={onClose} />}
-                {uiType === "show-collection-for-add-purpose" && <ShowCollections addFavoritesItem={addFavoritesItem} />}
+                {uiType === "show-collection-for-add-purpose" && <ShowCollections addFavoritesItem={addFavoritesItem}  open={open} /> }
             </div>
         </Modal>
     )
