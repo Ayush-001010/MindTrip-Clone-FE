@@ -1,12 +1,4 @@
 # TO-DO List
 
-- [ Done ] YouTube suggestions: link to YouTube search results for `${destination} travel guide` (no API).
-- [ ] Google Ads (seen with affiliate link)
-- [ ] Package flight search: link to Google Flights using `https://www.google.com/travel/flights?q=${encodeURIComponent(`Flights from ${origin} to ${destination} on ${departureDate}`)}` (no API).
-  - Label: "Search flights on Google Flights". Users confirm airports, dates, and current fares on the provider's site; do not display unverified live fares.
-  - Defer live flight API integration until after launch.
-- [ Done ] Hotel (real Hotel API)
-- [ Not Decided Yet ] Package AI
-- [ ] Activity AI with cost
-- [ In-Progress ] Video Maker with blog content (story format)
-- [ Done ] Integrate with news feed
+- [ ] Group Video Editing MVP: create a trip project, invite friends, collect photos/videos/voice notes, and generate a reviewable 30-60-second reel. Prioritize a simple mobile-friendly flow, minimal active editing time, and fast previews. See [feature rating and proposed acceptance targets](docs/GROUP_VIDEO_EDITING_RATING.md).
+  - Design and implement the [shared project credit budget](docs/GROUP_VIDEO_EDITING_CREDITS.md): use 100 credits as the initial example, show upfront quotes, enforce limits on the backend, and validate rates against actual costs.

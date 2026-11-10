@@ -1,4 +1,5 @@
 import React, { useEffect, createContext, useContext, useState } from "react";
+import Play from "./component/Pages/Play/Play";
 import Home from "./component/Pages/Home/Home";
 import TopNavbar from "./component/Common/Navbar/TopNavBar/TopNavbar";
 import SideNavBar from "./component/Common/Navbar/SideNavBar/SideNavBar";
@@ -22,6 +23,7 @@ import BlogNewsFeed from "./component/Pages/BlogNewsFeed/BlogNewsFeed";
 import BlogVideoCreation from "./component/Pages/BlogVideoCreation/BlogVideoCreation";
 import GlobleFeed from "./component/Pages/GlobleFeed/GlobleFeed";
 import Profile from "./component/Pages/Profile/Profile";
+import Memories from "./component/Pages/Memories/Memories";
 
 
 export interface IAppContext {
@@ -62,8 +64,9 @@ const AppContent: React.FC = () => {
   const isInspirationLink = location.pathname.includes("/inspiration");
   const isGlobeFeedLink = location.pathname.includes("/globefeed");
   const isProfileLink = location.pathname.includes("/profile");
+  const isMemoriesLink = location.pathname.includes("/memories");
   const { favoritesConfig, data: favoritesData, mode: favoritesMode } = useGetAppContext();
-  const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink || isGlobeFeedLink || isProfileLink;
+  const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink || isGlobeFeedLink || isProfileLink || isMemoriesLink;
   const faviorites = useFavorites(favoritesConfig.openFavorites, favoritesConfig.uiType ?? "show-collection-for-add-purpose", favoritesData, favoritesMode);
 
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -120,6 +123,7 @@ const AppContent: React.FC = () => {
       <div className={`min-w-0 flex-1 ${isDarkPage ? "h-screen overflow-y-auto" : ""}`}>
         <Routes>
           {/* Public routes */}
+          <Route path="/play" element={<Play />} />
           <Route path="/" element={<Home />} />
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={< SignUp />} />
@@ -137,6 +141,7 @@ const AppContent: React.FC = () => {
             <Route path="/inspiration/blog/:blogId" element={<Blog key="blog-preview" />} />
             <Route path="/blog/create-video/:blogId" element={<BlogVideoCreation key="blog-video-creation" />} />
             <Route path="/profile/:userId" element={<Profile />} />
+            <Route path="/memories" element={<Memories />} />
           </Route>
         </Routes>
       </div>

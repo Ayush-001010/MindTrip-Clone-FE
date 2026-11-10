@@ -1,17 +1,25 @@
 import { useState , useEffect } from "react";
+import { createPortal } from "react-dom";
 import { TiUserAdd } from "react-icons/ti";
 import { MdOutlineNotificationImportant } from "react-icons/md";
 
 export const notificationTypeArray = ["userJoin","alert","expense-added","error","success"];
 
-const useNotification = (type: typeof notificationTypeArray[number] , message: string , open: boolean , duration?: number) => {
+const notificationPositions = {
+    "top-right": "top-4 right-4",
+    "top-left": "top-4 left-4",
+    "bottom-right": "bottom-4 right-4",
+    "bottom-left": "bottom-4 left-4",
+};
+
+const useNotification = (type: typeof notificationTypeArray[number] , message: string , open: boolean , duration?: number , pos: keyof typeof notificationPositions = "top-right") => {
     const [isOpen, setIsOpen] = useState(open);
 
     const genratedUI = () => {
         switch(type) {
             case "userJoin":
                 return (
-                    <div role="status" aria-live="polite" className="fixed top-4 right-4 z-50">
+                    <div role="status" aria-live="polite">
                         <div className="flex items-start gap-3 bg-white/95 backdrop-blur-sm px-4 py-3 shadow-lg rounded-lg border border-gray-200 text-sm text-gray-800 max-w-xs">
                             <div className="text-2xl text-green-600 mt-0.5">
                                 <TiUserAdd />
@@ -32,7 +40,7 @@ const useNotification = (type: typeof notificationTypeArray[number] , message: s
                 );
             case "alert":
                 return (
-                    <div role="status" aria-live="polite" className="fixed top-4 right-4 z-50">
+                    <div role="status" aria-live="polite">
                         <div className="flex items-start gap-3 bg-yellow-100 px-4 py-3 shadow-lg rounded-lg border border-yellow-200 text-sm text-yellow-800 max-w-xs">
                             <div className="text-2xl text-yellow-600 mt-0.5">
                                 <MdOutlineNotificationImportant />
@@ -52,7 +60,7 @@ const useNotification = (type: typeof notificationTypeArray[number] , message: s
                 );
             case "expense-added":
                 return (
-                    <div role="status" aria-live="polite" className="fixed top-4 right-4 z-50">
+                    <div role="status" aria-live="polite">
                         <div className="flex items-start gap-3 bg-green-100 px-4 py-3 shadow-lg rounded-lg border border-green-200 text-sm text-green-800 max-w-xs">
                             <div className="text-2xl text-green-600 mt-0.5">
                                 <MdOutlineNotificationImportant />
@@ -72,7 +80,7 @@ const useNotification = (type: typeof notificationTypeArray[number] , message: s
                 );
             case "success":
                 return (
-                    <div role="status" aria-live="polite" className="fixed top-4 right-4 z-50">
+                    <div role="status" aria-live="polite">
                         <div className="flex items-start gap-3 bg-green-100 px-4 py-3 shadow-lg rounded-lg border border-green-200 text-sm text-green-800 max-w-xs">
                             <div className="text-2xl text-green-600 mt-0.5">
                                 <MdOutlineNotificationImportant />
@@ -92,7 +100,7 @@ const useNotification = (type: typeof notificationTypeArray[number] , message: s
                 );
             case "error":
                 return (
-                    <div role="status" aria-live="polite" className="fixed top-4 right-4 z-50">
+                    <div role="status" aria-live="polite">
                         <div className="flex items-start gap-3 bg-red-100 px-4 py-3 shadow-lg rounded-lg border border-red-200 text-sm text-red-800 max-w-xs">
                             <div className="text-2xl text-red-600 mt-0.5">
                                 <MdOutlineNotificationImportant />
@@ -121,15 +129,12 @@ const useNotification = (type: typeof notificationTypeArray[number] , message: s
         setIsOpen(open);
         return () => clearTimeout(timeObj);
     },[open])
-    return (
-        <>
-        {isOpen && (
-            <div>
+    return isOpen ? createPortal(
+            <div className={`fixed ${notificationPositions[pos]} z-[9999] max-w-[calc(100vw-2rem)] break-words [&_button]:shrink-0 [&_button]:cursor-pointer [&_button]:focus-visible:outline-2 [&_button]:focus-visible:outline-offset-2 [&_.flex-1]:min-w-0`}>
                 {genratedUI()}
-            </div>
-        )}
-        </>
-    )
+            </div>,
+            document.body
+    ) : null;
 };
 
 
