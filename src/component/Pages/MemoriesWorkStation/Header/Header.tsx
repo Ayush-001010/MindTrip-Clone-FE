@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useGetMemoriesWorkStationContext } from "../MemoriesWorkStation";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -9,14 +9,30 @@ import useMemoriesAction from "../../../../CustomHooks/useMemoriesAction";
 import { FaBoxOpen } from "react-icons/fa";
 import { Tooltip } from "antd";
 import { IoLocation } from "react-icons/io5";
+import AddPlace from "../AddPlace/AddPlace";
 
-const Header: React.FC<IHeader> = () => {
+const iconButton = "flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 text-zinc-300 shadow-sm transition hover:border-zinc-500 hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 active:scale-95";
+
+const Header: React.FC<IHeader> = ({ addNewPlace, setAddNewPlace }) => {
     const [openUserInvite, setOpenUserInvite] = useState(false);
+    const locationButtonRef = useRef<HTMLButtonElement>(null);
     const { inviteUser } = useMemoriesAction();
     const { workId } = useParams();
     const { userName } = useSelector((state: any) => state.userDetails);
-    const { dropBoxHandler } = useGetMemoriesWorkStationContext();
+    const { dropBoxHandler , memoriesData , setNotifyConfig } = useGetMemoriesWorkStationContext();
 
+    const openDropBoxHandler = () => {
+        if( !memoriesData?.place || memoriesData?.place?.length === 0) {
+            setNotifyConfig({
+                type: "alert",
+                message: "No places available to add media",
+                open: true,
+                duration: 1500
+            });
+            return;
+        }
+        dropBoxHandler("open");
+    }
     const openInviteModal = () => setOpenUserInvite(true);
     const closeInviteModal = () => setOpenUserInvite(false);
     const inviteIdToBase62 = (inviteId: string) => {
@@ -43,22 +59,41 @@ const Header: React.FC<IHeader> = () => {
     }
 
     return (
-        <header className="m-4">
-            <section className="flex justify-end">
-                <Tooltip title="Add Places">
-                    <p className="cursor-pointer mx-2 animate-shake  text-[#fff] font-medium bg-[#161a1d] p-2 rounded-full ring-1 text-sm">
-                        <IoLocation />
-                    </p>
-                </Tooltip>
+        <header className="relative mb-6">
+            <section className="flex items-start justify-end gap-2 sm:gap-3">
+                <div
+                    className="flex min-w-0 flex-1 items-start justify-end gap-2"
+                    onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                            setAddNewPlace(false);
+                            locationButtonRef.current?.focus();
+                        }
+                    }}
+                >
+                    <AddPlace open={addNewPlace} setOpen={setAddNewPlace} />
+                    <Tooltip title={addNewPlace ? "Close place search" : "Add places"}>
+                        <button
+                            ref={locationButtonRef}
+                            type="button"
+                            aria-label={addNewPlace ? "Close place search" : "Add places"}
+                            aria-expanded={addNewPlace}
+                            aria-controls={addNewPlace ? "add-place-search" : undefined}
+                            onClick={() => setAddNewPlace((open) => !open)}
+                            className={`${iconButton} ${addNewPlace ? "border-zinc-500 bg-black text-white" : ""}`}
+                        >
+                            <IoLocation aria-hidden="true" className="text-lg" />
+                        </button>
+                    </Tooltip>
+                </div>
                 <Tooltip title="Drop Photos , Music or Videos">
-                    <p onClick={() => dropBoxHandler("open")} className="cursor-pointer animate-shake mx-2 text-[#fff] font-medium bg-[#161a1d] p-2 rounded-full ring-1 text-sm">
-                        <FaBoxOpen />
-                    </p>
+                    <button type="button" aria-label="Add photos, music or videos" onClick={openDropBoxHandler} className={iconButton}>
+                        <FaBoxOpen aria-hidden="true" />
+                    </button>
                 </Tooltip>
                 <Tooltip title="User Invite">
-                    <p onClick={openInviteModal} className="cursor-pointer mx-2 animate-shake  text-[#fff] font-medium bg-[#161a1d] p-2 rounded-full ring-1 text-sm">
-                        <RxShare2 />
-                    </p>
+                    <button type="button" aria-label="Invite people" onClick={openInviteModal} className={iconButton}>
+                        <RxShare2 aria-hidden="true" />
+                    </button>
                 </Tooltip>
             </section>
 

@@ -5,7 +5,7 @@ import { MdOutlineNotificationImportant } from "react-icons/md";
 
 export const notificationTypeArray = ["userJoin","alert","expense-added","error","success"];
 
-const notificationPositions = {
+export const notificationPositions = {
     "top-right": "top-4 right-4",
     "top-left": "top-4 left-4",
     "bottom-right": "bottom-4 right-4",
@@ -42,7 +42,7 @@ const useNotification = (type: typeof notificationTypeArray[number] , message: s
                 return (
                     <div role="status" aria-live="polite">
                         <div className="flex items-start gap-3 bg-yellow-100 px-4 py-3 shadow-lg rounded-lg border border-yellow-200 text-sm text-yellow-800 max-w-xs">
-                            <div className="text-2xl text-yellow-600 mt-0.5">
+                            <div className="text-2xl text-yellow-600 mt-0.5 animate-tada">
                                 <MdOutlineNotificationImportant />
                             </div>
                             <div className="flex-1">
