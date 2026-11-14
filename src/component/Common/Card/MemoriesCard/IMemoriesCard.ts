@@ -3,4 +3,5 @@ import type IMemoriesData from "../../../../Interface/DataInterface/IMemoriesDat
 export default interface IMemoriesCard {
     data : IMemoriesData;
     imageUrl: string;
+    clickHandler: (data: IMemoriesData) => void;
 }

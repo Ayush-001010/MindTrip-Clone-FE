@@ -24,6 +24,7 @@ import BlogVideoCreation from "./component/Pages/BlogVideoCreation/BlogVideoCrea
 import GlobleFeed from "./component/Pages/GlobleFeed/GlobleFeed";
 import Profile from "./component/Pages/Profile/Profile";
 import Memories from "./component/Pages/Memories/Memories";
+import MemoriesWorkStation from "./component/Pages/MemoriesWorkStation/MemoriesWorkStation";
 
 
 export interface IAppContext {
@@ -65,8 +66,9 @@ const AppContent: React.FC = () => {
   const isGlobeFeedLink = location.pathname.includes("/globefeed");
   const isProfileLink = location.pathname.includes("/profile");
   const isMemoriesLink = location.pathname.includes("/memories");
+  const isMemoriesWorkStationLink = location.pathname.includes("/memoriesworkstation");
   const { favoritesConfig, data: favoritesData, mode: favoritesMode } = useGetAppContext();
-  const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink || isGlobeFeedLink || isProfileLink || isMemoriesLink;
+  const isDarkPage = isChatLink || isExploreLink || isBlogLink || isInspirationLink || isGlobeFeedLink || isProfileLink || isMemoriesLink || isMemoriesWorkStationLink;
   const faviorites = useFavorites(favoritesConfig.openFavorites, favoritesConfig.uiType ?? "show-collection-for-add-purpose", favoritesData, favoritesMode);
 
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -142,6 +144,7 @@ const AppContent: React.FC = () => {
             <Route path="/blog/create-video/:blogId" element={<BlogVideoCreation key="blog-video-creation" />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/memories" element={<Memories />} />
+            <Route path="/memoriesworkstation/:workId" element={<MemoriesWorkStation />} />
           </Route>
         </Routes>
       </div>

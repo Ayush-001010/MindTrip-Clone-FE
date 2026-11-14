@@ -3,7 +3,7 @@ import type IMemoriesCard from "./IMemoriesCard";
 import { Progress } from "antd";
 import { FaCameraRetro, FaMapMarkerAlt, FaPlay } from "react-icons/fa";
 
-const MemoriesCard: React.FC<IMemoriesCard> = ({ data , imageUrl }) => {
+const MemoriesCard: React.FC<IMemoriesCard> = ({ data , imageUrl, clickHandler }) => {
     const { uiType, name, numberOfPeopleWorkingCurrently, place, progress } = data;
     const isPolygon = uiType === "type2";
     const Icon = isPolygon ? FaPlay : FaCameraRetro;
@@ -11,7 +11,7 @@ const MemoriesCard: React.FC<IMemoriesCard> = ({ data , imageUrl }) => {
     const isPaused = numberOfPeopleWorkingCurrently === 0;
 
     return (
-        <section aria-label={`${name} memory`} className="group cursor-pointer relative isolate h-64 w-full min-w-0 max-w-96 text-[#ced4da]">
+        <section onClick={() => clickHandler(data)} aria-label={`${name} memory`} className="group cursor-pointer relative isolate h-64 w-full min-w-0 max-w-96 text-[#ced4da]">
             <svg viewBox="0 0 320 240" preserveAspectRatio="none" className="pointer-events-none absolute inset-0 size-full text-[#495057] transition-colors duration-300 group-hover:text-[#868e96]" fill="none" aria-hidden="true">
                 {isPolygon ? (
                     <polygon points="4,120 48,4 272,4 316,120 272,236 48,236" fill="#161a1d" fillOpacity="0.6" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />

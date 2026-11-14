@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type IMemories from "./IMemories";
 import type IMemoriesData from "../../../Interface/DataInterface/IMemoriesData";
 import Header from "./Header/Header";
@@ -16,8 +17,12 @@ const Memories: React.FC<IMemories> = () => {
     const { fetchMemories } = useMemoriesAction();
     const { userID } = useSelector((state: any) => state.userDetails);
     const {getImages} = useCommonAction();
+    const navigate = useNavigate();
 
-
+    const clickHandler = (data: IMemoriesData) => {
+        console.log("Memory clicked:", data);
+        navigate(`/memoriesworkstation/${data.workId}`);
+    };
 
     useEffect(() => {
         const timeObj = setTimeout(() => {
@@ -53,7 +58,7 @@ const Memories: React.FC<IMemories> = () => {
             ) : (
                 <section aria-label="Memories" className="grid grid-cols-1 justify-items-center gap-6 py-4 md:grid-cols-2 xl:grid-cols-3">
                     {memoriesData.map((memory) => (
-                        <MemoriesCard imageUrl={imageUrl || ""} key={memory.id.toString() + "-Memories-List-Card"} data={memory} />
+                        <MemoriesCard imageUrl={imageUrl || ""} key={memory.id.toString() + "-Memories-List-Card"} data={memory} clickHandler={clickHandler} />
                     ))}
                 </section>
             )}

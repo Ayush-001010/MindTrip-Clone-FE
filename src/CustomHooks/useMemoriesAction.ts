@@ -16,7 +16,7 @@ const useMemoriesAction = () => {
             userId,
             name
         });
-        return response?.data as boolean ?? null;
+        return response.success ? response?.data as boolean : null;
     }
 
     const fetchMemories = async (userId: string) : Promise<IMemoriesData[] | null> => {
@@ -26,7 +26,31 @@ const useMemoriesAction = () => {
         return response?.data as IMemoriesData[] ?? null;
     }
 
-    return { fetchMemoriesLeft , createNewMemory , fetchMemories };
+    const inviteUser = async (userName: string, workId: string ,base62 : string) : Promise<boolean | null> => {
+        const response = await apiInstance.postRequest("/memories/invite",{
+            workId,
+            userName,
+            base62
+        });
+        return response.success ? response?.data as boolean : null;
+    }
+
+    const checkInviteIsValidOrNot = async (base62:string) : Promise<any | null> => {
+        const response = await apiInstance.getRequest("/memories/details/invite",{
+            base62
+        });
+        return response.success ? response?.data : null;
+    }
+
+    const addToMemories = async (userId : string, base62: string) : Promise<boolean | null> => {
+        const response = await apiInstance.postRequest("/memories/addToMemory",{
+            userId,
+            base62
+        });
+        return response.success ? response?.data as boolean : null;
+    }
+
+    return { fetchMemoriesLeft , createNewMemory , fetchMemories , inviteUser , checkInviteIsValidOrNot , addToMemories };
 };
 
 export default useMemoriesAction;
