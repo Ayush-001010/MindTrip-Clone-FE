@@ -30,6 +30,11 @@ export default class SideNavBarConfig {
             title:"Profile",
             icon: "profile",
             link: "/profile/about"
+        },
+        {
+            title: "Create Memories",
+            icon: "custom-video-editor-icon",
+            link: "/memories"
         }
     ]
 }

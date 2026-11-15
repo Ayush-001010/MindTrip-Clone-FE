@@ -10,12 +10,13 @@ import { LuInstagram } from "react-icons/lu";
 import { MdFavoriteBorder } from "react-icons/md";
 import { LuNewspaper } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
+import { TfiInstagram } from "react-icons/tfi";
 
 const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
     const { isCollapsed } = useSideNavBarContext();
     const [favoritesDrawerOpen, setFavoritesDrawerOpen] = useState(false);
     const location = useLocation();
-    const path = useCallback(()=> location.pathname, [location.pathname]);
+    const path = useCallback(() => location.pathname, [location.pathname]);
 
     const openFavoritesDrawer = () => {
         setFavoritesDrawerOpen(true);
@@ -42,6 +43,8 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
                 return <LuNewspaper />;
             case "profile":
                 return <FaRegUser />;
+            case "custom-video-editor-icon":
+                return <TfiInstagram />;
             default:
                 return null;
         }

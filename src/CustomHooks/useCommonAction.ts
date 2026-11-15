@@ -159,8 +159,13 @@ const useCommonAction = () => {
     return response;
   };
 
+  const fetchPlaceName = async (placeName: string) => {
+    const response = await axios.get(`https://api.maptiler.com/geocoding/${placeName}.json?key=gvBWK8FAy2ynzJcqqJV7&limit=10`);
+    return response;
+  }
 
-  return { getImages, getPlaceName, fetchUserDetails, fetchUserFriends, fetchUserFollowing, fetchUserFollowers, updateUserDetails, followUser, userLikedBlogs, dislikeBlog, likeBlog, userActivity, fetchFreindsDetails, searchUserProfile, addFriend , takeFriendRequestAction };
+
+  return { getImages, getPlaceName, fetchUserDetails, fetchUserFriends, fetchUserFollowing, fetchUserFollowers, updateUserDetails, followUser, userLikedBlogs, dislikeBlog, likeBlog, userActivity, fetchFreindsDetails, searchUserProfile, addFriend , takeFriendRequestAction , fetchPlaceName };
 };
 
 export default useCommonAction;
