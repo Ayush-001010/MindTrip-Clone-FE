@@ -6,6 +6,7 @@ import DropBox from "./DropBox/DropBox";
 import useNotification from "../../../customHookWithUI/useNotification";
 import type { INotifyConfig } from "../../../Interface/DataInterface/INotificationConfig";
 import type IMemoriesData from "../../../Interface/DataInterface/IMemoriesData";
+import MakerBox from "./MakerBox/MakerBox";
 
 export interface IMemoriesWorkStationContext {
     openDropBox: boolean;
@@ -13,6 +14,7 @@ export interface IMemoriesWorkStationContext {
     changePlaces: (places: string[]) => Promise<void>;
     memoriesData : IMemoriesData | null,
     setNotifyConfig: React.Dispatch<React.SetStateAction<INotifyConfig | undefined>>;
+    addMedia: (taggedFiles: {file : File[] , tag : string}[], audioFiles: File[]) => Promise<void>;
 }
 
 const memoriesWorkStationContext = createContext<IMemoriesWorkStationContext | null>(null);
@@ -27,8 +29,10 @@ export const useGetMemoriesWorkStationContext = () => {
 
 const MemoriesWorkStation: React.FC<IMemoriesWorkStation> = () => {
     const [notifyConfig, setNotifyConfig] = useState<INotifyConfig>();
-
-    const {changePlaces , memoryDetails } = useMemoriesSocketAction(setNotifyConfig);
+    const changeDropBoxHandler = (type: "open" | "close") => {
+        setDropBox(type === "open");
+    };
+    const {changePlaces , memoryDetails , addMedia } = useMemoriesSocketAction(setNotifyConfig, changeDropBoxHandler);
     const [dropBox , setDropBox] = useState(false);
     const [addNewPlace, setAddNewPlace] = useState(false);
     const notification = useNotification(
@@ -39,10 +43,6 @@ const MemoriesWorkStation: React.FC<IMemoriesWorkStation> = () => {
         notifyConfig?.pos
     );
 
-    const changeDropBoxHandler = (type: "open" | "close") => {
-        setDropBox(type === "open");
-    };
-
     useEffect(() => {
         const timeout = setTimeout(() => {
             setNotifyConfig(undefined);
@@ -51,10 +51,12 @@ const MemoriesWorkStation: React.FC<IMemoriesWorkStation> = () => {
     },[notifyConfig]);
 
     return (
-        <memoriesWorkStationContext.Provider value={{ openDropBox: dropBox, dropBoxHandler: changeDropBoxHandler, changePlaces , memoriesData: memoryDetails , setNotifyConfig }}>
+        <memoriesWorkStationContext.Provider value={{ openDropBox: dropBox, dropBoxHandler: changeDropBoxHandler, changePlaces , memoriesData: memoryDetails , setNotifyConfig , addMedia }}>
             {notification}
             <main className="m-3 sm:m-6">
                 <Header addNewPlace={addNewPlace} setAddNewPlace={setAddNewPlace} />
+                <hr className="my-4 border-zinc-700" />
+                <MakerBox/>
                 <DropBox />
             </main>
         </memoriesWorkStationContext.Provider>

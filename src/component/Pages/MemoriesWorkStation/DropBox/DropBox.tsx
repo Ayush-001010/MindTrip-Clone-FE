@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import type IDropBox from "./IDropBox";
 import { ConfigProvider, Drawer, theme } from "antd";
 import { useGetMemoriesWorkStationContext } from "../MemoriesWorkStation";
@@ -20,18 +20,38 @@ const drawerTheme = {
 };
 
 const DropBox: React.FC<IDropBox> = () => {
-    const { openDropBox, dropBoxHandler } = useGetMemoriesWorkStationContext();
+    const { openDropBox, dropBoxHandler, addMedia , setNotifyConfig } = useGetMemoriesWorkStationContext();
     const [uiType, setUiType] = useState<"music" | "photos">("music");
-    const [visualFiles, setVisualFiles] = useState<File[]>([]);
     const [audioFiles, setAudioFiles] = useState<File[]>([]);
     const [taggedFiles, setTaggedFiles] = useState<{file : File[] , tag : string}[]>([]);
+    const visualFiles = taggedFiles.flatMap(({ file }) => file);
 
-    useEffect(() => {
-        setTaggedFiles((prev) => {
-            const newTaggedFiles = visualFiles.map((file) => ({ file: [file], tag: "" }));
-            return [...prev, ...newTaggedFiles];
-        });
-    },[visualFiles]);
+    const addVisualFiles = (files: File[]) => {
+        setTaggedFiles((prev) => [...prev, ...files.map((file) => ({ file: [file], tag: "" }))]);
+    };
+    const addMediaHandler = async () => {
+        if(taggedFiles.length === 0 && audioFiles.length === 0) {
+            setNotifyConfig({
+                type: "error",
+                message: "Please add at least one visual or audio file",
+                open: true,
+                pos: "top-left",
+                duration: 2000
+            });
+            return;
+        }
+        if(taggedFiles.some(({ tag }) =>  tag.length === 0)) {
+            setNotifyConfig({
+                type: "error",
+                message: "Please add a tag for all visual files",
+                open: true,
+                pos: "top-left",
+                duration: 2000
+            });
+            return;
+        }
+        await addMedia(taggedFiles, audioFiles);
+    };
 
 
     return (
@@ -55,10 +75,16 @@ const DropBox: React.FC<IDropBox> = () => {
                         key={uiType}
                         type={uiType}
                         files={uiType === "music" ? audioFiles : visualFiles}
-                        setFile={uiType === "music" ? setAudioFiles : setVisualFiles}
+                        setFile={uiType === "music" ? setAudioFiles : addVisualFiles}
                     />
                     {uiType === "music" && <AudioBox files={audioFiles} open={openDropBox} />}
                     {uiType === "photos" && <VisualBox files={taggedFiles} setFiles={setTaggedFiles} />}
+
+                    <div className="flex justify-end">
+                        <button className="px-4 py-2 bg-zinc-600 text-white rounded cursor-pointer" onClick={addMediaHandler}>
+                            Add Media
+                        </button>
+                    </div>
                 </div>
             </Drawer>
         </ConfigProvider>
