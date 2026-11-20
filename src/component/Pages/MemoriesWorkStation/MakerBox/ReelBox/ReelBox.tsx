@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useGetMemoriesWorkStationContext } from "../../MemoriesWorkStation";
 import MakerBoxConfig from "../../../../../config/component/MakerBoxConfig";
 import { motion, useReducedMotion } from "framer-motion";
 import type IReelBox from "./IReelBox";
@@ -22,16 +23,13 @@ export interface IStoryBoard {
 }
 
 const ReelBox: React.FC<IReelBox> = () => {
+    const { sendCommentToAI, batchDetails, selectedAudioUrl, generatedReel } = useGetMemoriesWorkStationContext();
     const reduceMotion = useReducedMotion();
     const playerRef = useRef<PlayerRef>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [oldFashionPlayAudio, setOldFashionPlayAudio] = useState<string | null>(null);
     const { getImages } = useCommonAction();
     const [storyBoard, setStoryBoard] = useState<IStoryBoard | null>(null);
-
-    const playHandler = () => {
-        setIsPlaying(true);
-    }
 
     useEffect(() => {
         getImages("Audio/freesound_community-8mm-film-camera-6446.mp3").then((images : any) => {
@@ -43,12 +41,32 @@ const ReelBox: React.FC<IReelBox> = () => {
         });
     },[]);
 
+    useEffect(() => {
+        if(batchDetails && batchDetails.length > 0) {
+            setStoryBoard(prev => {
+                if (!prev || prev.scenes.length === 0) return prev;
+                const scenes = [...prev.scenes];
+                const lastSceneIndex = scenes.length - 1;
+                scenes[lastSceneIndex] = {
+                    ...scenes[lastSceneIndex],
+                    duration: 20
+                };
+                return { ...prev, scenes };
+            })
+        }
+    }, [batchDetails]);
+
 
     useEffect(() => {
         const player = playerRef.current;
         if (!player) return;
 
-        const onPlay = playHandler;
+        const onPlay = () => {
+            if (!generatedReel) {
+                sendCommentToAI("Start Genrating Reel...");
+            }
+            setIsPlaying(true);
+        };
         const onPause = () => setIsPlaying(false);
 
         setIsPlaying(player.isPlaying());
@@ -59,7 +77,7 @@ const ReelBox: React.FC<IReelBox> = () => {
             player.removeEventListener("play", onPlay);
             player.removeEventListener("pause", onPause);
         };
-    }, []);
+    }, [generatedReel, sendCommentToAI]);
 
     const sceneSeconds = (scene: IStoryBoardScene): number => {
         // if (scene.type === "video") return Math.max(scene.trimEnd - scene.trimStart, 0.5);
@@ -70,11 +88,17 @@ const ReelBox: React.FC<IReelBox> = () => {
     const totalReelFrames = (storyboard: IStoryBoard): number =>
         Math.max(storyboard.scenes.reduce((sum, scene) => sum + sceneFrames(scene), 0), 1);
     
-    const durationInFrames = totalReelFrames(storyBoard || { scenes: [] , duration: 0 });
+    const generatedSceneFrames = generatedReel?.script.scenes.reduce(
+        (sum, scene) => sum + scene.durationInFrames,
+        0,
+    ) ?? 0;
+    const durationInFrames = generatedReel
+        ? Math.max(generatedReel.script.durationInFrames, generatedSceneFrames)
+        : totalReelFrames(storyBoard || { scenes: [], duration: 0 });
 
     return (
         <motion.section
-            className="p-4"
+            className=" m-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: reduceMotion ? 0 : 0.5, ease: "easeOut" }}
@@ -90,9 +114,13 @@ const ReelBox: React.FC<IReelBox> = () => {
                     <Player
                         ref={playerRef}
                         component={PlayerBox}
-                        inputProps={{storyBoard , audioUrl : oldFashionPlayAudio}}
+                        inputProps={{
+                            storyBoard,
+                            audioUrl: selectedAudioUrl ?? oldFashionPlayAudio,
+                            generatedReel,
+                        }}
                         durationInFrames={durationInFrames}
-                        fps={30}
+                        fps={generatedReel?.script.fps ?? 30}
                         compositionWidth={344}
                         compositionHeight={685}
                         controls

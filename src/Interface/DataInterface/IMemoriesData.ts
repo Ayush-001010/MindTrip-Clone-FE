@@ -11,4 +11,72 @@ export default interface IMemoriesData {
     workId : string;
     isTripPhotoAndVideoUpload?: boolean;
     isTripAudioUpload?: boolean;
+    rooms:{name : string , id : number }[]
+}
+
+export interface IMemoriesReelAnalysisBatch {
+    tagName: string;
+    status: "pending" | "completed" | "failed";
+}
+
+export interface IMemoriesChat {
+    id: number;
+    roomId: number | null;
+    memoryId: number | null;
+    userMessage: string;
+    botMessage: string | null;
+    userName: string | null;
+    actionType: "Start" | "Other" | null;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface IMemoryMusicData {
+    id: number;
+    type: "audio";
+    url: string;
+}
+
+export interface IMemoriesReelScene {
+    index: number;
+    clipId: string;
+    type: "photo" | "video";
+    mediaId: number;
+    place?: string;
+    src: string;
+    startSec?: number;
+    endSec?: number;
+    fromFrame?: number;
+    durationInFrames: number;
+    focalPoint?: { x: number; y: number };
+    motion?: string;
+    caption?: string;
+    reason?: string;
+    trimStartSec?: number;
+    trimEndSec?: number;
+    playbackRate?: number;
+}
+
+export interface IMemoriesGeneratedReel {
+    script: {
+        version: number;
+        title: string;
+        template: string;
+        mood: string;
+        pace: string;
+        fps: number;
+        width: number;
+        height: number;
+        durationSec: number;
+        durationInFrames: number;
+        audio: {
+            src: string;
+            startFromSec?: number;
+            bpm?: number;
+        };
+        scenes: IMemoriesReelScene[];
+        pickedBy?: string[];
+        warnings?: string[];
+    };
+    music?: Record<string, unknown>;
 }
