@@ -40,13 +40,6 @@ const Template: React.FC<ITemplate> = () => {
             orderedPlaces,
             note ? note : undefined,
         );
-
-        // const visitOrder = orderedPlaces.map((name, index) => `${index + 1}. ${name}`);
-        // sendCommentToAI([
-        //     `Create a reel. Template: ${selectedTemplate.title}. Mood: ${mood}. Pace: ${pace}.`,
-        //     `Places to highlight in visit order:\n${visitOrder.join("\n")}`,
-        //     ...(note ? [`Suggestion: ${note}`] : []),
-        // ].join("\n"));
     };
 
     return (

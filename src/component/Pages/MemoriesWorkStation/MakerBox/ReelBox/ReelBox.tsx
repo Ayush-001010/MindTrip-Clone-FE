@@ -147,15 +147,3 @@ const ReelBox: React.FC<IReelBox> = () => {
 }
 
 export default ReelBox;
-
-{/* <Player
-                // component={ReelComposition}
-                // inputProps={inputProps}
-                // durationInFrames={durationInFrames}
-                // fps={REEL_FPS}
-                // compositionWidth={REEL_WIDTH}
-                // compositionHeight={REEL_HEIGHT}
-                controls
-                loop
-                style={{ width: "100%" }}
-            /> */}
