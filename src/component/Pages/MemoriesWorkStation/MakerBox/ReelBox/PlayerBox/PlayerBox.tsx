@@ -60,7 +60,7 @@ const SceneContent: React.FC<{ scene: IStoryBoardScene; durationInFrames: number
 
 type GeneratedScene = NonNullable<IPlayerBox["generatedReel"]>["script"]["scenes"][number];
 
-const GeneratedSceneContent: React.FC<{ scene: GeneratedScene; transitionFrames: number }> = ({ scene, transitionFrames }) => {
+const GeneratedSceneContent: React.FC<{ scene: GeneratedScene; transitionFrames: number; forExport: boolean }> = ({ scene, transitionFrames, forExport }) => {
     const frame = useCurrentFrame();
     const { fps } = useVideoConfig();
     const progress = interpolate(frame, [0, Math.max(scene.durationInFrames + transitionFrames - 1, 1)], [0, 1], {
@@ -77,6 +77,7 @@ const GeneratedSceneContent: React.FC<{ scene: GeneratedScene; transitionFrames:
             {scene.type === "photo" ? (
                 <Img
                     src={scene.src}
+                    crossOrigin={forExport ? "anonymous" : undefined}
                     className="h-full w-full object-cover"
                     style={{
                         transformOrigin: `${focalPoint.x * 100}% ${focalPoint.y * 100}%`,
@@ -109,7 +110,8 @@ const GeneratedSceneTransition: React.FC<{
     scene: GeneratedScene;
     transitionFrames: number;
     index: number;
-}> = ({ scene, transitionFrames, index }) => {
+    forExport: boolean;
+}> = ({ scene, transitionFrames, index, forExport }) => {
     const frame = useCurrentFrame();
     const { fps } = useVideoConfig();
     const animationFrames = transitionFrames > 1 ? transitionFrames : Math.max(Math.round(fps * 0.3), 2);
@@ -127,12 +129,12 @@ const GeneratedSceneTransition: React.FC<{
             className="overflow-hidden"
             style={{ opacity: transitionFrames > 1 ? entrance : 1, transform: `translateX(${offset}%) scale(${1 + (1 - entrance) * 0.04})` }}
         >
-            <GeneratedSceneContent scene={scene} transitionFrames={transitionFrames} />
+            <GeneratedSceneContent scene={scene} transitionFrames={transitionFrames} forExport={forExport} />
         </AbsoluteFill>
     );
 };
 
-const PlayerBox: React.FC<IPlayerBox> = ({ storyBoard, audioUrl, generatedReel }) => {
+const PlayerBox: React.FC<IPlayerBox> = ({ storyBoard, audioUrl, generatedReel, forExport = false }) => {
     const { fps } = useVideoConfig();
     if (!generatedReel && !storyBoard) return null;
 
@@ -165,7 +167,7 @@ const PlayerBox: React.FC<IPlayerBox> = ({ storyBoard, audioUrl, generatedReel }
                         durationInFrames={scene.durationInFrames + transitions[index]}
                         premountFor={Math.round(fps)}
                     >
-                        <GeneratedSceneTransition scene={scene} transitionFrames={transitions[index]} index={index} />
+                        <GeneratedSceneTransition scene={scene} transitionFrames={transitions[index]} index={index} forExport={forExport} />
                     </Sequence>
                 ))
                 : storyboardScenes.map((scene, index) => (

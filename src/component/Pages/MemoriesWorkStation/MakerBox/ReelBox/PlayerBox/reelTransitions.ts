@@ -1,4 +1,10 @@
-import type { IMemoriesReelScene } from "../../../../../../Interface/DataInterface/IMemoriesData";
+import type { IMemoriesGeneratedReel, IMemoriesReelScene } from "../../../../../../Interface/DataInterface/IMemoriesData";
+
+export const getGeneratedReelDurationInFrames = (reel: IMemoriesGeneratedReel): number => {
+    const sceneFrames = reel.script.scenes.reduce((sum, scene) => sum + scene.durationInFrames, 0);
+    const duration = Math.max(reel.script.durationInFrames, sceneFrames);
+    return Number.isFinite(duration) && duration > 0 ? Math.round(duration) : 1;
+};
 
 export const getTransitionFrames = (
     scene: IMemoriesReelScene,

@@ -43,7 +43,7 @@ const Template: React.FC<ITemplate> = () => {
     };
 
     return (
-        <section className="flex max-h-[min(36rem,75dvh)] w-full min-w-0 flex-col self-start rounded-xl border border-zinc-800 bg-zinc-950/80 shadow-xl shadow-black/20">
+        <section className="flex max-h-[min(30rem,75dvh)] w-full min-w-0 flex-col self-start rounded-xl border border-zinc-800 bg-zinc-950/80 shadow-xl shadow-black/20">
             <div
                 role="region"
                 aria-label="Reel setup settings"

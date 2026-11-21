@@ -11,7 +11,8 @@ export default interface IMemoriesData {
     workId : string;
     isTripPhotoAndVideoUpload?: boolean;
     isTripAudioUpload?: boolean;
-    rooms:{name : string , id : number }[]
+    rooms:{name : string , id : number , script?: IMemoriesGeneratedReel["script"] | null }[];
+    isAllAnalysisCompleted?: boolean;
 }
 
 export interface IMemoriesReelAnalysisBatch {
@@ -75,7 +76,7 @@ export interface IMemoriesGeneratedReel {
             bpm?: number;
         };
         scenes: IMemoriesReelScene[];
-        pickedBy?: string[];
+        pickedBy?: string | string[];
         warnings?: string[];
     };
     music?: Record<string, unknown>;

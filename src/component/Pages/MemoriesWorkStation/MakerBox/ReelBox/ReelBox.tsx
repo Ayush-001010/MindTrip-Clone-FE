@@ -7,8 +7,11 @@ import { Player } from "@remotion/player";
 import type { PlayerRef } from "@remotion/player";
 import { FaPlay } from "react-icons/fa";
 import PlayerBox from "./PlayerBox/PlayerBox";
+import { getGeneratedReelDurationInFrames } from "./PlayerBox/reelTransitions";
 import useCommonAction from "../../../../../CustomHooks/useCommonAction";
 
+export const REEL_COMPOSITION_WIDTH = 344;
+export const REEL_COMPOSITION_HEIGHT = 685;
 
 export interface IAnimationScene {
     duration : number;
@@ -55,6 +58,7 @@ const ReelBox: React.FC<IReelBox> = () => {
             })
         }
     }, [batchDetails]);
+        console.log("Duration in frames:", generatedReel);
 
 
     useEffect(() => {
@@ -88,13 +92,10 @@ const ReelBox: React.FC<IReelBox> = () => {
     const totalReelFrames = (storyboard: IStoryBoard): number =>
         Math.max(storyboard.scenes.reduce((sum, scene) => sum + sceneFrames(scene), 0), 1);
     
-    const generatedSceneFrames = generatedReel?.script.scenes.reduce(
-        (sum, scene) => sum + scene.durationInFrames,
-        0,
-    ) ?? 0;
     const durationInFrames = generatedReel
-        ? Math.max(generatedReel.script.durationInFrames, generatedSceneFrames)
+        ? getGeneratedReelDurationInFrames(generatedReel)
         : totalReelFrames(storyBoard || { scenes: [], duration: 0 });
+
 
     return (
         <motion.section
@@ -120,9 +121,9 @@ const ReelBox: React.FC<IReelBox> = () => {
                             generatedReel,
                         }}
                         durationInFrames={durationInFrames}
-                        fps={generatedReel?.script.fps ?? 30}
-                        compositionWidth={344}
-                        compositionHeight={685}
+                        fps={generatedReel?.script?.fps || 30}
+                        compositionWidth={REEL_COMPOSITION_WIDTH}
+                        compositionHeight={REEL_COMPOSITION_HEIGHT}
                         controls
                         clickToPlay={false}
                         loop

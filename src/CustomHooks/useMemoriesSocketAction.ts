@@ -28,7 +28,7 @@ const isReelScene = (value: unknown): value is IMemoriesReelScene => {
   );
 };
 
-const isGeneratedReel = (value: unknown): value is IMemoriesGeneratedReel => {
+export const isGeneratedReel = (value: unknown): value is IMemoriesGeneratedReel => {
   if (!isRecord(value) || !isRecord(value.script)) return false;
   const { script } = value;
   return (
@@ -228,7 +228,9 @@ const useMemoriesSocketAction = (setNotifyConfig : React.Dispatch<React.SetState
     console.log("Fetched room chats:", data);
     const chats = data.filter((chat: IMemoriesChat) => chat.roomId === selectedRoomId);
     setRoomChats(chats);
-  };
+    // console.log("Memory data :", memoryDetails);
+    // console.log("Memory room chats:", memoryDetails?.rooms.filter((room: any) => room.id === selectedRoomId));
+  }
 
   const fetchAudio = () => {
     socket.emit("room:fetchAudioInMemory",{memoryId: memoryDetails?.id})
@@ -324,7 +326,7 @@ const useMemoriesSocketAction = (setNotifyConfig : React.Dispatch<React.SetState
 
       socket.disconnect();
     };
-  }, [workId , userId]);
+  }, [workId , userId ]);
 
   useEffect(() => {
     if(memoryDetails?.rooms) {
@@ -333,7 +335,7 @@ const useMemoriesSocketAction = (setNotifyConfig : React.Dispatch<React.SetState
     }
   },[memoryDetails?.rooms]);
 
-  return { changePlaces , memoryDetails , addMedia , sendCommentToAI , rooms , batchDetails , isAnalyzingCompleted , handleAddRoom, fetchRoomChatData, roomChats, audioFiles, generatedReel, isReelGenerating, handleReelCreation };
+  return { changePlaces , memoryDetails , addMedia , sendCommentToAI , rooms , batchDetails , isAnalyzingCompleted , handleAddRoom, fetchRoomChatData, roomChats, audioFiles, generatedReel, isReelGenerating, handleReelCreation , setGeneratedReel };
 };
 
 export default useMemoriesSocketAction;

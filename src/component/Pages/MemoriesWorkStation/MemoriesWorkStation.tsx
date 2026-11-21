@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { IMemoriesChat, IMemoriesGeneratedReel, IMemoryMusicData } from "../../../Interface/DataInterface/IMemoriesData";
-import useMemoriesSocketAction from "../../../CustomHooks/useMemoriesSocketAction";
+import useMemoriesSocketAction, { isGeneratedReel } from "../../../CustomHooks/useMemoriesSocketAction";
 import type { IMemoriesReelAnalysisBatch } from "../../../Interface/DataInterface/IMemoriesData";
 import type IMemoriesWorkStation from "./IMemoriesWorkStation";
 import Header from "./Header/Header";
@@ -48,7 +48,7 @@ const MemoriesWorkStation: React.FC<IMemoriesWorkStation> = () => {
     const changeDropBoxHandler = (type: "open" | "close") => {
         setDropBox(type === "open");
     };
-    const {changePlaces , memoryDetails , addMedia , sendCommentToAI , rooms , batchDetails , isAnalyzingCompleted , handleAddRoom, fetchRoomChatData, roomChats, audioFiles, generatedReel, isReelGenerating, handleReelCreation } = useMemoriesSocketAction(setNotifyConfig, changeDropBoxHandler);
+    const {changePlaces , memoryDetails , addMedia , sendCommentToAI , rooms , batchDetails , isAnalyzingCompleted , handleAddRoom, fetchRoomChatData, roomChats, audioFiles, generatedReel, isReelGenerating, setGeneratedReel, handleReelCreation } = useMemoriesSocketAction(setNotifyConfig, changeDropBoxHandler);
     const [activtyRoom, setActivtyRoom] = useState("");
     const [selectedAudioUrl, setSelectedAudioUrl] = useState<string | null>(null);
     const [dropBox , setDropBox] = useState(false);
@@ -69,10 +69,26 @@ const MemoriesWorkStation: React.FC<IMemoriesWorkStation> = () => {
     },[notifyConfig]);
 
     useEffect(()=>{
-        if(activtyRoom) {
-            const val = memoryDetails?.rooms?.filter(room => room.name === activtyRoom);
-            if(val && val.length > 0)
-                fetchRoomChatData(val[0].id);
+        setGeneratedReel(null);
+        if (activtyRoom) {
+            const room = memoryDetails?.rooms?.find(room => room.name === activtyRoom);
+            if (room) {
+                fetchRoomChatData(room.id);
+                if (room.script) {
+                    const reel = { script: room.script };
+                    if (isGeneratedReel(reel)) {
+                        setGeneratedReel(reel);
+                    } else {
+                        console.error("Saved room reel is invalid:", room.script);
+                        setNotifyConfig({
+                            type: "alert",
+                            message: "The saved reel is incomplete and cannot be played.",
+                            open: true,
+                            pos: "top-left"
+                        });
+                    }
+                }
+            }
         }
     },[activtyRoom])
 
