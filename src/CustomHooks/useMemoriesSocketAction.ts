@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import type IMemoriesData from "../Interface/DataInterface/IMemoriesData";
 import type { IMemoriesChat, IMemoriesGeneratedReel, IMemoriesReelAnalysisBatch, IMemoriesReelScene, IMemoryMusicData } from "../Interface/DataInterface/IMemoriesData";
 import type { INotifyConfig } from "../Interface/DataInterface/INotificationConfig";
-import useCommonAction from "./useCommonAction";
 import APIService from "../Services/APIService";
 const SERVER_URL = "http://localhost:3000/memories";
 const socket = io(SERVER_URL, { autoConnect: false });
@@ -65,7 +64,6 @@ const useMemoriesSocketAction = (setNotifyConfig : React.Dispatch<React.SetState
   const { workId } = useParams();
   const { userID : userId , userName } = useSelector((state: any) => state.userDetails);
   const [memoryDetails, setMemoryDetails] = useState<IMemoriesData | null>(null);
-  const {} = useCommonAction();
   const [rooms , setRooms] = useState<string[]>([]);
   const [batchDetails , setBatchDetails] = useState<IMemoriesReelAnalysisBatch[] | null>(null);
   const [isAnalyzingCompleted, setIsAnalyzingCompleted] = useState<boolean>(false);

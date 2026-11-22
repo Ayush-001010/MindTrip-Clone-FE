@@ -2,5 +2,6 @@ import type IBlogUniquePlace from "../../../Interface/DataInterface/IBlogUniqueP
 
 export default interface IGlobe {
     type : "place";
-    places: IBlogUniquePlace[]
+    places: IBlogUniquePlace[];
+    onSelectPlace: (place: IBlogUniquePlace) => void;
 }

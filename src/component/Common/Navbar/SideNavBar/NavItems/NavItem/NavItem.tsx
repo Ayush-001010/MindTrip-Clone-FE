@@ -11,6 +11,7 @@ import { MdFavoriteBorder } from "react-icons/md";
 import { LuNewspaper } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
 import { TfiInstagram } from "react-icons/tfi";
+import { BsFillGlobeCentralSouthAsiaFill } from "react-icons/bs";
 
 const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
     const { isCollapsed } = useSideNavBarContext();
@@ -45,6 +46,8 @@ const NavItem: React.FC<INavItem> = ({ title, icon, link }) => {
                 return <FaRegUser />;
             case "custom-video-editor-icon":
                 return <TfiInstagram />;
+            case "globe":
+                return <BsFillGlobeCentralSouthAsiaFill />;
             default:
                 return null;
         }

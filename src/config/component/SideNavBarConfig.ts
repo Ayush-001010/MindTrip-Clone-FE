@@ -27,14 +27,19 @@ export default class SideNavBarConfig {
             link: "/blog"
         },
         {
-            title:"Profile",
-            icon: "profile",
-            link: "/profile/about"
+            title:"World",
+            icon: "globe",
+            link:"/globefeed"
         },
         {
             title: "Create Memories",
             icon: "custom-video-editor-icon",
             link: "/memories"
+        },
+        {
+            title:"Profile",
+            icon: "profile",
+            link: "/profile/about"
         }
     ]
 }
