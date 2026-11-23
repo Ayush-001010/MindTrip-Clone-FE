@@ -5,9 +5,15 @@ import CloseBox from "../TripUser/CloseBox/CloseBox";
 import { useChatContext } from "../../Chat";
 
 const TripBudget: React.FC<ITripBudget> = ({ open, closeHandler }) => {
-    const {setTripBudget} = useChatContext();
+    const {setTripBudget , finalItinerary , setNotificationConfig} = useChatContext();
 
     const handleSave = () => {
+        if(!finalItinerary){
+            setNotificationConfig({
+                open:true , type: "error", message: "Please set the itinerary first."
+            });
+            return;
+        }
         const budgetInput = (document.getElementById("trip-budget-input") as HTMLInputElement)?.value;
         if (budgetInput && setTripBudget) {
             setTripBudget(Number(budgetInput));
@@ -46,7 +52,7 @@ const TripBudget: React.FC<ITripBudget> = ({ open, closeHandler }) => {
                     <div className="flex justify-end">
                         <button
                             onClick={handleSave}
-                            className="rounded-xl bg-sky-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-600"
+                            className="rounded-xl bg-zinc-700 px-5 py-2.5 text-sm font-medium text-white transition-colors cursor-pointer"
                         >
                             Save
                         </button>

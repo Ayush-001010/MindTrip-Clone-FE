@@ -43,7 +43,7 @@ const useCommonAction = () => {
 
   const fetchUserFriends = async () => {
     const apiInstance = new APIService();
-    const response = await apiInstance.getRequest(`/common/fetchUserFriends`,{
+    const response = await apiInstance.getRequest<{id: number, status: string,friendId: number,createdAt:string,friendName: string,updatedAt: string,userId: number}[]>(`/common/fetchUserFriends`,{
       userID : userID || 2,
     });
     return response;

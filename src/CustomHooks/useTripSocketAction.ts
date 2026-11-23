@@ -3,12 +3,12 @@ import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type IUserInterface from "../Interface/DataInterface/IUserDetails";
-import type INotificationConfig from "../Interface/DataInterface/INotificationConfig";
 import type IMessageTrip from "../Interface/DataInterface/IMessageTrip";
 import type IFinalItineraryResponse from "../Interface/DataInterface/IFinalItineraryResponse";
 import APIService from "../Services/APIService";
 import type ITripHotelData from "../Interface/DataInterface/ITripHotel";
 import type IGroupHubMessage from "../Interface/DataInterface/IGroupHubMessage";
+import type { INotifyConfig } from "../Interface/DataInterface/INotificationConfig";
 
 const SERVER_URL = "http://localhost:3000"; // change to your server URL
 const socket = io(SERVER_URL, { autoConnect: false });
@@ -16,7 +16,7 @@ const socket = io(SERVER_URL, { autoConnect: false });
 const useTripSocketAction = (onNewGroupMessage?: () => void) => {
   const onNewGroupMessageRef = useRef(onNewGroupMessage);
   onNewGroupMessageRef.current = onNewGroupMessage;
-  const [notificationConfig, setNotificationConfig] =useState<INotificationConfig>({open: false,type: "",message: "",duration: undefined});
+  const [notificationConfig, setNotificationConfig] =useState<INotifyConfig>({open: false,type: "",message: "",duration: undefined});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [messages, setMessages] = useState<Array<IMessageTrip>>([]);
   const [finalItinerary, setFinalItinerary] = useState<IFinalItineraryResponse | null>(null);
@@ -330,7 +330,7 @@ const useTripSocketAction = (onNewGroupMessage?: () => void) => {
     }
   }, [isFinalItineraryReceived]);
 
-  return { notificationConfig,sendMessageHandler,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName,addHotelToWishList, bookHotelHandler, sendNewMessage , tripSuggestionsDate };
+  return { notificationConfig,sendMessageHandler , setNotificationConfig,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName,addHotelToWishList, bookHotelHandler, sendNewMessage , tripSuggestionsDate };
 };
 
 export default useTripSocketAction;
