@@ -186,39 +186,6 @@ const Blog: React.FC<IBlog> = () => {
         return responses.flatMap((response) => (typeof response?.data === "string" ? [response.data] : []));
     };
 
-    const prepareDraft = (blog: IBlogData): IBlogData => {
-        const activitiesPerDay: Record<number, number> = {};
-        const activities = (blog.activities ?? []).map((activity) => {
-            const day = activity.day ?? 1;
-            activitiesPerDay[day] = (activitiesPerDay[day] ?? 0) + 1;
-            const itemOrder = activity.itemOrder ?? [
-                ...(activity.description ? ["Notes"] : []),
-                ...(activity.tips?.length ? ["Tips"] : []),
-                ...(activity.sideActivities?.length ? ["Side-Activity"] : []),
-            ];
-            return {
-                ...CommonConfig.initialActivityValue,
-                ...activity,
-                day,
-                index: activity.index ?? activitiesPerDay[day],
-                coordinates: { ...CommonConfig.initialActivityValue.coordinates, ...activity.coordinates },
-                tips: activity.tips ?? [],
-                images: activity.images ?? [],
-                sideActivities: activity.sideActivities ?? [],
-                itemOrder,
-            };
-        });
-        return {
-            ...CommonConfig.initialBlogValue,
-            ...blog,
-            activities,
-            hotel: blog.hotel ?? [],
-            travel: blog.travel ?? [],
-            profileImages: blog.profileImages ?? [],
-            metaData: blog.metaData ?? [],
-        };
-    };
-
     // converts the saved blog into the shape the create-mode components already understand
     const prepareBlogForPreview = async (blog: IBlogData): Promise<IBlogData> => {
         const activitiesPerDay: Record<number, number> = {};
@@ -293,37 +260,30 @@ const Blog: React.FC<IBlog> = () => {
     }, [blogId, blogValue, selectedDay]);
 
     useEffect(() => {
-        let cancelled = false;
         const initializeBlog = async () => {
             const url = location.href;
             if (url.includes("/#/blog/create")) {
                 setMode("create");
-                setFetchError(null);
-                if (blogId) {
+                setBlogValue(CommonConfig.initialBlogValue);
+                if(blogId) {
                     console.log("Initializing blog in create mode");
-                    const response = await fetchBlogById(blogId);
-                    if (cancelled) return;
-                    if (!response.success || !response.data) {
-                        setFetchError("Unable to load this draft.");
-                        return;
+                    const response:{success:boolean; data?: IBlogData} = await fetchBlogById(blogId);
+                    if (response.success && response.data) {
+                        setBlogValue({
+                            ...response.data,
+                            activities: (response.data?.activities && response.data?.activities.length > 0) ?  response.data.activities.map((item, index) => ({ ...item , itemOrder : item.itemOrder ?? [] , index : index + 1 })) : [
+                                {
+                                    ...CommonConfig.initialActivityValue,
+                                    day: 1,
+                                    index: 1
+                                }
+                            ]
+                        });
                     }
-                    const draft = prepareDraft(response.data);
-                    setMapMarkerPoints(draft.activities
-                        .filter((activity) => activity.coordinates.longitude && activity.coordinates.latitude)
-                        .map((activity) => ({
-                            longitude: activity.coordinates.longitude,
-                            latitude: activity.coordinates.latitude,
-                        })));
-                    setBlogValue(draft);
-                } else {
-                    setBlogValue(CommonConfig.initialBlogValue);
                 }
             }
         };
         void initializeBlog();
-        return () => {
-            cancelled = true;
-        };
     }, [blogId]);
 
     const addOrRemovingActivityItem = () => {
@@ -369,7 +329,8 @@ const Blog: React.FC<IBlog> = () => {
 
     useEffect(() => {
         // a saved blog is read-only, its activities must never be padded or trimmed
-        if (blogId) return;
+        if (mode === "preview") return;
+        console.log("Adding or removing activity items based on trip duration");
         const timeOutObj = setTimeout(() => {
             addOrRemovingActivityItem();
         }, 500);
@@ -377,15 +338,15 @@ const Blog: React.FC<IBlog> = () => {
     }, [blogValue?.tripDuration]);
 
 
+    if (fetchError) {
+        return <p className="p-8 text-center text-[#ced4da]">{fetchError}</p>;
+    }
+
     useEffect(() => {
         if(mode === "preview" && blogId){
             userActivity("blog", blogId ? parseInt(blogId) : 0);
         }
     }, [mode , blogId]);
-
-    if (fetchError) {
-        return <p className="p-8 text-center text-[#ced4da]">{fetchError}</p>;
-    }
 
     return (
         <blogContext.Provider value={{ mode, blogValue: blogValue!, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay, mapMarkerPoints, selectedLongitude, selectedLatitude, addingHotel, addTravel , currentEditActivityIndex, setCurrentEditActivityIndex , setMode }}>

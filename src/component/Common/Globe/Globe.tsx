@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import type IGlobe from "./IGlobe";
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { useEffect } from "react";
 import * as THREE from 'three';
 import ThreeGlobe from 'three-globe';
@@ -8,8 +8,53 @@ import { OrbitControls } from "@react-three/drei/core/OrbitControls";
 import { Html } from "@react-three/drei";
 import { CiLocationOn } from "react-icons/ci";
 import { FaLocationDot } from "react-icons/fa6";
+import type IBlogUniquePlace from "../../../Interface/DataInterface/IBlogUniquePlace";
 
 const GLOBE_SCALE = 0.02;
+
+const FocusBlogPlace: React.FC<{ globe: ThreeGlobe; latitude?: number; longitude?: number }> = ({ globe, latitude, longitude }) => {
+    const camera = useThree((state) => state.camera);
+
+    useEffect(() => {
+        if (latitude === undefined || longitude === undefined) return;
+        const { x, y, z } = globe.getCoords(latitude, longitude);
+        camera.position.set(x, y, z).normalize().multiplyScalar(6);
+        camera.lookAt(0, 0, 0);
+    }, [camera, globe, latitude, longitude]);
+
+    return null;
+};
+
+const BlogGlobePlaces: React.FC<{ globe: ThreeGlobe; places: IBlogUniquePlace[] }> = ({ globe, places }) => {
+    useEffect(() => {
+        const points = places.map((place) => ({ lat: place.latitude, lng: place.longitude }));
+        const arcs = points.slice(1).flatMap((point, index) => {
+            const previous = points[index];
+            return previous.lat === point.lat && previous.lng === point.lng ? [] : [{
+                startLat: previous.lat,
+                startLng: previous.lng,
+                endLat: point.lat,
+                endLng: point.lng,
+            }];
+        });
+
+        globe
+            .pointColor(() => "#06b6d4")
+            .pointAltitude(0.015)
+            .pointRadius(1.8)
+            .pointsData(points)
+            .ringColor(() => (t: number) => `rgba(6,182,212,${1 - t})`)
+            .ringMaxRadius(4)
+            .ringPropagationSpeed(2)
+            .ringRepeatPeriod(1800)
+            .ringsData(points)
+            .arcColor(() => ["#06b6d4", "#2563eb"])
+            .arcStroke(0.2)
+            .arcsData(arcs);
+    }, [globe, places]);
+
+    return null;
+};
 
 const GlobeLayers: React.FC<{ globe: ThreeGlobe }> = ({ globe }) => {
     useEffect(() => {
@@ -65,6 +110,7 @@ const GlobeLayers: React.FC<{ globe: ThreeGlobe }> = ({ globe }) => {
 const Globe: React.FC<IGlobe> = ({ places, type , onSelectPlace}) => {
     const globe = useMemo(() => new ThreeGlobe(), []);
     const [autoRotate, setAutoRotate] = useState(true);
+    console.log(places);
 
     useEffect(() => {
         if (type === "place" && places.length > 0) {
@@ -77,7 +123,7 @@ const Globe: React.FC<IGlobe> = ({ places, type , onSelectPlace}) => {
         }
     }, [globe, places, type]);
     return (
-        <section className="relative h-[calc(100vh-56px)] min-h-[420px] w-full overflow-hidden sm:min-h-[500px]">
+        <section className={`relative w-full overflow-hidden ${type === "blog" ? "h-full min-h-0" : "h-[calc(100vh-56px)] min-h-[420px] sm:min-h-[500px]"}`}>
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.12),transparent_65%)]" />
             <p className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full border border-zinc-800 bg-zinc-900/80 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 shadow-md shadow-black/30 backdrop-blur">
                 Drag to rotate · Scroll to zoom
@@ -89,6 +135,12 @@ const Globe: React.FC<IGlobe> = ({ places, type , onSelectPlace}) => {
                 <directionalLight color="#ffffff" position={[-4, 3, 5]} intensity={1.2} />
                 <primitive object={new THREE.PointLight(new THREE.Color('#a78bfa'), 20)} position={[-4, 2, 4]} />
                 <GlobeLayers globe={globe} />
+                {type === "blog" && (
+                    <>
+                        <FocusBlogPlace globe={globe} latitude={places[0]?.latitude} longitude={places[0]?.longitude} />
+                        <BlogGlobePlaces globe={globe} places={places} />
+                    </>
+                )}
                 {type === "place" && places.map((place) => {
                     const { x, y, z } = globe.getCoords(place.latitude, place.longitude, 0.02);
                     return (
