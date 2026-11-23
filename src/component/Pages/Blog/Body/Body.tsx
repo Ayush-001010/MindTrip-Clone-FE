@@ -60,8 +60,8 @@ const Body: React.FC<IBody> = ({ }) => {
                     // a saved blog only shows the transfer between two activities when one was recorded
                     const showTravelConnector = !lastActivity;
                     return (
-                        <section>
-                            <Activity indexNumber={index} key={index} blogActivity={activityItem} />
+                        <section key={index}>
+                            <Activity indexNumber={index} blogActivity={activityItem} />
                             { showTravelConnector && (
                                 <section className="mt-2 flex items-center gap-3">
                                     <section className="my-1 flex w-16 shrink-0 flex-col items-center cursor-pointer sm:w-28">

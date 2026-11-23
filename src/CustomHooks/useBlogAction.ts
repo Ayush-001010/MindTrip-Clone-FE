@@ -129,6 +129,7 @@ const useBlogAction = () => {
     const fetchBlogById = async (blogId: string) => {
         const apiInstance = new APIService();
         const response = await apiInstance.getRequest<IBlogData>(`/blog/fetch/${blogId}`);
+        console.log("Fetching blog by ID:", response);
         return response;
     }
 

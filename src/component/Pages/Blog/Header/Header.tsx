@@ -97,8 +97,8 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                     <div className="flex items-center gap-2">
                         <p className="m-0 font-medium text-[#ced4da]">Duration:</p>
                         {mode === "create" && (
-                            <section onChange={(e: any) => saveChangeToBlog("tripDuration", e.target.value)}>
-                                <select className="w-[30px] cursor-pointer text-sm font-medium text-[#dee2e6] outline-none transition-colors hover:border-slate-300/70 focus:border-slate-300/70">
+                            <section>
+                                <select value={blogValue?.tripDuration ?? 1} onChange={(e) => saveChangeToBlog("tripDuration", Number(e.target.value))} className="w-[30px] cursor-pointer text-sm font-medium text-[#dee2e6] outline-none transition-colors hover:border-slate-300/70 focus:border-slate-300/70">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>

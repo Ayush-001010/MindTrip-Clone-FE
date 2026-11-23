@@ -68,12 +68,16 @@ const PageWheel: React.FC<IPageWheel> = ({  changeSelectedDay }) => {
         (closestIdx, position, idx) => (position.distanceFromFront < positions[closestIdx].distanceFromFront ? idx : closestIdx),
         0
     );
+    const frontDay = positions.length > 0 ? positions[frontIndex].key + 1 : null;
+
+    useEffect(() => {
+        if (frontDay !== null) {
+            changeSelectedDay(frontDay);
+        }
+    }, [frontDay, changeSelectedDay]);
 
     const circles = positions.map((position, idx) => {
         const scale = 0.75 + 0.35 * position.visibility;
-        if(idx === frontIndex) {
-            changeSelectedDay(position.key + 1);
-        }
 
         return {
             key: position.key,
