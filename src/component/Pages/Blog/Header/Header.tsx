@@ -4,32 +4,52 @@ import { useGetBlogContext } from "../Blog";
 import { MdOutlineEdit } from "react-icons/md";
 import { GoShare } from "react-icons/go";
 import { MdFavoriteBorder } from "react-icons/md";
-import TravelAgency from "./TravelAgency/TravelAgency";
+// import TravelAgency from "./TravelAgency/TravelAgency";
 import Publish from "./Publish/Publish";
-import { IoVideocamOutline } from "react-icons/io5";
-import { Tooltip } from "antd";
-import { Link, useParams } from "react-router-dom";
+import useBlogAction from "../../../../CustomHooks/useBlogAction";
+import { useParams } from "react-router-dom";
 
 const Header: React.FC<IHeader> = ({ selectedDay }) => {
     const { mode, blogValue, saveChangeToBlog, setMode } = useGetBlogContext();
-    const [isTravelAgency, setTravelAgency] = useState(false);
+    const { saveBlog } = useBlogAction();
+    // const [isTravelAgency, setTravelAgency] = useState(false);
     const { totalSpent } = blogValue ?? { totalSpent: 0 };
     const [isPublish, setPublish] = useState(false);
-    const {blogId} = useParams();
+    const [draftStatus, setDraftStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+    const { blogId } = useParams();
 
-
-    const openTravelAgency = () => {
-        setTravelAgency(true);
-    };
+    // const openTravelAgency = () => {
+    //     setTravelAgency(true);
+    // };
     const openPublish = () => {
         setPublish(true);
     };
 
-    const closeTravelAgency = () => {
-        setTravelAgency(false);
-    };
+    // const closeTravelAgency = () => {
+    //     setTravelAgency(false);
+    // };
     const closePublish = () => {
         setPublish(false);
+    };
+
+    const saveAsDraft = async () => {
+        if (!blogValue || draftStatus === "saving") return;
+        console.log("Blog ID:", blogId);
+
+        setDraftStatus("saving");
+        const response = await saveBlog(
+            {
+                ...blogValue,
+                id: blogId ?? "",
+
+            },
+            blogValue.profileTitle ?? "",
+            blogValue.profileIcon ?? "",
+            [],
+            blogValue.metaData ?? [],
+            true
+        );
+        setDraftStatus(response.success ? "saved" : "error");
     };
 
     return (
@@ -102,8 +122,22 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
             <section className="flex flex-wrap items-center gap-3 lg:justify-end">
                 { (mode === "create" || window.location.href.includes("/#/blog/create")) && (
                     <>
-                        <button onClick={openTravelAgency} className="rounded-full cursor-pointer border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70">
+                        {/* <button onClick={openTravelAgency} className="rounded-full cursor-pointer border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70">
                             Travel Agency ?
+                        </button> */}
+                        <button
+                            onClick={saveAsDraft}
+                            disabled={draftStatus === "saving"}
+                            className="min-w-28 rounded-full border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70 disabled:cursor-not-allowed disabled:opacity-60"
+                            aria-live="polite"
+                        >
+                            {draftStatus === "saving"
+                                ? "Saving..."
+                                : draftStatus === "saved"
+                                    ? "Draft Saved"
+                                    : draftStatus === "error"
+                                        ? "Try Again"
+                                        : "Save As Draft"}
                         </button>
                         <button onClick={openPublish} className="rounded-full cursor-pointer border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70">
                             Publish
@@ -120,15 +154,6 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                         )}
                     </>
                 )}
-                {mode === "preview"  && (
-                    <Tooltip title="Turn into Video">
-                        <Link to={`/blog/create-video/${blogId}`}>
-                            <button  className="cursor-pointer flex h-9 w-9 items-center justify-center rounded-full border border-slate-600/70 text-[#ced4da] transition-colors hover:border-slate-300/70 hover:text-[#dee2e6]">
-                                <IoVideocamOutline className="inline-block text-lg" />
-                            </button>
-                        </Link>
-                    </Tooltip>
-                )}
                 <button className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-600/70 text-[#ced4da] transition-colors hover:border-slate-300/70 hover:text-[#dee2e6]">
                     <GoShare className={mode === "create" ? "disabled cursor-not-allowed " + "inline-block text-lg" : "cursor-pointer " + "inline-block text-lg"} />
                 </button>
@@ -136,7 +161,7 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                     <MdFavoriteBorder className={mode === "create" ? "disabled cursor-not-allowed " + "inline-block text-lg" : "cursor-pointer " + "inline-block text-lg"} />
                 </button>
             </section>
-            <TravelAgency isOpen={isTravelAgency} onClose={closeTravelAgency} />
+            {/* <TravelAgency isOpen={isTravelAgency} onClose={closeTravelAgency} /> */}
             <Publish isOpen={isPublish} onClose={closePublish} />
         </header>
     );

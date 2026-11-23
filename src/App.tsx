@@ -139,7 +139,7 @@ const AppContent: React.FC = () => {
             <Route path="/inspiration" element={<Inspiration />} />
             <Route path="/chat/:tripId" element={<Chat />} />
             <Route path="/blog" element={<BlogNewsFeed />} />
-            <Route path="/blog/create" element={<Blog key="blog-create" />} />
+            <Route path="/blog/create/:blogId" element={<Blog key="blog-create" />} />
             <Route path="/inspiration/blog/:blogId" element={<Blog key="blog-preview" />} />
             <Route path="/blog/create-video/:blogId" element={<BlogVideoCreation key="blog-video-creation" />} />
             <Route path="/profile/:userId" element={<Profile />} />

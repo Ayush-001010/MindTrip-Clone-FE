@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import { BsJournalText, BsHeart, BsEye } from "react-icons/bs";
 import type IBlogsStamp from "./IBlogsStamp";
 
-const BlogsStamp: React.FC<IBlogsStamp> = ({ blogsDetails }) => {
+const BlogsStamp: React.FC<IBlogsStamp> = ({ blogsDetails, isWorkInProgress }) => {
     return (
-        <section className="mt-8 border-t border-zinc-800 pt-8">
-            <h2 className="text-2xl font-semibold tracking-tight text-zinc-100">Stories I've shared</h2>
-            <p className="mt-2 text-sm leading-6 text-zinc-400">Travel memories, one story at a time.</p>
+        <section className="pt-6 sm:pt-8">
+            {!isWorkInProgress && (
+                <>
+                    <h2 className="text-2xl font-semibold tracking-tight text-zinc-100">Stories I've shared</h2>
+                    <p className="mt-2 text-sm leading-6 text-zinc-400">Travel memories, one story at a time.</p>
+                </>
+            )}
             {blogsDetails.length === 0 ? (
                 <p className="mt-4 text-sm text-zinc-500">No blog stamps yet.</p>
             ) : (
@@ -19,7 +23,7 @@ const BlogsStamp: React.FC<IBlogsStamp> = ({ blogsDetails }) => {
                     {blogsDetails.map((blog, index) => (
                         <li key={blog.blogId} className="w-48 shrink-0 snap-start sm:w-52">
                             <Link
-                                to={`/inspiration/blog/${blog.blogId}`}
+                                to={isWorkInProgress ? `/blog/create/${blog.blogId}` : `/inspiration/blog/${blog.blogId}`}
                                 aria-label={`Read ${blog.blogTitle}`}
                                 className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/50"
                             >
@@ -33,7 +37,7 @@ const BlogsStamp: React.FC<IBlogsStamp> = ({ blogsDetails }) => {
                                             <span>Travel journal</span>
                                             <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                                         </div>
-                                        <p className="mt-2 line-clamp-2 text-sm font-semibold leading-5 text-zinc-100 wrap-anywhere">{blog.blogTitle}</p>
+                                        <p className="mt-2 line-clamp-2 text-sm font-semibold leading-5 text-zinc-100 wrap-anywhere">{isWorkInProgress ? blog.blogTitle || "Work in progress" :  blog.blogTitle}</p>
                                         <div className="mt-auto flex items-end justify-between pt-2">
                                             <span className="text-[9px] font-semibold uppercase tracking-widest opacity-75">Story stamp</span>
                                             <BsJournalText className="size-8 shrink-0" aria-hidden="true" />
@@ -44,7 +48,7 @@ const BlogsStamp: React.FC<IBlogsStamp> = ({ blogsDetails }) => {
                                     {blog.blogTitle}
                                 </p>
                             </Link>
-                            <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-zinc-400">
+                            {!isWorkInProgress && <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-zinc-400">
                                 <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-900/60 px-2.5 py-1" aria-label={`${blog.numberOfLikes} likes`}>
                                     <BsHeart className="text-violet-300/80" aria-hidden="true" />
                                     {blog.numberOfLikes.toLocaleString()}
@@ -53,7 +57,7 @@ const BlogsStamp: React.FC<IBlogsStamp> = ({ blogsDetails }) => {
                                     <BsEye aria-hidden="true" />
                                     {blog.numberOfViews.toLocaleString()}
                                 </span>
-                            </div>
+                            </div>}
                         </li>
                     ))}
                 </ul>

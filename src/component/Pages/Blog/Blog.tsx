@@ -220,7 +220,8 @@ const Blog: React.FC<IBlog> = () => {
     };
 
     useEffect(() => {
-        if (!blogId) return;
+        const url = location.href;
+        if (!blogId || url.includes("/#/blog/create")) return;
         let cancelled = false;
 
         const loadBlog = async () => {
