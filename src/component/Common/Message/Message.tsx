@@ -13,7 +13,7 @@ import ItineraryOptions from "./ItineraryOptions/ItineraryOptions";
 import FallBackResponse from "./FallBackResponse/FallBackResponse";
 import FinalResponse from "./FinalResponse/FinalResponse";
 import ShowHotelSearchResponse from "./ShowHotelSearchResponse/ShowHotelSearchResponse";
-
+import FlightSearchResponse from "./FlightSearchResponse/FlightSearchResponse";
 const Message: React.FC<IIMessage> = ({ data }) => {
     const { message, timestamp, response } = data;
     const formattedTimestamp = moment(timestamp).format("HH:mm DD/MM/YY");
@@ -26,10 +26,10 @@ const Message: React.FC<IIMessage> = ({ data }) => {
             case "destination":
                 return <DestinationResponse data={response} />;
         
-            case "question-gather":
-            case "favourite-information-gather-round1":
-            case "favourite-information-gather-round2":
-                return <QuestionGatherResponse data={response} />;
+                case "question-gather":
+                    case "favourite-information-gather-round1":
+                    case "favourite-information-gather-round2":
+                        return <QuestionGatherResponse data={response as any} />;
         
             case "itinerary-options":
                 return <ItineraryOptions itineraryOptions={response} />;
@@ -40,11 +40,14 @@ const Message: React.FC<IIMessage> = ({ data }) => {
             case "final-itinerary":
                 return <FinalResponse message={(response as IItineraryFinalResponse).message} />;
         
-            case "hotel-information-gather":
-                return <QuestionGatherResponse data={response} />;
+                case "hotel-information-gather":
+                    return <QuestionGatherResponse data={response as any} />;
         
             case "hotel-search":
                 return <ShowHotelSearchResponse data={response} />;
+
+                case "flight-results":
+                    return <FlightSearchResponse data={response as any} />;
         
             default:
                 return null;

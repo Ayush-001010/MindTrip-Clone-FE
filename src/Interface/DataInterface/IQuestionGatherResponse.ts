@@ -4,7 +4,10 @@ export interface IQuestion {
     options: Array<string>;
     purpose?: string;
     required?: boolean;
-    type: string;
+    type: "text" | "single-choice" | "multiple-choice" | "date" | "counter";
+    min?: number;
+    max?: number;
+    defaultValue?: number;
 }
 
 export default interface IQuestionGatherResponse {

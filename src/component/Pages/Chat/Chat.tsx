@@ -16,6 +16,7 @@ import { useParams } from 'react-router-dom';
 import type IUserInterface from '../../../Interface/DataInterface/IUserDetails';
 import { useSelector } from 'react-redux';
 import type IGroupHubMessage from '../../../Interface/DataInterface/IGroupHubMessage';
+import type ITripFlightData from '../../../Interface/DataInterface/ITripFlightData';
 
 export interface IChatContext {
     isSelectedLocation: boolean;
@@ -53,6 +54,9 @@ export interface IChatContext {
     addCommentOnOpinion: ( postId: string, comment: string, parentOpinionCommentId?: string) => Promise<any>;
     checkInUpdate: ( id: number, status: string, reachWhen?: string) => Promise<any>;
     tripSuggestionsDate? : { startDate: Date | null, endDate: Date | null };
+    showFlightPannel: boolean;
+setShowFlightPannel: React.Dispatch<React.SetStateAction<boolean>>;
+bookFlightHandler?: (flight: ITripFlightData) => void;
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -72,13 +76,16 @@ const ChatContext = createContext<IChatContext>({
     showHotelInLocationPannel: false,
     showHotelDetails: null,
     isTripAdmin: false,
+    
     sendNewMessage: async (_type : "announcement" | "medical-emergency" | "poll" | "opinion" | "check-ins" , _message: IGroupHubMessage) => {},
     createActionHandler: (type: "poll" | "opinion" | "default", title: string, option1?: string, option2?: string, option3?: string, option4?: string , imageUrl?: string) => {
         console.log(type, title, option1, option2, option3, option4, imageUrl);
     },
     likeOrDislikeGroupHubPost: async (_postID: string, _like: boolean) => {},
     addCommentOnOpinion: async (_opinionId: string, _comment: string, _parentOpinionCommentId?: string) => {},
-    checkInUpdate: async (_id: number, _status: string, _reachWhen?: string) => {}
+    checkInUpdate: async (_id: number, _status: string, _reachWhen?: string) => {},
+    showFlightPannel: false,
+   setShowFlightPannel: () => {}
 });
 
 export const useChatContext = () => {
@@ -99,7 +106,7 @@ const Chat : React.FC<IChat> = () => {
             }
         });
     };
-    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , addHotelToWishList, bookHotelHandler , sendNewMessage , tripSuggestionsDate } = useTripSocketAction(loadGroupHubPosts);
+    const { notificationConfig, sendMessageHandler, messages , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , addHotelToWishList, bookHotelHandler ,bookFlightHandler, sendNewMessage , tripSuggestionsDate } = useTripSocketAction(loadGroupHubPosts);
     const [isSelectedLocation, setIsSelectedLocation] = useState<boolean>(false);
     const [locationLongitude, setLocationLongitude] = useState<number>(0);
     const [locationLatitude, setLocationLatitude] = useState<number>(0);
@@ -121,7 +128,7 @@ const Chat : React.FC<IChat> = () => {
         option4?: string,
         imageUrl?: string
     } | null>(null);
-
+    const [showFlightPannel, setShowFlightPannel] = useState<boolean>(false);
     const createActionHandler = (type: "poll" | "opinion" | "default", title: string, option1?: string, option2?: string, option3?: string, option4?: string , imageUrl?:string) => {
         if(type === "default") {
             setCreateAction(null);
@@ -162,7 +169,8 @@ const Chat : React.FC<IChat> = () => {
     },[tripId, userID]);
 
     return (
-        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler , isTripAdmin , sendNewMessage , groupHubPosts, createActionHandler , createAction , likeOrDislikeGroupHubPost, addCommentOnOpinion , checkInUpdate , tripSuggestionsDate }}>
+        <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler ,bookFlightHandler, isTripAdmin , sendNewMessage , groupHubPosts, createActionHandler , createAction , likeOrDislikeGroupHubPost, addCommentOnOpinion , checkInUpdate , tripSuggestionsDate,showFlightPannel,
+            setShowFlightPannel }}>
             <div className="w-full ">
                 {notification}
                 <Header/>

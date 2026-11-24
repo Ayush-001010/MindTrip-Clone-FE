@@ -6,6 +6,7 @@ import type ITripExpense from "../Interface/DataInterface/ITripExpense";
 import type ITripSplitWiseAnalytics from "../Interface/DataInterface/ITripSplitWiseAnalytics";
 import type { IHotelDataInterface } from "../Interface/CommonInterface";
 import type ITripHotelData from "../Interface/DataInterface/ITripHotel";
+import type ITripFlightData from "../Interface/DataInterface/ITripFlightData";
 
 const useTripAction = () => {
     const { tripId } = useParams();
@@ -100,6 +101,19 @@ const useTripAction = () => {
         });
         return response;
     };
+    
+    const fetchTripFlightDetails = async () => {
+        const apiServiceInstance = new APIService();
+    
+        const response = await apiServiceInstance.getRequest<ITripFlightData[]>(
+            "/trip/fetchTripFlightDetails",
+            {
+                base62: tripId || ""
+            }
+        );
+    
+        return response;
+    };
 
     const isUserTripAdmin = async () => {
         const apiServiceInstance = new APIService();
@@ -150,7 +164,7 @@ const useTripAction = () => {
         return response;
     };
     
-    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost , addCommentOnOpinion , checkInUpdate };
+    return { createNewTrip , fetchTripID, fetchTripMemberDetails, createInviteURL, joinTrip, fetchTripAnalytics, fetchExpenses, fetchHotelDetails, fetchImportanDates, fetchTripHotelDetails , fetchTripFlightDetails,isUserTripAdmin , fetchOldGroupHubPost , likeOrDislikeGroupHubPost , addCommentOnOpinion , checkInUpdate };
 };
 
 export default useTripAction;
