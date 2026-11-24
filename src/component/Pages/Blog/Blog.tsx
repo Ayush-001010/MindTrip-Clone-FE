@@ -324,13 +324,9 @@ const Blog: React.FC<IBlog> = () => {
         })
     }
 
-
-    console.log("Current blog value:", blogValue);
-
     useEffect(() => {
         // a saved blog is read-only, its activities must never be padded or trimmed
         if (mode === "preview") return;
-        console.log("Adding or removing activity items based on trip duration");
         const timeOutObj = setTimeout(() => {
             addOrRemovingActivityItem();
         }, 500);
@@ -338,18 +334,22 @@ const Blog: React.FC<IBlog> = () => {
     }, [blogValue?.tripDuration]);
 
 
-    if (fetchError) {
-        return <p className="p-8 text-center text-[#ced4da]">{fetchError}</p>;
-    }
-
     useEffect(() => {
         if(mode === "preview" && blogId){
             userActivity("blog", blogId ? parseInt(blogId) : 0);
         }
     }, [mode , blogId]);
 
+    if (fetchError) {
+        return <p className="p-8 text-center text-[#ced4da]">{fetchError}</p>;
+    }
+
+    if (!blogValue) {
+        return <p role="status" className="p-8 text-center text-[#ced4da]">Loading blog...</p>;
+    }
+
     return (
-        <blogContext.Provider value={{ mode, blogValue: blogValue!, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay, mapMarkerPoints, selectedLongitude, selectedLatitude, addingHotel, addTravel , currentEditActivityIndex, setCurrentEditActivityIndex , setMode }}>
+        <blogContext.Provider value={{ mode, blogValue, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay, mapMarkerPoints, selectedLongitude, selectedLatitude, addingHotel, addTravel , currentEditActivityIndex, setCurrentEditActivityIndex , setMode }}>
             <Header selectedDay={selectedDay} />
             <Body />
             <section className="static">

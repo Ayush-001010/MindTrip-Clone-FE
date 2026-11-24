@@ -8,13 +8,13 @@ import { useCallback } from "react";
 const useCommonAction = () => {
   const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
 
-  const getImages = async (key: string) : Promise<{success: boolean, data?: string | undefined}> => {
+  const getImages = useCallback(async (key: string) : Promise<{success: boolean, data?: string | undefined}> => {
     const apiInstance = new APIService();
     const response = await apiInstance.getRequest<string>(
       `/common/someRandomImages?type=${key}`,
     );
     return response;
-  };
+  }, []);
 
   const getPlaceName = async (placeName: string) => {
     const response = await axios.get(

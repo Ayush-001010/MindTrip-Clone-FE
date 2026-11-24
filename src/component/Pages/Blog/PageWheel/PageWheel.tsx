@@ -90,7 +90,7 @@ const PageWheel: React.FC<IPageWheel> = ({  changeSelectedDay }) => {
     });
 
     return (
-        <section className="absolute right-0 bottom-10 w-[180px] origin-bottom-right scale-[0.7] overflow-visible sm:scale-100">
+        <section className="pointer-events-none fixed right-0 bottom-10 z-20 w-[180px] origin-bottom-right scale-[0.7] overflow-visible sm:scale-100">
             <section
                 ref={boxRef}
                 className="relative h-100 overflow-y-auto overflow-x-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -99,7 +99,7 @@ const PageWheel: React.FC<IPageWheel> = ({  changeSelectedDay }) => {
                     {circles.map((circle) => (
                         <section
                             key={circle.key}
-                            className={`absolute right-0 flex items-center justify-center rounded-full border border-white/50 text-center transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${circle.className}`}
+                            className={`pointer-events-auto absolute right-0 flex items-center justify-center rounded-full border border-white/50 text-center transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${circle.className}`}
                             style={{
                                 top: `${orbitCenterY}px`,
                                 width: `${circleSize}px`,

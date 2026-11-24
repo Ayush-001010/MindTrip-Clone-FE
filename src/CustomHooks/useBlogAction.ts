@@ -55,7 +55,12 @@ const useBlogAction = () => {
             await Promise.all(activity.images.map(async (image : any) => {
                 // Perform any asynchronous operations for each image if needed
                 let { name: fileName = "", type: fileType = "" } = image;
-                fileName = "Blog/" + fileName;
+                if( typeof image === "string" && (image as string).includes("Blog/")) {
+                    //  Take substring after "Blog/" if needed
+                    fileName = (image as string).substring((image as string).indexOf("Blog/"));
+                    imageURLs.push(fileName);
+                    return;
+                }
                 const fileUploadResponse = await apiInstance.postRequest("/common/getUploadedFileURL", {
                     contentType: fileType,
                     key: fileName,
@@ -129,7 +134,6 @@ const useBlogAction = () => {
     const fetchBlogById = async (blogId: string) => {
         const apiInstance = new APIService();
         const response = await apiInstance.getRequest<IBlogData>(`/blog/fetch/${blogId}`);
-        console.log("Fetching blog by ID:", response);
         return response;
     }
 

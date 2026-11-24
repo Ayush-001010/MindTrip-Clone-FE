@@ -12,6 +12,8 @@ import Loader from "./Loader/Loader";
 import { CiMap } from "react-icons/ci";
 import { RiGlobeLine } from "react-icons/ri";
 import Globe from "../../../Common/Globe/Globe";
+import { BsCameraReels } from "react-icons/bs";
+import Animation from "../../Blog/Animation/Animation";
 
 const Body: React.FC<IBody> = ({ }) => {
     const { mode, blogValue, selectedDay, mapMarkerPoints, selectedLongitude, selectedLatitude } = useGetBlogContext();
@@ -19,7 +21,7 @@ const Body: React.FC<IBody> = ({ }) => {
         isVisible: false,
         indexNumber: -1
     });
-    const [view, setView] = useState<"map" | "globe">("map");
+    const [view, setView] = useState<"map" | "globe" | "animation">("animation");
     const [isHotelModalOpen, setIsHotelModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -98,6 +100,9 @@ const Body: React.FC<IBody> = ({ }) => {
                     <button type="button" aria-label="Show globe" aria-pressed={view === "globe"} className="cursor-pointer rounded-tr-lg p-2 text-zinc-400 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-violet-400 aria-pressed:bg-zinc-800 aria-pressed:text-white" onClick={() => setView("globe")}>
                         <RiGlobeLine className="text-lg" />
                     </button>
+                    <button type="button" aria-label="Show animation" aria-pressed={view === "animation"} className="cursor-pointer rounded-tr-lg p-2 text-zinc-400 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-violet-400 aria-pressed:bg-zinc-800 aria-pressed:text-white" onClick={() => setView("animation")}>
+                        <BsCameraReels className="text-lg" />
+                    </button>
                 </section>
                 <section className="min-h-0 flex-1 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950 shadow-lg shadow-black/30">
                     {view === "map" && <Map markerPoints={mapMarkerPoints} longitude={selectedLongitude} latitude={selectedLatitude} />}
@@ -111,6 +116,9 @@ const Body: React.FC<IBody> = ({ }) => {
                                 latitude: activity.coordinates.latitude,
                                 placeName: activity.placeName,
                             }))} onSelectPlace={() => {}} />
+                    )}
+                    {view === "animation" && (
+                        <Animation />
                     )}
                 </section>
             </section>
