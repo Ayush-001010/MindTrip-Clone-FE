@@ -36,6 +36,13 @@ const Message: React.FC<IIMessage> = ({ data }) => {
         
             case "fallback":
                 return <FallBackResponse message={response.message} />;
+
+            case "text":
+                    return (
+                        <div className="rounded-lg border border-gray-700 bg-gray-900/70 px-4 py-3 text-sm leading-6 text-white">
+                            {(response as any).message}
+                        </div>
+                    );
         
             case "final-itinerary":
                 return <FinalResponse message={(response as IItineraryFinalResponse).message} />;

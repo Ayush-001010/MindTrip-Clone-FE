@@ -21,4 +21,20 @@ export default interface ITripFlightData {
     isBooked?: boolean;
     base62: string;
     bookedBy?: string;
+
+    tripType?: "One-way" | "Round-trip";
+    returnLeg?: {
+        airline: string;
+        airlineLogo: string;
+        flightNumber: string;
+        origin: string;
+        originCode: string;
+        destination: string;
+        destinationCode: string;
+        departure: Date | string;
+        arrival: Date | string;
+        durationMinutes: number;
+        stops: number;
+        segments: any[];
+    };
 }

@@ -5,24 +5,40 @@ import type ITripFlightData from "../../../../Interface/DataInterface/ITripFligh
 import { useChatContext } from "../../../Pages/Chat/Chat";
 
 interface Flight {
-  id: string;
-  price: number;
-  formattedPrice: string;
-  airline: string;
-  airlineLogo: string;
-  flightNumber: string;
-  origin: string;
-  originCode: string;
-  destination: string;
-  destinationCode: string;
-  departure: string;
-  arrival: string;
-  durationMinutes: number;
-  stops: number;
-  segments: any[];
-  isRefundable: boolean;
-  emissionsKg: number;
-}
+    id: string;
+    price: number;
+    formattedPrice: string;
+    airline: string;
+    airlineLogo: string;
+    flightNumber: string;
+    origin: string;
+    originCode: string;
+    destination: string;
+    destinationCode: string;
+    departure: string;
+    arrival: string;
+    durationMinutes: number;
+    stops: number;
+    segments: any[];
+    isRefundable: boolean;
+    emissionsKg: number;
+  
+    tripType?: "One-way" | "Round-trip";
+    returnLeg?: {
+      airline: string;
+      airlineLogo: string;
+      flightNumber: string;
+      origin: string;
+      originCode: string;
+      destination: string;
+      destinationCode: string;
+      departure: string;
+      arrival: string;
+      durationMinutes: number;
+      stops: number;
+      segments: any[];
+    };
+  }
 
 interface Props {
   data: IFlightSearchResponse;
@@ -49,7 +65,7 @@ const FlightSearchResponse: React.FC<Props> = ({ data }) => {
   const flights = [...(data.flights || [])]
     .sort((a: Flight, b: Flight) => a.price - b.price)
     .slice(0, 20);
-
+    console.log("Flight search results:", flights);
   return (
     <section className="mt-3 w-full space-y-4 text-white">
       <div className="rounded-xl border border-gray-700 bg-[#1e293b] p-4">
@@ -141,6 +157,58 @@ const FlightSearchResponse: React.FC<Props> = ({ data }) => {
             </div>
           </div>
 
+{/* Return Journey */}
+{flight.returnLeg && (
+  <div className="mt-5 border-t border-gray-700 pt-4">
+    <p className="mb-3 text-sm font-semibold text-blue-400">
+      ↩ Return Journey
+    </p>
+
+    <div className="flex items-center justify-between gap-2">
+      <div>
+        <p className="text-xl font-semibold">
+          {formatTime(flight.returnLeg.departure)}
+        </p>
+        <p className="text-sm text-gray-400">
+          {flight.returnLeg.originCode}
+        </p>
+      </div>
+
+      <div className="flex flex-1 flex-col items-center px-2">
+        <p className="text-xs text-gray-400">
+          {formatDuration(flight.returnLeg.durationMinutes)}
+        </p>
+
+        <div className="my-2 flex w-full items-center">
+          <div className="h-px flex-1 bg-gray-500" />
+          <span className="mx-2 text-blue-400">✈</span>
+          <div className="h-px flex-1 bg-gray-500" />
+        </div>
+
+        <p className="text-xs text-gray-400">
+          {flight.returnLeg.stops === 0
+            ? "Non-stop"
+            : `${flight.returnLeg.stops} stop${flight.returnLeg.stops > 1 ? "s" : ""}`}
+        </p>
+      </div>
+
+      <div className="text-right">
+        <p className="text-xl font-semibold">
+          {formatTime(flight.returnLeg.arrival)}
+        </p>
+        <p className="text-sm text-gray-400">
+          {flight.returnLeg.destinationCode}
+        </p>
+      </div>
+    </div>
+
+    <div className="mt-3 text-xs text-gray-400">
+      {flight.returnLeg.airline} · {flight.returnLeg.flightNumber}
+    </div>
+  </div>
+)}
+
+
           {/* Additional details */}
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-gray-700 pt-3 text-xs text-gray-400">
             <span>
@@ -187,6 +255,25 @@ const FlightSearchResponse: React.FC<Props> = ({ data }) => {
         emissionsKg: flight.emissionsKg,
         isBooked: false,
         base62: "",
+    
+        tripType: flight.returnLeg ? "Round-trip" : "One-way",
+    
+        returnLeg: flight.returnLeg
+            ? {
+                airline: flight.returnLeg.airline,
+                airlineLogo: flight.returnLeg.airlineLogo,
+                flightNumber: flight.returnLeg.flightNumber,
+                origin: flight.returnLeg.origin,
+                originCode: flight.returnLeg.originCode,
+                destination: flight.returnLeg.destination,
+                destinationCode: flight.returnLeg.destinationCode,
+                departure: flight.returnLeg.departure,
+                arrival: flight.returnLeg.arrival,
+                durationMinutes: flight.returnLeg.durationMinutes,
+                stops: flight.returnLeg.stops,
+                segments: flight.returnLeg.segments,
+            }
+            : undefined,
     };
 
     bookFlightHandler(flightData);

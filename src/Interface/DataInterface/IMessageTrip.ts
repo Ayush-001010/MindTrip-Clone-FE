@@ -22,5 +22,10 @@ export default interface IMessageTrip {
     | IItineraryFinalResponse
     | IHotelQuestionGatherResponse
     | IHotelSearchResponse
-    | IFlightSearchResponse;
+    | IFlightSearchResponse
+    | {
+        type: "text";
+        message: string;
+        confirmationType?: string;
+    };
 }

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
-import { FaPlane } from "react-icons/fa";
+import { IoSearch } from "react-icons/io5";
 import type ITripFlightData from "../../../../Interface/DataInterface/ITripFlightData";
 import { useChatContext } from "../../../Pages/Chat/Chat";
 import useTripAction from "../../../../CustomHooks/useTripAction";
@@ -12,31 +12,30 @@ interface Props {
     onClose: () => void;
 }
 
-const ShowBookedFlightsModel: React.FC<Props> = ({
-    open,
-    onClose
-}) => {
-    const { bookFlightHandler } = useChatContext();
+const ShowBookedFlightsModel: React.FC<Props> = ({ open, onClose }) => {
+    const { sendMessageHandler, bookFlightHandler } = useChatContext();
     const { fetchTripFlightDetails } = useTripAction();
 
     const [flights, setFlights] = useState<ITripFlightData[]>([]);
-    const [loading, setLoading] = useState(false);
+
+    const searchFlight = () => {
+        onClose();
+        sendMessageHandler(
+            "I want to search for flights for my current trip. Use my existing trip destination and ask me only for the flight details you still need. Do not ask me for my destination again."
+        );
+    };
 
     useEffect(() => {
-        if (!open) return;
-
-        setLoading(true);
-
-        fetchTripFlightDetails()
-            .then(response => {
-                setFlights(response.data ?? []);
-            })
-            .catch(error => {
-                console.error("Error fetching flights:", error);
-                setFlights([]);
-            })
-            .finally(() => setLoading(false));
-
+        if (open) {
+            fetchTripFlightDetails()
+                .then(response => {
+                    setFlights(response.data ?? []);
+                })
+                .catch(error => {
+                    console.error("Error fetching flights:", error);
+                    setFlights([]);
+                });
+        }
     }, [open]);
 
     return (
@@ -71,25 +70,19 @@ const ShowBookedFlightsModel: React.FC<Props> = ({
             }}
             closeIcon={<span className="text-white text-lg">x</span>}
         >
-            <main className="rounded-2xl bg-gradient-to-b from-gray-900/90 to-black/90 p-8 text-white shadow-2xl ring-1 ring-white/10">
+            <main className="rounded-2xl bg-gradient-to-b from-gray-900/90 to-black/90 p-10 text-white shadow-2xl ring-1 ring-white/10 backdrop-blur-md">
 
-                <header className="flex items-center gap-3 border-b border-white/10 pb-4">
-                    <FaPlane className="text-2xl text-blue-400" />
-                    <div>
-                        <h2 className="text-xl font-semibold">
-                            My Flights
-                        </h2>
-                        <p className="mt-1 text-sm text-white/50">
-                            Your saved flight selections
-                        </p>
-                    </div>
+                <header className="flex justify-end border-b border-white/10 pb-4">
+                    <button
+                        onClick={searchFlight}
+                        className="flex items-center gap-2 rounded-full bg-indigo-500/20 px-4 py-2 text-sm font-medium text-indigo-200 ring-1 ring-indigo-400/40 transition-colors hover:bg-indigo-500/30"
+                    >
+                        Find flights for your trip
+                        <IoSearch className="text-base" />
+                    </button>
                 </header>
 
-                {loading ? (
-                    <p className="py-10 text-center text-white/50">
-                        Loading your flights...
-                    </p>
-                ) : flights.length > 0 ? (
+                {flights.length > 0 ? (
                     <section className="pt-4">
                         <TripFlightList
                             flights={flights}
@@ -99,9 +92,11 @@ const ShowBookedFlightsModel: React.FC<Props> = ({
                     </section>
                 ) : (
                     <section className="flex flex-col items-center justify-center gap-2 py-10 text-center">
-                        <span className="text-3xl">✈️</span>
-                        <p className="text-sm text-white/60">
-                            You haven't booked any flights yet
+                        <span className="text-3xl" aria-hidden>
+                            ✈️
+                        </span>
+                        <p className="m-0 text-sm leading-6 text-white/60">
+                            You haven&apos;t selected any flights yet
                         </p>
                     </section>
                 )}

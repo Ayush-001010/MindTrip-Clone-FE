@@ -3,45 +3,43 @@ import React from "react";
 import type IItineraryHotel from "./IItineraryHotel";
 import { FaHotel, FaPlane } from "react-icons/fa";
 import ShowHotelModel from "../../../Model/ShowHotelModel/ShowHotelModel";
-import { useChatContext } from "../../../../Pages/Chat/Chat";
+import ShowBookedFlightsModel from "../../../Model/ShowBookedFlightsModel/ShowBookedFlightsModel";
 
 const ItineraryHotel: React.FC<IItineraryHotel> = () => {
-    const [isOpen, setIsOpen] = React.useState(false);
-
-    const {
-                sendMessageHandler
-    } = useChatContext();
-
-    const openModel = () => setIsOpen(true);
-    const closeModel = () => setIsOpen(false);
-
-    const handleFlightClick = () => {
-        sendMessageHandler(
-            "I want to search for flights for my current trip. Use my existing trip destination and ask me only for the flight details you still need. Do not ask me for my destination again."
-        );
-    };
+    const [isHotelOpen, setIsHotelOpen] = React.useState(false);
+    const [isFlightOpen, setIsFlightOpen] = React.useState(false);
 
     return (
         <section className="flex items-center gap-3">
+            {/* Hotel */}
             <p
-                className="text-3xl hover:text-[#9fa0ff] transition-all duration-500 ease-in-out cursor-pointer"
-                onClick={openModel}
+                title="My Hotels"
+                className="cursor-pointer text-3xl transition-all duration-500 ease-in-out hover:text-[#9fa0ff]"
+                onClick={() => setIsHotelOpen(true)}
             >
                 <FaHotel />
             </p>
 
+            {/* Flights */}
             <p
-                title="Search Flights"
-                className="text-3xl hover:text-[#9fa0ff] transition-all duration-500 ease-in-out cursor-pointer"
-                onClick={handleFlightClick}
+                title="My Flights"
+                className="cursor-pointer text-3xl transition-all duration-500 ease-in-out hover:text-[#9fa0ff]"
+                onClick={() => setIsFlightOpen(true)}
             >
                 <FaPlane />
             </p>
 
-            <ShowHotelModel open={isOpen} onClose={closeModel} />
-        </section>
+            <ShowHotelModel
+                open={isHotelOpen}
+                onClose={() => setIsHotelOpen(false)}
+            />
 
-)
+            <ShowBookedFlightsModel
+                open={isFlightOpen}
+                onClose={() => setIsFlightOpen(false)}
+            />
+        </section>
+    );
 };
 
 export default ItineraryHotel;

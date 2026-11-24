@@ -86,7 +86,7 @@ const BookedFlightCard: React.FC<Props> = ({ flight }) => {
             <div className="flex items-center gap-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
                 <BsCheckCircleFill className="shrink-0 text-sm" />
                 <span>
-                    Demo booking confirmed for {formatDateTime(flight.departure)}
+                    Booking confirmed for {formatDateTime(flight.departure)}
                 </span>
             </div>
 
