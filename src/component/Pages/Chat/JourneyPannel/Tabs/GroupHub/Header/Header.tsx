@@ -1,7 +1,8 @@
 import React from "react";
 import type IHeader from "./IHeader";
 
-const TABS = ["Poll", "Announcement", "Opinion", "Check ins", "Medical Assistance"] as const;
+const TABS = ["Poll", "Announcement", "Opinion", "Check ins"] as const;
+//  "Medical Assistance"
 
 const Header : React.FC<IHeader> = ({ activeTab, setActiveTab }) => {
 

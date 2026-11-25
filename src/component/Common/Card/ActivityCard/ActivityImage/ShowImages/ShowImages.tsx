@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import {Image } from "antd";
 
 const ShowImages: React.FC<IShowImages> = ({ imagesURL, imageFiles }) => {
     // object URLs must stay stable across renders, otherwise images flicker/reload
@@ -24,7 +25,7 @@ const ShowImages: React.FC<IShowImages> = ({ imagesURL, imageFiles }) => {
         >
             {allImages.map((src, index) => (
                 <SwiperSlide key={`image-${index}`}>
-                    <img src={src} alt={`activity-image-${index}`} className="h-full w-full object-cover rounded-xl shadow-lg shadow-slate-400/40" />
+                    <Image src={src} alt={`activity-image-${index}`} className="h-full w-full object-cover rounded-xl shadow-lg shadow-slate-400/40" />
                 </SwiperSlide>
             ))}
         </Swiper>

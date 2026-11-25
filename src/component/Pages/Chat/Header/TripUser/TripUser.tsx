@@ -12,11 +12,13 @@ const TripUser: React.FC<ITripUser> = ({ open, onClose }) => {
         userId: string;
         userName: string;
         userEmail: string;
+        userImage?: string;
     }>>([]);
 
     const fetchMembers = async () => {
         const response : any = await fetchTripMemberDetails();
         if(response.success) {
+            console.log("Member Details ", response.data)
             setMembers(response.data);
         }
     };

@@ -57,3 +57,10 @@ export interface IBlogHotel {
     description: string;
     images: string;
 }
+
+export interface IBlogWorkData {
+    id: number;
+    userId: string;
+    blogId: number;
+    title?: string;
+}

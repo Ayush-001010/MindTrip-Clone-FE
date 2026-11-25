@@ -11,7 +11,7 @@ const TripWhen: React.FC<ITripWhen> = ({ open, closeHandler }) => {
     const [startDate, setStartDate] = useState<Dayjs | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [endDate, setEndDate] = useState<Dayjs | null>(null);
-    const { setTripDate , finalItinerary , tripSuggestionsDate} = useChatContext();
+    const { setTripDate , finalItinerary , tripSuggestionsDate , setNotificationConfig} = useChatContext();
 
     const hasSuggestion = !!(tripSuggestionsDate?.startDate && tripSuggestionsDate?.endDate);
     const suggestionAlreadyApplied = hasSuggestion
@@ -33,6 +33,12 @@ const TripWhen: React.FC<ITripWhen> = ({ open, closeHandler }) => {
     };
 
     const submitHandler = () => {
+        if(!finalItinerary){
+            setNotificationConfig({
+                open:true , type: "error", message: "Please set the itinerary first."
+            });
+            return;
+        }
         if (startDate && endDate && setTripDate) {
             setTripDate(startDate.toDate(), endDate.toDate());
         }
@@ -95,7 +101,7 @@ const TripWhen: React.FC<ITripWhen> = ({ open, closeHandler }) => {
                     </div>
                     <div className="mt-5 flex justify-end">
                         <button
-                            className="bg-[#0ea5e9] cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-[#0284c7]"
+                            className="bg-zinc-700 cursor-pointer text-white px-4 py-2 rounded-lg"
                             onClick={() => {
                                 submitHandler();
                                 closeHandler();

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type ILeftSection from "./ILeftSection";
 import { LiaRobotSolid } from "react-icons/lia";
 import { motion } from "framer-motion";
@@ -20,9 +21,7 @@ const paragraphs: ISegment[][] = [
     [{ text: "Let's make travel planning fun, easy, and exciting together." }],
     [{ text: "What's on your mind today? 🌍💙" }],
     [{text: "Discover Upcoming Long Weekends ✈️"}],
-    [{text:"Get Updates on Your Upcoming Trip ✈️"}],
-    // [{text:"Splitwise Updates 🧾"}],
-    // [{text:"Custom Agents 🤖"}]
+    [{text:"Plan Your Upcoming Trip 🚗"}],
 ];
 
 // Lengths are counted in code points so emoji are never split mid-character.
@@ -53,10 +52,13 @@ const renderTyped = (segments: ISegment[], visibleCount: number) => {
 const LeftSection: React.FC<ILeftSection> = ({setSelectedOption}) => {
     const [typedCount, setTypedCount] = useState(0);
     const [thinking, setThinking] = useState<boolean>(true);
+    const navigate = useNavigate();
 
     const clickHandler = (optionNumber: number) => {
         if(optionNumber === 4) {
             setSelectedOption("search-longweekends");
+        } else if(optionNumber === 5) {
+            navigate("/chat");
         }
     }
 
@@ -119,7 +121,7 @@ const LeftSection: React.FC<ILeftSection> = ({setSelectedOption}) => {
                         {renderTyped(paragraphs[3], visibleIn(3))}
                     </p>
                     <section className="grid w-full gap-3 sm:grid-cols-2">
-                        {[4].map((index) => (
+                        {[4,5].map((index) => (
                             <button
                                 key={index}
                                 type="button"

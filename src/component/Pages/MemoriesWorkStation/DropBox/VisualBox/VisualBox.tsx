@@ -24,24 +24,23 @@ const VisualBox: React.FC<IVisualBox> = ({ files , setFiles }) => {
     const [tagPlace, setTagPlace] = useState<string | null>(null);
     const tagOptionsId = useId();
 
-    const changeHandler = (value : boolean , index: number) => {
-        if (!tagPlace || tagPlace === "") {
+    const changeHandler = (value: boolean, targetFile: File) => {
+        const nextTag = value ? tagPlace : "";
+        if (nextTag === null || (value && nextTag === "")) {
             setNotifyConfig({
                 pos: "top-left",
                 message: "Please select a tag",
                 type: "alert",
                 open: true
             });
+            return;
         }
-        setFiles((prevFiles) => {
-            const newFiles = [...prevFiles];
-            if (value) {
-                newFiles[index].tag = tagPlace || "";
-            } else {
-                newFiles[index].tag = "";
-            }
-            return newFiles;
-        });
+        setFiles((prevFiles) => prevFiles.flatMap(({ file, tag }) =>
+            file.map((currentFile) => ({
+                file: [currentFile],
+                tag: currentFile === targetFile ? nextTag : tag,
+            }))
+        ));
     }
 
 
@@ -113,7 +112,7 @@ const VisualBox: React.FC<IVisualBox> = ({ files , setFiles }) => {
                             <p className="text-[11px] text-zinc-400">Choose photos or videos above to preview them here.</p>
                         </div>
                     )}
-                    {previews.map(({ file, url, tag }, index) => (
+                    {previews.map(({ file, url, tag }) => (
                         <section key={url} className="min-w-0 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/60 p-2 shadow-sm shadow-black/20 transition hover:border-zinc-600">
                             <div className="mb-2 flex min-h-5 items-center justify-between gap-2 px-0.5">
                                 <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
@@ -122,9 +121,9 @@ const VisualBox: React.FC<IVisualBox> = ({ files , setFiles }) => {
                                 </span>
                                 {isSelectedTagOpen && (
                                     <Checkbox
-                                        aria-label={`Apply selected place tag to ${file.name}`}
-                                        checked={Boolean(tagPlace) && tag === tagPlace}
-                                        onChange={(event) => changeHandler(event.target.checked, index)}
+                                        aria-label={tag ? `Remove place tag from ${file.name}` : `Apply selected place tag to ${file.name}`}
+                                        checked={Boolean(tag)}
+                                        onChange={(event) => changeHandler(event.target.checked, file)}
                                     />
                                 )}
                             </div>

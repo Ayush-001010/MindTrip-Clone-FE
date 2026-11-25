@@ -6,4 +6,5 @@ export default interface IBlogsStamp {
         blogImage: string;
         numberOfViews: number;
     }[];
+    isWorkInProgress?: boolean;
 }

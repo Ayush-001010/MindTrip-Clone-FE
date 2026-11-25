@@ -56,8 +56,8 @@ const Activity: React.FC<IActivity> = ({ indexNumber , blogActivity }) => {
                             return <ActivityCard.ActivityRectangleImage key={index} />;
                         case "Side-Activity":
                             return (
-                                <section className="p-3 sm:p-8">
-                                    <ActivityCard key={index} indexNumber={indexNumber} blogActivity={blogActivity} itSubActivity={true}>
+                                <section key={index} className="p-3 sm:p-8">
+                                    <ActivityCard indexNumber={indexNumber} blogActivity={blogActivity} itSubActivity={true}>
                                         <section className="flex w-full items-start gap-4">
                                             <ActivityCard.ActivityImage />
                                             <section className="flex min-w-0 flex-1 flex-col gap-2">

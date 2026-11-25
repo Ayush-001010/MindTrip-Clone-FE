@@ -178,10 +178,6 @@ const Blog: React.FC<IBlog> = () => {
         }
     }
 
-    const changeSelectedDay = (newDay: number) => {
-        setSelectedDay(newDay);
-    }
-
     // saved blogs store S3 keys for images, so they must be resolved to viewable URLs first
     const resolveImageURLs = async (imageKeys: string[]) => {
         const responses = await Promise.all((imageKeys ?? []).map((key) =>
@@ -220,7 +216,8 @@ const Blog: React.FC<IBlog> = () => {
     };
 
     useEffect(() => {
-        if (!blogId) return;
+        const url = location.href;
+        if (!blogId || url.includes("/#/blog/create")) return;
         let cancelled = false;
 
         const loadBlog = async () => {
@@ -263,12 +260,31 @@ const Blog: React.FC<IBlog> = () => {
     }, [blogId, blogValue, selectedDay]);
 
     useEffect(() => {
-        const url = location.href;
-        if (url.includes("/#/blog/create")) {
-            setMode("create");
-            setBlogValue(CommonConfig.initialBlogValue);
-        }
-    }, []);
+        const initializeBlog = async () => {
+            const url = location.href;
+            if (url.includes("/#/blog/create")) {
+                setMode("create");
+                setBlogValue(CommonConfig.initialBlogValue);
+                if(blogId) {
+                    console.log("Initializing blog in create mode");
+                    const response:{success:boolean; data?: IBlogData} = await fetchBlogById(blogId);
+                    if (response.success && response.data) {
+                        setBlogValue({
+                            ...response.data,
+                            activities: (response.data?.activities && response.data?.activities.length > 0) ?  response.data.activities.map((item, index) => ({ ...item , itemOrder : item.itemOrder ?? [] , index : index + 1 })) : [
+                                {
+                                    ...CommonConfig.initialActivityValue,
+                                    day: 1,
+                                    index: 1
+                                }
+                            ]
+                        });
+                    }
+                }
+            }
+        };
+        void initializeBlog();
+    }, [blogId]);
 
     const addOrRemovingActivityItem = () => {
         setBlogValue((prev: IBlogData | null) => {
@@ -310,7 +326,7 @@ const Blog: React.FC<IBlog> = () => {
 
     useEffect(() => {
         // a saved blog is read-only, its activities must never be padded or trimmed
-        if (blogId) return;
+        if (mode === "preview") return;
         const timeOutObj = setTimeout(() => {
             addOrRemovingActivityItem();
         }, 500);
@@ -318,22 +334,26 @@ const Blog: React.FC<IBlog> = () => {
     }, [blogValue?.tripDuration]);
 
 
-    if (fetchError) {
-        return <p className="p-8 text-center text-[#ced4da]">{fetchError}</p>;
-    }
-
     useEffect(() => {
         if(mode === "preview" && blogId){
             userActivity("blog", blogId ? parseInt(blogId) : 0);
         }
     }, [mode , blogId]);
 
+    if (fetchError) {
+        return <p className="p-8 text-center text-[#ced4da]">{fetchError}</p>;
+    }
+
+    if (!blogValue) {
+        return <p role="status" className="p-8 text-center text-[#ced4da]">Loading blog...</p>;
+    }
+
     return (
-        <blogContext.Provider value={{ mode, blogValue: blogValue!, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay, mapMarkerPoints, selectedLongitude, selectedLatitude, addingHotel, addTravel , currentEditActivityIndex, setCurrentEditActivityIndex , setMode }}>
+        <blogContext.Provider value={{ mode, blogValue, itemAddToActivity, itemToAdd, saveChangeToBlog, selectedDay, mapMarkerPoints, selectedLongitude, selectedLatitude, addingHotel, addTravel , currentEditActivityIndex, setCurrentEditActivityIndex , setMode }}>
             <Header selectedDay={selectedDay} />
             <Body />
             <section className="static">
-                <PageWheel changeSelectedDay={changeSelectedDay} />
+                <PageWheel changeSelectedDay={setSelectedDay} />
             </section>
             {mode === "create" && <SpeedDial />}
         </blogContext.Provider>

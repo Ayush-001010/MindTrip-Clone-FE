@@ -57,7 +57,7 @@ const Header: React.FC<IHeader> = () => {
             <section className="w-full md:w-[400px] md:shrink-0">
                 <TripSelection />
             </section>
-            <section className="flex w-full items-center justify-center">
+            <section className="flex w-full items-center justify-start">
                 <section className="flex w-full justify-center md:ml-6 lg:ml-20 lg:w-1/2">
                     <div className="flex w-fit max-w-full flex-wrap items-center justify-center gap-1 rounded-3xl border border-white/10 bg-white/5 p-1 sm:rounded-full">
                         <button

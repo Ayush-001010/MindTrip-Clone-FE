@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type IProfile from "./IProfile";
 import ProfileSection from "./ProfileSection/ProfileSection";
 import ConfigrationSection from "./ConfigrationSection/ConfigrationSection";
@@ -12,9 +13,11 @@ const Profile: React.FC<IProfile> = ({ metaData }) => {
     const [profileIconType, setProfileIconType] = useState("");
     const { saveBlog } = useBlogAction();
     const {blogValue} = useGetBlogContext();
+    const navigate = useNavigate();
 
-    const submitHandler = () => {
-        saveBlog(blogValue,profileName,profileIconType,images,metaData);
+    const submitHandler =async() => {
+        await saveBlog(blogValue,profileName,profileIconType,images,metaData);
+        navigate("/blog");
     };
 
     return (

@@ -1,0 +1,68 @@
+.comic-background {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  width: 100%;
+  min-height: 500px;
+  display: grid;
+  place-items: center;
+
+  /* Bright blue center, dark corners */
+  background: radial-gradient(
+    ellipse at center,
+    #3674ec 0%,
+    #2454bd 55%,
+    #101a3c 100%
+  );
+}
+
+/* Dark halftone dots around the edges */
+.comic-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  background-image: radial-gradient(
+    circle,
+    #10152b 4px,
+    transparent 4.5px
+  );
+  background-size: 15px 15px;
+
+  /* Fade the dots near the center */
+  mask-image: radial-gradient(
+    ellipse at center,
+    transparent 15%,
+    black 85%
+  );
+}
+
+/* Yellow dots in the top-left corner */
+.comic-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  background-image: radial-gradient(
+    circle,
+    #ffd438 4px,
+    transparent 4.5px
+  );
+  background-size: 15px 15px;
+
+  mask-image: radial-gradient(
+    circle at top left,
+    black 0%,
+    transparent 35%
+  );
+}
+
+.comic-background h1 {
+  margin: 0;
+  color: #fff3d6;
+  font: 900 clamp(3rem, 12vw, 8rem) sans-serif;
+  text-shadow: 6px 6px 0 #10152b;
+}

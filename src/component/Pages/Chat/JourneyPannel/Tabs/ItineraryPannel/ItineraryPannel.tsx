@@ -17,6 +17,7 @@ const ItineraryPannel: React.FC<IItineraryPannel> = () => {
             <div className="min-h-0 flex-1 mt-4 overflow-y-auto pr-1">
                 <ItineraryCard days={finalItinerary?.days || []} mode="edit" tips={finalItinerary?.travelTips || []}>
                     <section className="flex justify-end gap-2 my-2">
+                        <ItineraryCard.ItineraryTravel />
                         <ItineraryCard.ItineraryHotel />
                         <ItineraryCard.ItineraryTips />
                     </section>

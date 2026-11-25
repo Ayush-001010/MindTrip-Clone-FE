@@ -7,6 +7,7 @@ import type IUserInterface from "../Interface/DataInterface/IUserDetails";
 import type { IPhotoOrVideoBlogVideo, IThumbnailBlogVideo } from "../component/Pages/BlogVideoCreation/BlogVideoCreation";
 
 import type { IGenerateVideoResponse } from "../component/Pages/BlogVideoCreation/Reel/IStoryboard";
+import type { IBlogWorkData } from "../Interface/DataInterface/IBlogData";
 
 export interface IGenerateVideoPayload {
     blogId: string;
@@ -27,7 +28,7 @@ const useBlogAction = () => {
         return response;
     };
 
-    const saveBlog = async (blogData: IBlogData , profileName: string , profileIcon: string , images: File[] , metaData: string[]) => {
+    const saveBlog = async (blogData: IBlogData, profileName: string, profileIcon: string, images: File[], metaData: string[], draft = false) => {
         const apiInstance = new APIService();
         const profileImages: string[] = [];
         for (const file of images) {
@@ -54,7 +55,12 @@ const useBlogAction = () => {
             await Promise.all(activity.images.map(async (image : any) => {
                 // Perform any asynchronous operations for each image if needed
                 let { name: fileName = "", type: fileType = "" } = image;
-                fileName = "Blog/" + fileName;
+                if( typeof image === "string" && (image as string).includes("Blog/")) {
+                    //  Take substring after "Blog/" if needed
+                    fileName = (image as string).substring((image as string).indexOf("Blog/"));
+                    imageURLs.push(fileName);
+                    return;
+                }
                 const fileUploadResponse = await apiInstance.postRequest("/common/getUploadedFileURL", {
                     contentType: fileType,
                     key: fileName,
@@ -89,7 +95,7 @@ const useBlogAction = () => {
             }));
         }));
 
-        const saveResponse = await apiInstance.postRequest("/blog/create", {blogData , userID });
+        const saveResponse = await apiInstance.postRequest("/blog/create", {blogData , userID, isDraft: draft });
         return saveResponse;
     };
     
@@ -159,7 +165,24 @@ const useBlogAction = () => {
         const response = await apiInstance.postRequest<unknown>("/blogVideoGenration/genrate", formData);
         return response as unknown as Partial<IGenerateVideoResponse> & { success: boolean; error?: string };
     }
-    return { getMetaData, saveBlog, getTopFiveBlogs, getProfileAndTitle, searchMetaData, fetchBlogs, fetchBlogById, getBlogPlaces, genrateVideo };
+
+    const fetchUserBlogWork = async () : Promise<{success:boolean; data?: IBlogWorkData[]}> => {
+        const apiInstance = new APIService();
+        const response = await apiInstance.getRequest<IBlogWorkData[]>("blog/work-by-user", {
+            userId: userID?.toString() || ""
+        });
+        return response.success && response.data ? { success: true, data: response.data } : { success: false };
+    }
+
+    const createBlogWork = async () : Promise<{success:boolean; data?: number}> => {
+        const apiInstance = new APIService();
+        const response = await apiInstance.getRequest<number>("/blog/in-progress", {
+            userId: userID?.toString() || ""
+        });
+        return response.success && response.data ? { success: true, data: response.data } : { success: false };
+    }
+    
+    return { getMetaData, saveBlog, getTopFiveBlogs, getProfileAndTitle, searchMetaData, fetchBlogs, fetchBlogById, getBlogPlaces, genrateVideo, fetchUserBlogWork, createBlogWork };
 }
 
 export default useBlogAction;

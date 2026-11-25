@@ -3,5 +3,6 @@ export default interface IMemberBox {
         userId: string;
         userName: string;
         userEmail: string;
+        userImage?: string;
     }>;
 }

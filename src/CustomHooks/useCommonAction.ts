@@ -8,13 +8,13 @@ import { useCallback } from "react";
 const useCommonAction = () => {
   const { userID } = useSelector((state: any) => state.userDetails as IUserInterface);
 
-  const getImages = async (key: string) => {
+  const getImages = useCallback(async (key: string) : Promise<{success: boolean, data?: string | undefined}> => {
     const apiInstance = new APIService();
-    const response = await apiInstance.getRequest(
+    const response = await apiInstance.getRequest<string>(
       `/common/someRandomImages?type=${key}`,
     );
     return response;
-  };
+  }, []);
 
   const getPlaceName = async (placeName: string) => {
     const response = await axios.get(
@@ -43,7 +43,7 @@ const useCommonAction = () => {
 
   const fetchUserFriends = async () => {
     const apiInstance = new APIService();
-    const response = await apiInstance.getRequest(`/common/fetchUserFriends`,{
+    const response = await apiInstance.getRequest<{id: number, status: string,friendId: number,createdAt:string,friendName: string,updatedAt: string,userId: number}[]>(`/common/fetchUserFriends`,{
       userID : userID || 2,
     });
     return response;
