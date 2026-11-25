@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { IBlogActivite } from "../src/Interface/DataInterface/IBlogData";
-import { BLOG_DURATION_IN_FRAMES, BLOG_FPS, buildBlogTimeline } from "../src/component/Pages/Blog/Animation/blogTimeline.ts";
+import { BLOG_MAX_DURATION_IN_FRAMES, BLOG_FPS, buildBlogTimeline } from "../src/component/Pages/Blog/Animation/blogTimeline.ts";
 
 const activity = (values: Partial<IBlogActivite> = {}): IBlogActivite => ({
     index: 1,
@@ -21,11 +21,11 @@ const activity = (values: Partial<IBlogActivite> = {}): IBlogActivite => ({
     ...values,
 });
 
-test("fills exactly 90 seconds with consecutive intro and day scenes, including rounding", () => {
+test("uses shorter intros and six seconds per day instead of padding short blogs to 90 seconds", () => {
     const scenes = buildBlogTimeline({ tripDuration: 7, activities: [], travel: [] });
     assert.deepEqual(scenes.slice(0, 2).map((scene) => [scene.type, scene.from, scene.durationInFrames]), [
-        ["start", 0, 180],
-        ["caseFile", 180, 180],
+        ["start", 0, 90],
+        ["caseFile", 90, 60],
     ]);
     let end = 0;
     for (const scene of scenes) {
@@ -33,11 +33,30 @@ test("fills exactly 90 seconds with consecutive intro and day scenes, including 
         assert.ok(Number.isInteger(scene.durationInFrames) && scene.durationInFrames > 0);
         end += scene.durationInFrames;
     }
-    assert.equal(end, BLOG_DURATION_IN_FRAMES);
-    assert.equal(end / BLOG_FPS, 90);
+    assert.equal(end / BLOG_FPS, 47);
+    assert.ok(scenes.filter((scene) => scene.type === "day").every((scene) => scene.durationInFrames === 6 * BLOG_FPS));
+    const oneDay = buildBlogTimeline({ tripDuration: 1, activities: [], travel: [] });
+    assert.equal(oneDay.reduce((total, scene) => total + scene.durationInFrames, 0) / BLOG_FPS, 11);
 });
 
-test("orders days numerically and gives each photo time without counting its spending twice", () => {
+test("caps long blogs at 90 seconds and keeps day scenes consecutive with integer frame rounding", () => {
+    for (const dayCount of [14, 15, 31]) {
+        const scenes = buildBlogTimeline({ tripDuration: dayCount, activities: [], travel: [] });
+        let end = 0;
+        for (const scene of scenes) {
+            assert.equal(scene.from, end);
+            assert.ok(Number.isInteger(scene.durationInFrames) && scene.durationInFrames > 0);
+            end += scene.durationInFrames;
+        }
+        assert.equal(end, Math.min((5 + 6 * dayCount) * BLOG_FPS, BLOG_MAX_DURATION_IN_FRAMES));
+        const days = scenes.filter((scene) => scene.type === "day");
+        assert.equal(days.length, dayCount);
+        const durations = days.map((scene) => scene.durationInFrames);
+        assert.ok(Math.max(...durations) - Math.min(...durations) <= 1);
+    }
+});
+
+test("orders days numerically and shares each day's time among its photos without counting spending twice", () => {
     const scenes = buildBlogTimeline({
         tripDuration: 2,
         activities: [
@@ -48,7 +67,8 @@ test("orders days numerically and gives each photo time without counting its spe
     });
     const days = scenes.filter((scene) => scene.type === "day");
     assert.deepEqual(days.map((scene) => scene.content.day), [1, 2]);
-    assert.equal(days[0].durationInFrames, days[1].durationInFrames * 3);
+    assert.equal(days[0].durationInFrames, days[1].durationInFrames);
+    assert.equal(scenes.reduce((total, scene) => total + scene.durationInFrames, 0) / BLOG_FPS, 17);
     assert.deepEqual(days[0].content.slides.map((slide) => slide.photo), ["first.jpg", "second.jpg", "third.jpg"]);
     assert.equal(days[0].content.amountSpent, 120);
     assert.ok(days[0].content.slides.every((slide) => slide.description === "An afternoon by the sea." && slide.amountSpent === 120));
@@ -83,7 +103,7 @@ test("keeps empty days and zero-cost entries visible and includes days beyond th
     assert.deepEqual(days[2].content.slides, [{ placeName: "", time: "", description: "No description added.", amountSpent: 0 }]);
     const empty = buildBlogTimeline({ tripDuration: 0, activities: [], travel: [] });
     assert.equal(empty.length, 3);
-    assert.equal(empty[2].from + empty[2].durationInFrames, BLOG_DURATION_IN_FRAMES);
+    assert.equal(empty[2].from + empty[2].durationInFrames, 11 * BLOG_FPS);
 });
 
 test("preserves uploaded files for the day photo renderer", () => {

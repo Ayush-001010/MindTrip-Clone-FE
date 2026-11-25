@@ -2,8 +2,10 @@ import type IBlogData from "../../../../Interface/DataInterface/IBlogData";
 import type { IBlogActivite } from "../../../../Interface/DataInterface/IBlogData";
 
 export const BLOG_FPS = 30;
-export const BLOG_DURATION_IN_FRAMES = 90 * BLOG_FPS;
-const INTRO_DURATION_IN_FRAMES = 6 * BLOG_FPS;
+export const BLOG_MAX_DURATION_IN_FRAMES = 90 * BLOG_FPS;
+const WELCOME_DURATION_IN_FRAMES = 3 * BLOG_FPS;
+const CASE_FILE_DURATION_IN_FRAMES = 2 * BLOG_FPS;
+const DAY_DURATION_IN_FRAMES = 6 * BLOG_FPS;
 
 export interface BlogDaySlide {
     photo?: string | File;
@@ -85,18 +87,18 @@ export const buildBlogTimeline = (
     }
 
     const orderedDays = [...days.values()].sort((a, b) => a.day - b.day);
-    const totalSlides = orderedDays.reduce((total, day) => total + Math.max(1, day.slides.length), 0);
-    const contentStart = 2 * INTRO_DURATION_IN_FRAMES;
-    const contentFrames = BLOG_DURATION_IN_FRAMES - contentStart;
+    const contentStart = WELCOME_DURATION_IN_FRAMES + CASE_FILE_DURATION_IN_FRAMES;
+    const contentFrames = Math.min(
+        orderedDays.length * DAY_DURATION_IN_FRAMES,
+        BLOG_MAX_DURATION_IN_FRAMES - contentStart,
+    );
     const scenes: IAnimationVideoType[] = [
-        { type: "start", from: 0, durationInFrames: INTRO_DURATION_IN_FRAMES },
-        { type: "caseFile", from: INTRO_DURATION_IN_FRAMES, durationInFrames: INTRO_DURATION_IN_FRAMES },
+        { type: "start", from: 0, durationInFrames: WELCOME_DURATION_IN_FRAMES },
+        { type: "caseFile", from: WELCOME_DURATION_IN_FRAMES, durationInFrames: CASE_FILE_DURATION_IN_FRAMES },
     ];
-    let completedSlides = 0;
     let from = contentStart;
-    for (const content of orderedDays) {
-        completedSlides += Math.max(1, content.slides.length);
-        const end = contentStart + Math.round(contentFrames * completedSlides / totalSlides);
+    for (const [index, content] of orderedDays.entries()) {
+        const end = contentStart + Math.round(contentFrames * (index + 1) / orderedDays.length);
         scenes.push({ type: "day", content, from, durationInFrames: end - from });
         from = end;
     }

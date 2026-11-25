@@ -3,12 +3,13 @@ import type IAnimation from "./IAnimation";
 import { Player, type PlayerRef } from "@remotion/player";
 import BlogAnimation from "./BlogAnimation/BlogAnimation";
 import { useGetBlogContext } from "../Blog";
-import { BLOG_DURATION_IN_FRAMES, BLOG_FPS, buildBlogTimeline } from "./blogTimeline";
+import { BLOG_FPS, buildBlogTimeline } from "./blogTimeline";
 
 export type { IAnimationVideoType } from "./blogTimeline";
 const Animation: React.FC<IAnimation> = () => {
     const { blogValue } = useGetBlogContext();
     const sence = buildBlogTimeline(blogValue);
+    const totalDurationInFrames = sence.reduce((total, scene) => total + scene.durationInFrames, 0);
     const playerRef = useRef<PlayerRef>(null);
     const [isPlaying, setIsPlaying] = useState(false);
 
@@ -44,7 +45,7 @@ const Animation: React.FC<IAnimation> = () => {
                 controls
                 alwaysShowControls
                 style={{ width: "100%" }}
-                durationInFrames={BLOG_DURATION_IN_FRAMES}
+                durationInFrames={totalDurationInFrames}
                 compositionWidth={1920}
                 compositionHeight={1500}
                 fps={BLOG_FPS} />
