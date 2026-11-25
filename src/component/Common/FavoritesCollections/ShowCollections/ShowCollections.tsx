@@ -19,17 +19,21 @@ const ShowCollections: React.FC<IShowCollections> = ({ addFavoritesItem }) => {
         });
     }
     useEffect(() => {
+        if (!open) return;
+    
         const getCollections = async () => {
             const response = await fetchCollection();
+    
             if (response.success && response.data) {
                 setCollections(response.data);
             }
         };
+    
         getCollections();
-    }, []);
+    }, [open]);
 
     return (
-        <section className="flex flex-col gap-5" key={`show-collections-${Math.random()*1000}`}>
+        <section className="flex flex-col gap-5" >
             <header className="flex items-center justify-between gap-3 pr-10">
                 <div className="flex flex-col">
                     <h2 className="text-xl font-semibold text-white">Your collections</h2>

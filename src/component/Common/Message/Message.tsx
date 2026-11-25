@@ -13,7 +13,7 @@ import ItineraryOptions from "./ItineraryOptions/ItineraryOptions";
 import FallBackResponse from "./FallBackResponse/FallBackResponse";
 import FinalResponse from "./FinalResponse/FinalResponse";
 import ShowHotelSearchResponse from "./ShowHotelSearchResponse/ShowHotelSearchResponse";
-
+import FlightSearchResponse from "./FlightSearchResponse/FlightSearchResponse";
 const Message: React.FC<IIMessage> = ({ data }) => {
     const { message, timestamp, response } = data;
     const formattedTimestamp = moment(timestamp).format("HH:mm DD/MM/YY");
@@ -23,14 +23,41 @@ const Message: React.FC<IIMessage> = ({ data }) => {
             response = JSON.parse(response as unknown as string) as ITripAPIResponse;
         }
         switch (response.type) {
-            case "destination": return <DestinationResponse data={response} />;
-            case "question-gather": return <QuestionGatherResponse data={response} />;
-            case "itinerary-options": return <ItineraryOptions itineraryOptions={response} />;
-            case "fallback": return <FallBackResponse message={response.message} />;
-            case "final-itinerary" : return <FinalResponse message={(response as IItineraryFinalResponse).message} />;
-            case "hotel-information-gather" : return <QuestionGatherResponse data={response} />;
-            case "hotel-search" : return <ShowHotelSearchResponse data={response} />;
-            default: return null;
+            case "destination":
+                return <DestinationResponse data={response} />;
+        
+                case "question-gather":
+                    case "favourite-information-gather-round1":
+                    case "favourite-information-gather-round2":
+                        return <QuestionGatherResponse data={response as any} />;
+        
+            case "itinerary-options":
+                return <ItineraryOptions itineraryOptions={response} />;
+        
+            case "fallback":
+                return <FallBackResponse message={response.message} />;
+
+            case "text":
+                    return (
+                        <div className="rounded-lg border border-gray-700 bg-gray-900/70 px-4 py-3 text-sm leading-6 text-white">
+                            {(response as any).message}
+                        </div>
+                    );
+        
+            case "final-itinerary":
+                return <FinalResponse message={(response as IItineraryFinalResponse).message} />;
+        
+                case "hotel-information-gather":
+                    return <QuestionGatherResponse data={response as any} />;
+        
+            case "hotel-search":
+                return <ShowHotelSearchResponse data={response} />;
+
+                case "flight-results":
+                    return <FlightSearchResponse data={response as any} />;
+        
+            default:
+                return null;
         }
     }
     const assistantVariant = {

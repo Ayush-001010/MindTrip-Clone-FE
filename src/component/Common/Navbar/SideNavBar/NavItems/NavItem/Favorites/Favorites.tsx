@@ -10,7 +10,7 @@ import { useGetAppContext } from "../../../../../../../App";
 
 const Favorites: React.FC<IFavorites> = ({ openDrawer, closeDrawer }) => {
     const [collections, setCollections] = useState<IFaviouritesCollection[]>([]);
-    const { fetchCollection } = useFavouritesAction();
+    const { fetchCollection, renameCollection, deleteCollection } = useFavouritesAction();
     const {changeFavoritesConfig} = useGetAppContext();
 
     const createCollection = () => {
@@ -20,6 +20,37 @@ const Favorites: React.FC<IFavorites> = ({ openDrawer, closeDrawer }) => {
         });
         closeDrawer();
     }
+    const handleDeleteCollection = async (
+        collectionId: number
+    ): Promise<boolean> => {
+        const success = await deleteCollection(collectionId);
+    
+        if (success) {
+            setCollections(previous =>
+                previous.filter(collection => collection.id !== collectionId)
+            );
+        }
+    
+        return success;
+    };
+    const handleRenameCollection = async (
+        collectionId: number,
+        newName: string
+    ): Promise<boolean> => {
+        const success = await renameCollection(collectionId, newName);
+    
+        if (success) {
+            setCollections(previous =>
+                previous.map(collection =>
+                    collection.id === collectionId
+                        ? { ...collection, name: newName.trim() }
+                        : collection
+                )
+            );
+        }
+    
+        return success;
+    };
 
     useEffect(() => {
         const getCollections = async () => {
@@ -54,9 +85,18 @@ const Favorites: React.FC<IFavorites> = ({ openDrawer, closeDrawer }) => {
                         </p>
                     </header>
                     <section>
-                        {collections.map((collection) => (
-                            <CollectionCard key={collection.id} name={collection.name} id={collection.id} image1={collection.image1} image2={collection.image2} image3={collection.image3} />
-                        ))}
+                    {collections.map((collection) => (
+    <CollectionCard
+        key={collection.id}
+        name={collection.name}
+        id={collection.id}
+        image1={collection.image1}
+        image2={collection.image2}
+        image3={collection.image3}
+        onRename={handleRenameCollection}
+        onDelete={handleDeleteCollection}
+    />
+))}
                     </section>
                 </>
             )}

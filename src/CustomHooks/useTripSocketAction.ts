@@ -8,6 +8,7 @@ import type IFinalItineraryResponse from "../Interface/DataInterface/IFinalItine
 import APIService from "../Services/APIService";
 import type ITripHotelData from "../Interface/DataInterface/ITripHotel";
 import type IGroupHubMessage from "../Interface/DataInterface/IGroupHubMessage";
+import type ITripFlightData from "../Interface/DataInterface/ITripFlightData";
 import type { INotifyConfig } from "../Interface/DataInterface/INotificationConfig";
 
 const SERVER_URL = "http://localhost:3000"; // change to your server URL
@@ -79,9 +80,25 @@ const useTripSocketAction = (onNewGroupMessage?: () => void) => {
 
   on("room:chat-response", (response) => {
     const { data } = response;
+
     setMessages((prevMessages) => [...prevMessages, data]);
     setIsLoading(false);
-  });
+
+    let assistantResponse = data?.response;
+
+    if (typeof assistantResponse === "string") {
+        try {
+            assistantResponse = JSON.parse(assistantResponse);
+        } catch {
+            assistantResponse = null;
+        }
+    }
+
+    if (assistantResponse?.type === "final-itinerary") {
+        console.log("Final itinerary received from AI");
+        setIsFinalItineraryReceived(true);
+    }
+});
 
   on("room:setTripStartAndEnd-response", (response) => {
     const { startDate, endDate } = response;
@@ -167,6 +184,26 @@ const useTripSocketAction = (onNewGroupMessage?: () => void) => {
       }
     }
   });
+  
+socket.on("room:createTripFlight-response", (response) => {
+  if (response.success) {
+      if (response.data === "booked") {
+          setNotificationConfig({
+              open: true,
+              type: "success",
+              message: "Flight has been added to your booked list",
+              duration: 3000,
+          });
+      }
+  } else {
+      setNotificationConfig({
+          open: true,
+          type: "alert",
+          message: "Failed to book flight. Please try again.",
+          duration: 3000,
+      });
+  }
+});
 
   on("room:suggestedTripDates-response" , (response) => {
     if(response.success && response.data) {
@@ -234,6 +271,16 @@ const useTripSocketAction = (onNewGroupMessage?: () => void) => {
       userName : userName,
     })
   };
+ 
+  const bookFlightHandler = (flight: ITripFlightData) => {
+    flight.base62 = tripId;
+
+    socket.emit("room:createTripFlight", {
+        tripFlightData: flight,
+        userId: userID,
+        userName: userName,
+    });
+};
 
   const addHotelToWishList = (hotel : ITripHotelData) => {
     hotel.base62 = tripId;
@@ -330,6 +377,7 @@ const useTripSocketAction = (onNewGroupMessage?: () => void) => {
     }
   }, [isFinalItineraryReceived]);
 
+//   return { notificationConfig,sendMessageHandler,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName,addHotelToWishList, bookHotelHandler,bookFlightHandler, sendNewMessage , tripSuggestionsDate };
   return { notificationConfig,sendMessageHandler , setNotificationConfig,messages,isLoading,finalItinerary,setTripDate,setTripBudget,addExpense,searchHotelHandler,editTripName,addHotelToWishList, bookHotelHandler, sendNewMessage , tripSuggestionsDate };
 };
 

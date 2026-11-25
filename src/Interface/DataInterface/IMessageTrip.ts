@@ -6,12 +6,26 @@ import type { IItineraryFallBack } from "./IItinerarayFallBack";
 import type IItineraryFinalResponse from "./IItineraryFinalResponse";
 import type IHotelQuestionGatherResponse from "./IHotelQuestionGatherResponse";
 import type IHotelSearchResponse from "./IHotelSearchResponse";
-
+import type IFlightSearchResponse from "./IFlightSearchResponse";
 export default interface IMessageTrip {
     ID: string;
     userID: string;
     tripID: string;
     message: string;
     timestamp: Date;
-    response?: ITripAPIResponse | IQuestionGatherResponse | IItineraryOptions | IFinalItineraryResponse | IItineraryFallBack | IItineraryFinalResponse | IHotelQuestionGatherResponse | IHotelSearchResponse;
+    response?: 
+    | ITripAPIResponse
+    | IQuestionGatherResponse
+    | IItineraryOptions
+    | IFinalItineraryResponse
+    | IItineraryFallBack
+    | IItineraryFinalResponse
+    | IHotelQuestionGatherResponse
+    | IHotelSearchResponse
+    | IFlightSearchResponse
+    | {
+        type: "text";
+        message: string;
+        confirmationType?: string;
+    };
 }

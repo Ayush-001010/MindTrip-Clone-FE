@@ -28,19 +28,18 @@ const HotelCard: React.FC<IHotelCard> = ({
           uiType: "show-collection-for-add-purpose",
           data: {
             placeName: location || "",
-            hotelImage: hotel.image || "",
+            hotelImage: hotel.image ?? "",
             hotelName: hotel.name,
-            hotelDescription: hotel.description,
-            hotelLocation: location || "",
-            rating: hotel.rating,
-            reviews: hotel.reviews,
+            hotelDescription: hotel.description ?? "",
             longitude: hotel.longitude,
             latitude: hotel.latitude,
-            link: hotel.link || "",
-            price: typeof hotel.price === "number"
-              ? hotel.price
-              : Number(String(hotel.price ?? 0).replace(/[^0-9.-]/g, "")) || 0,
-          } as IFavouritesHotel,
+            rating: hotel.rating ?? 0,
+            reviews: hotel.reviews ?? 0,
+            link: hotel.link ?? "",
+            price: hotel.extractedPrice ?? (
+                Number(String(hotel.price ?? "").replace(/[^0-9.-]/g, "")) || 0
+            ),
+        } as IFavouritesHotel,
           mode: "hotel"
         })
       }} className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm transition hover:bg-black/60">

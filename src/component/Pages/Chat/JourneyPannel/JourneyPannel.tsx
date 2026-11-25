@@ -11,10 +11,11 @@ import { useParams } from "react-router-dom";
 import TripNotCreated from "./Tabs/ItineraryPannel/EmptyItinerary/TripNotCreated/TripNotCreated";
 import GroupHub from "./Tabs/GroupHub/GroupHub";
 import ItinerarySplitWise from "./Tabs/ItinerarySplitWise/ItinerarySplitWise";
+import FlightPannel from "./Tabs/FlightPannel/FlightPannel";
 
 const JourneyPannel: React.FC<IJourneyPannel> = () => {
     const [pannelType, setPannelType] = useState<"location" | "trip" | "split-wise" | "user-chats">("trip");
-    const { isSelectedLocation, locationLatitude, locationLongitude, isSelectedItineraryPlan, showHotelInLocationPannel , createAction } = useChatContext();
+    const { isSelectedLocation, locationLatitude, locationLongitude, isSelectedItineraryPlan, showHotelInLocationPannel ,showFlightPannel,  createAction } = useChatContext();
     const hasSelectedCoordinates = locationLatitude !== 0 || locationLongitude !== 0;
     const {tripId} = useParams(); 
 
@@ -31,6 +32,9 @@ const JourneyPannel: React.FC<IJourneyPannel> = () => {
                 }
                 if(isSelectedItineraryPlan)
                     return <ItineraryPlan />;
+                if (showFlightPannel) {
+                    return <FlightPannel />;
+                }
                 return (isSelectedLocation || hasSelectedCoordinates) ? <LocationPannel /> : <EmptyPannel />;
             case "split-wise":
                 return <ItinerarySplitWise />

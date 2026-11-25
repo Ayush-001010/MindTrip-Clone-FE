@@ -4,4 +4,5 @@ export default interface IFavouritesCard {
     description: string;
     address?: string;
     price?: number;
+    onRemove?: () => void;
 }
