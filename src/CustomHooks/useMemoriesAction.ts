@@ -1,5 +1,6 @@
 import APIService from "../Services/APIService";
 import type IMemoriesData from "../Interface/DataInterface/IMemoriesData";
+import type { IMemoriesGeneratedReel } from "../Interface/DataInterface/IMemoriesData";
 
 const useMemoriesAction = () => {
     const apiInstance = new APIService();
@@ -50,7 +51,17 @@ const useMemoriesAction = () => {
         return response.success ? response?.data as boolean : null;
     }
 
-    return { fetchMemoriesLeft , createNewMemory , fetchMemories , inviteUser , checkInviteIsValidOrNot , addToMemories };
+    const saveRoomScript = async (userId: string, userName: string , place : string, script: IMemoriesGeneratedReel) : Promise<boolean | null> => {
+        const response = await apiInstance.postRequest("/memories/saveRoomScript",{
+            userId,
+            userName,
+            place,
+            script
+        });
+        return response.success ? response?.data as boolean : null;
+    }
+
+    return { fetchMemoriesLeft , createNewMemory , fetchMemories , inviteUser , checkInviteIsValidOrNot , addToMemories , saveRoomScript };
 };
 
 export default useMemoriesAction;

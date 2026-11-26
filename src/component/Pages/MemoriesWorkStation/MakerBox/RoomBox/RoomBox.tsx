@@ -6,12 +6,21 @@ import { FaRegThumbsDown } from "react-icons/fa";
 import { Tooltip } from "antd";
 
 const RoomBox: React.FC<IRoomBox> = () => {
-    const { rooms , setNotifyConfig , setActivtyRoom , activtyRoom  } = useGetMemoriesWorkStationContext();
+    const { rooms , setNotifyConfig , setActivtyRoom , activtyRoom , memoriesData } = useGetMemoriesWorkStationContext();
     const [addingRoom, setAddingRoom] = useState<boolean>(false);
     const [roomName, setRoomName] = useState<string>("");
     const { handleAddRoom } = useGetMemoriesWorkStationContext();
 
     const handleAddRoomClick = async () => {
+        if(!memoriesData  || !memoriesData.isTripPhotoAndVideoUpload && !memoriesData.isTripAudioUpload) {
+            setNotifyConfig({
+                type: "error",
+                message: "Please upload trip photos, videos, and audio before adding a room.",
+                duration: 1000,
+                open: true
+            });
+            return;
+        }
         if(rooms.some(room => room === roomName)) {
             setNotifyConfig({
                 type: "alert",

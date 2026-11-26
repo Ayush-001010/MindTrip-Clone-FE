@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import type IHeader from "./IHeader";
 import { useSelector } from "react-redux";
 import useMemoriesAction from "../../../../CustomHooks/useMemoriesAction";
-import { Tooltip } from "antd";
+// import { Tooltip } from "antd";
 import { CiEdit } from "react-icons/ci";
 import { motion, useReducedMotion } from "framer-motion";
 import useNotification from "../../../../customHookWithUI/useNotification";
@@ -70,15 +70,15 @@ const Header: React.FC<IHeader> = ({ buttonAnimation , setIsNewCreated }) => {
     }, [userID]);
 
     return (
-        <header className="flex flex-wrap justify-between items-center gap-4">
+        <header className="flex flex-wrap justify-end items-center gap-4">
             {notification}
-            <section className="text-[#ced4da] text-md font-medium">
+            {/* <section className="text-[#ced4da] text-md font-medium">
                 <Tooltip title="You can create or join up to 5 memories on a single account.">
                     <span>
                         Memories left: {memoriesLeft !== null ? memoriesLeft === 0 ? "No memories left" : memoriesLeft : "Loading..."}
                     </span>
                 </Tooltip>
-            </section>
+            </section> */}
             {memoriesLeft !== null && memoriesLeft > 0 && !isCreating && (
                 <section>
                     {buttonAnimation ?

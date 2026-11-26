@@ -7,6 +7,9 @@ import { REEL_COMPOSITION_HEIGHT, REEL_COMPOSITION_WIDTH } from "../../ReelBox/R
 import PlayerBox from "../../ReelBox/PlayerBox/PlayerBox";
 import type IPlayerBox from "../../ReelBox/PlayerBox/IPlayerBox";
 import { getGeneratedReelDurationInFrames } from "../../ReelBox/PlayerBox/reelTransitions";
+import { applyReelAudioEdit } from "../../ReelBox/PlayerBox/reelAudio";
+import { useSelector } from "react-redux";
+import { Tooltip } from "antd";
 
 const placeholderScenes = [
     { src: null, reason: null, type: null },
@@ -16,11 +19,13 @@ const placeholderScenes = [
 ];
 
 const Script: React.FC<IScript> = () => {
-    const { generatedReel } = useGetMemoriesWorkStationContext();
+    const { generatedReel, saveRoomScript, memoriesData, reelAudioEdit, activtyRoom } = useGetMemoriesWorkStationContext();
     const [scene, setScene] = useState<{ src: string | null, reason: string | null, type: "photo" | "video" | null }[]>([]);
     const [exportProgress, setExportProgress] = useState<number | null>(null);
     const [exportError, setExportError] = useState("");
     const exportRef = useRef<AbortController | null>(null);
+    const exportReelRef = useRef<IPlayerBox["generatedReel"]>(null);
+    const { userID, userName } = useSelector((state: any) => state.userDetails)
 
     useEffect(() => {
         setScene(
@@ -35,13 +40,21 @@ const Script: React.FC<IScript> = () => {
     }, [generatedReel]);
 
     useEffect(() => {
+        if (exportRef.current && generatedReel === exportReelRef.current) return;
+        exportRef.current?.abort();
+        exportRef.current = null;
+        exportReelRef.current = null;
         setExportProgress(null);
         setExportError("");
+    }, [generatedReel]);
+
+    useEffect(() => {
         return () => {
             exportRef.current?.abort();
             exportRef.current = null;
+            exportReelRef.current = null;
         };
-    }, [generatedReel]);
+    }, [activtyRoom]);
 
     const handleDownload = async () => {
         if (!generatedReel || exportRef.current) return;
@@ -52,6 +65,13 @@ const Script: React.FC<IScript> = () => {
         setExportError("");
 
         try {
+            const reelWithMusic = applyReelAudioEdit(generatedReel, reelAudioEdit);
+            exportReelRef.current = reelWithMusic;
+            const saved = await saveRoomScript(userID, userName, memoriesData?.place || "", reelWithMusic);
+            if (controller.signal.aborted) return;
+            if (!saved) {
+                throw new Error("Could not save the reel before export. Please try again.");
+            }
             const support = await canRenderMediaOnWeb({
                 container: "mp4",
                 width: REEL_COMPOSITION_WIDTH,
@@ -63,18 +83,26 @@ const Script: React.FC<IScript> = () => {
                 throw new Error(support.issues.find((issue) => issue.severity === "error")?.message ?? "This browser cannot export MP4 videos.");
             }
 
-            const inputProps: IPlayerBox = { storyBoard: null, audioUrl: null, generatedReel, forExport: true };
+            const inputProps: IPlayerBox = {
+                storyBoard: null,
+                audioUrl: null,
+                generatedReel: reelWithMusic,
+                audioEdit: reelAudioEdit,
+                forExport: true,
+            };
+            const renderProps: Record<string, unknown> = { ...inputProps };
+            const ExportPlayer: React.FC<Record<string, unknown>> = () => <PlayerBox {...inputProps} />;
             const { getBlob } = await renderMediaOnWeb({
                 composition: {
                     id: "memories-reel",
-                    component: PlayerBox,
-                    durationInFrames: getGeneratedReelDurationInFrames(generatedReel),
-                    fps: generatedReel.script.fps,
+                    component: ExportPlayer,
+                    durationInFrames: getGeneratedReelDurationInFrames(reelWithMusic),
+                    fps: reelWithMusic.script.fps,
                     width: REEL_COMPOSITION_WIDTH,
                     height: REEL_COMPOSITION_HEIGHT,
-                    defaultProps: inputProps,
+                    defaultProps: renderProps,
                 },
-                inputProps,
+                inputProps: renderProps,
                 container: "mp4",
                 scale: 2,
                 signal: controller.signal,
@@ -99,6 +127,7 @@ const Script: React.FC<IScript> = () => {
         } finally {
             if (exportRef.current === controller) {
                 exportRef.current = null;
+                exportReelRef.current = null;
                 setExportProgress(null);
             }
         }
@@ -124,43 +153,47 @@ const Script: React.FC<IScript> = () => {
 
             <section className="mt-3">
                 {/* Not Working Yet */}
-                <div className="flex gap-2 overflow-x-auto w-2xl pb-2" aria-label="Reel scenes">
+                <div className="flex w-full min-w-0 gap-2 overflow-x-auto pb-2" aria-label="Reel scenes">
                     {scene?.map((item, index) => (
-                        <article
-                            key={`${item.src ?? "placeholder"}-${index}`}
-                            className="group flex w-28 shrink-0 flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/70 transition hover:border-zinc-700"
-                        >
-                            <div className="relative h-16 w-full overflow-hidden border-b border-zinc-800 bg-zinc-950">
-                                {item.src && item.type === "video" ? (
-                                    <video
-                                        src={item.src}
-                                        aria-label={item.reason || `Reel scene ${index + 1}`}
-                                        muted
-                                        playsInline
-                                        preload="metadata"
-                                        className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-                                    />
-                                ) : item.src ? (
-                                    <img
-                                        src={item.src}
-                                        alt={item.reason || `Reel scene ${index + 1}`}
-                                        className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-                                    />
-                                ) : (
-                                    <div className="flex h-full items-center justify-center">
-                                        <span className="h-7 w-7 rounded-full border border-dashed border-zinc-700 bg-zinc-900" />
-                                    </div>
-                                )}
-                                <span className="absolute left-1.5 top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border border-zinc-700/80 bg-zinc-950/80 px-1 text-[10px] font-semibold text-zinc-300 backdrop-blur-sm">
-                                    {index + 1}
-                                </span>
-                            </div>
-                            <div className="min-h-10 px-2 py-2">
-                                <p className="line-clamp-2 text-[11px] leading-4 text-zinc-400">
-                                    {item.reason || "Scene pending"}
-                                </p>
-                            </div>
-                        </article>
+                        <React.Fragment key={`${item.src ?? "placeholder"}-${index}`}>
+                            <article className="group flex w-28 shrink-0 flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/70 transition hover:border-zinc-700">
+                                <div className="relative h-16 w-full overflow-hidden border-b border-zinc-800 bg-zinc-950">
+                                    {item.src && item.type === "video" ? (
+                                        <video
+                                            src={item.src}
+                                            aria-label={item.reason || `Reel scene ${index + 1}`}
+                                            muted
+                                            playsInline
+                                            preload="metadata"
+                                            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                                        />
+                                    ) : item.src ? (
+                                        <img
+                                            src={item.src}
+                                            alt={item.reason || `Reel scene ${index + 1}`}
+                                            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                                        />
+                                    ) : (
+                                        <div className="flex h-full items-center justify-center">
+                                            <span className="h-7 w-7 rounded-full border border-dashed border-zinc-700 bg-zinc-900" />
+                                        </div>
+                                    )}
+                                    <span className="absolute left-1.5 top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border border-zinc-700/80 bg-zinc-950/80 px-1 text-[10px] font-semibold text-zinc-300 backdrop-blur-sm">
+                                        {index + 1}
+                                    </span>
+                                </div>
+                                <div className="min-h-10 px-2 py-2">
+                                    <Tooltip title={item.reason || "Scene pending"}>
+                                        <p className="line-clamp-2 text-[11px] leading-4 text-zinc-400">
+                                            {item.reason || "Scene pending"}
+                                        </p>
+                                    </Tooltip>
+                                </div>
+                            </article>
+                            {index + 1 < scene.length && (
+                                <span aria-hidden="true" className="w-px shrink-0 self-stretch bg-violet-400/50" />
+                            )}
+                        </React.Fragment>
                     ))}
                 </div>
             </section>

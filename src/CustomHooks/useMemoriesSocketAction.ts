@@ -103,7 +103,7 @@ const useMemoriesSocketAction = (setNotifyConfig : React.Dispatch<React.SetState
     console.log("Changed Places:", places);
     socket.emit("room:changePlaceInMemory", {
       id:memoryDetails?.id,
-      placeName: places.join(",")
+      placeName: places.join("|")
     })
   };
 
@@ -155,6 +155,13 @@ const useMemoriesSocketAction = (setNotifyConfig : React.Dispatch<React.SetState
     }));
 
     socket.emit("room:addMediaToMemory" , addData);
+    setNotifyConfig({
+      type: "success",
+      message: "Media upload initiated",
+      open: true,
+      duration: 1500,
+      pos: "top-left"
+    });
   }
 
   const handleAddMediaSuccess = (data: any) => {
@@ -167,6 +174,7 @@ const useMemoriesSocketAction = (setNotifyConfig : React.Dispatch<React.SetState
       pos: "top-left"
     });
     changeDropBoxHandler("close");
+    location.reload();
   };
 
   const sendCommentToAI = useCallback((comment : string) => {

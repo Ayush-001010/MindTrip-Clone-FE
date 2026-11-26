@@ -6,7 +6,7 @@ import RoomBox from "./RoomBox/RoomBox";
 
 const MakerBox: React.FC<IMakerBox> = () => {
     return (
-        <section className="flex bg-[#161a1d] rounded-4xl ring ring-[#343a40]">
+        <section className="flex min-w-0 flex-col bg-[#161a1d] rounded-4xl ring ring-[#343a40] lg:flex-row">
             <ReelBox />
             <ChatBox />
             <RoomBox />

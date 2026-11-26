@@ -74,6 +74,17 @@ const AppContent: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   useEffect(() => {
+    if (!isDarkPage) return;
+    const backgroundClasses = ["bg-[#04080f]", "overscroll-none"];
+    document.documentElement.classList.add(...backgroundClasses);
+    document.body.classList.add(...backgroundClasses, "overflow-hidden");
+    return () => {
+      document.documentElement.classList.remove(...backgroundClasses);
+      document.body.classList.remove(...backgroundClasses, "overflow-hidden");
+    };
+  }, [isDarkPage]);
+
+  useEffect(() => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
 
@@ -88,7 +99,7 @@ const AppContent: React.FC = () => {
     <div
       className={
         isDarkPage
-          ? "flex h-screen w-full min-w-0 overflow-hidden bg-[#04080f] text-white"
+          ? "flex h-dvh w-full min-w-0 overflow-hidden bg-[#04080f] text-white"
           : "min-h-screen w-full overflow-x-hidden bg-[#f7fbfa] text-black"
       }
     >
@@ -122,7 +133,7 @@ const AppContent: React.FC = () => {
       {!isDarkPage && <TopNavbar />}
 
       {/* MAIN APPLICATION AREA */}
-      <div className={`min-w-0 flex-1 ${isDarkPage ? "h-screen overflow-y-auto" : ""}`}>
+      <div className={`min-w-0 flex-1 ${isDarkPage ? "h-full overflow-y-auto overscroll-y-contain" : ""}`}>
         <Routes>
           {/* Public routes */}
           <Route path="/play" element={<Play />} />

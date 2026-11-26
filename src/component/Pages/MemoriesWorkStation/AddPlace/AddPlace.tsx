@@ -57,7 +57,7 @@ const AddPlace: React.FC<IAddPlace> = ({ open , setOpen }) => {
 
     useEffect(() => {
         // Addresses use ", " internally; changePlaces joins separate addresses with ",".
-        const places = (memoriesData?.place ?? "").split(/,(?=\S)/).map((place) => place.trim()).filter(Boolean);
+        const places = (memoriesData?.place ?? "").split(/\|/).map((place) => place.trim()).filter(Boolean);
         setSelectedValues([...new Set(places)]);
     }, [memoriesData?.place , open]);
 

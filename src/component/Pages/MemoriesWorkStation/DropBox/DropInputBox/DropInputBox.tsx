@@ -1,8 +1,23 @@
 import React from "react";
 import type IDropInputBox from "./IDropInputBox";
+import { useGetMemoriesWorkStationContext } from "../../MemoriesWorkStation";
 
 const DropInputBox: React.FC<IDropInputBox> = ({ type, files, setFile }) => {
+    const {setNotifyConfig} = useGetMemoriesWorkStationContext();
+
     const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(type === "photos"){
+            const files = event.currentTarget.files ? Array.from(event.currentTarget.files) : [];
+            if(files.length > 30) {
+                setNotifyConfig({
+                    type: "error",
+                    message: "You can upload at max 30 photos",
+                    duration: 1000,
+                    open: true
+                });
+                return;
+            }
+        }
         setFile(event.currentTarget.files ? Array.from(event.currentTarget.files) : []);
     }
     return (

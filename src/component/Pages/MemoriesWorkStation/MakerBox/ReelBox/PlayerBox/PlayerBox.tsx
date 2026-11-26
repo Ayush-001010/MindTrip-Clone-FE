@@ -134,7 +134,30 @@ const GeneratedSceneTransition: React.FC<{
     );
 };
 
-const PlayerBox: React.FC<IPlayerBox> = ({ storyBoard, audioUrl, generatedReel, forExport = false }) => {
+const ReelMusic: React.FC<{
+    src: string;
+    startFromSec: number;
+    endAtSec: number;
+    volume: number;
+    durationSec: number;
+}> = ({ src, startFromSec, endAtSec, volume, durationSec }) => {
+    const { fps, durationInFrames } = useVideoConfig();
+    const segmentEndSec = endAtSec > startFromSec
+        ? Math.min(endAtSec, durationSec || endAtSec)
+        : durationSec;
+    const segmentFrames = segmentEndSec > startFromSec
+        ? Math.max(Math.round((segmentEndSec - startFromSec) * fps), 1)
+        : durationInFrames;
+    const trimBefore = Math.round(startFromSec * fps);
+
+    return (
+        <Sequence from={0} durationInFrames={Math.min(segmentFrames, durationInFrames)}>
+            <Audio key={`${src}-${trimBefore}-${segmentFrames}`} src={src} trimBefore={trimBefore} volume={volume} />
+        </Sequence>
+    );
+};
+
+const PlayerBox: React.FC<IPlayerBox> = ({ storyBoard, audioUrl, generatedReel, audioEdit, forExport = false }) => {
     const { fps } = useVideoConfig();
     if (!generatedReel && !storyBoard) return null;
 
@@ -151,11 +174,23 @@ const PlayerBox: React.FC<IPlayerBox> = ({ storyBoard, audioUrl, generatedReel, 
     return (
         <AbsoluteFill className="flex items-center justify-center bg-black">
             {generatedReel ? (
-                <Audio
-                    src={generatedReel.script.audio.src}
-                    trimBefore={Math.round((generatedReel.script.audio.startFromSec ?? 0) * generatedReel.script.fps)}
-                    volume={0.5}
-                />
+                audioEdit ? (
+                    <ReelMusic
+                        src={audioEdit.playbackUrl}
+                        startFromSec={audioEdit.startFromSec}
+                        endAtSec={audioEdit.endAtSec}
+                        volume={audioEdit.volume}
+                        durationSec={audioEdit.durationSec}
+                    />
+                ) : (
+                    <ReelMusic
+                        src={generatedReel.script.audio.src}
+                        startFromSec={generatedReel.script.audio.startFromSec ?? 0}
+                        endAtSec={generatedReel.script.audio.endAtSec ?? 0}
+                        durationSec={generatedReel.script.audio.durationSec ?? 0}
+                        volume={generatedReel.script.audio.volume ?? 0.5}
+                    />
+                )
             ) : (
                 audioUrl && <Audio src={audioUrl} trimBefore={115} volume={0.5} />
             )}

@@ -38,6 +38,23 @@ export interface IMemoryMusicData {
     url: string;
 }
 
+export interface IMemoriesReelAudioTrack {
+    src: string;
+    startFromSec?: number;
+    endAtSec?: number;
+    volume?: number;
+    durationSec?: number;
+}
+
+export interface IMemoriesReelAudioEdit {
+    sourceKey: string;
+    playbackUrl: string;
+    startFromSec: number;
+    endAtSec: number;
+    volume: number;
+    durationSec: number;
+}
+
 export interface IMemoriesReelScene {
     index: number;
     clipId: string;
@@ -70,10 +87,9 @@ export interface IMemoriesGeneratedReel {
         height: number;
         durationSec: number;
         durationInFrames: number;
-        audio: {
-            src: string;
-            startFromSec?: number;
+        audio: IMemoriesReelAudioTrack & {
             bpm?: number;
+            originalAudio?: IMemoriesReelAudioTrack;
         };
         scenes: IMemoriesReelScene[];
         pickedBy?: string | string[];

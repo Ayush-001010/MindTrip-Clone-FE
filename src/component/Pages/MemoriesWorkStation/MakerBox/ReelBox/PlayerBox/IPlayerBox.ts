@@ -1,11 +1,12 @@
 import type { IStoryBoard } from "../ReelBox";
-import type { IMemoriesGeneratedReel } from "../../../../../../Interface/DataInterface/IMemoriesData";
+import type { IMemoriesGeneratedReel, IMemoriesReelAudioEdit } from "../../../../../../Interface/DataInterface/IMemoriesData";
 
-type IPlayerBox = {
+interface IPlayerBox {
     storyBoard: IStoryBoard | null;
     audioUrl: string | null;
     generatedReel: IMemoriesGeneratedReel | null;
+    audioEdit?: IMemoriesReelAudioEdit | null;
     forExport?: boolean;
-};
+}
 
-export default IPlayerBox;
+export type { IPlayerBox as default };

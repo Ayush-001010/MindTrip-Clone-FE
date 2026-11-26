@@ -13,7 +13,7 @@ const ChatBox: React.FC<IChatBox> = () => {
 
 
     return (
-        <section className="w-full p-3">
+        <section className="w-full min-w-0 p-2 sm:p-3">
             {(!activtyRoom && !isAllAnalysisCompleted && !isAnalyzingCompleted) && (
                 <AnalysicMessage />
             )}
@@ -23,16 +23,14 @@ const ChatBox: React.FC<IChatBox> = () => {
             )}
 
             {(activtyRoom && roomChats?.length === 0) && (
-                <section className="overflow-y-auto h-[800px]">
+                <section className="min-w-0 lg:h-[800px] lg:overflow-y-auto">
                     <Template />
-                    <div className="flex h-[120px] w-full flex-col items-center justify-center">
-                        <div className="mt-1 h-[40px] w-5"></div>
-                        <div className="my-2 rounded-lg border border-[#ced4da] p-2">
-                            <SlSettings className={`text-lg text-[#ced4da] ${isReelGenerating ? "animate-rotate-360" : ""}`} />
+                    {isReelGenerating && (
+                        <div role="status" className="my-3 flex items-center justify-center gap-2 text-zinc-300">
+                            <SlSettings aria-hidden="true" className="animate-rotate-360 text-base motion-reduce:animate-none" />
+                            <p className="text-xs">Generating Reel...</p>
                         </div>
-                        <p className="text-sm text-[#ced4da]">{isReelGenerating ? "Generating Reel..." : ""}</p>
-                        <div className="mb-1 h-[40px] w-5"></div>
-                    </div>
+                    )}
                     <Script />
                 </section>
             )}

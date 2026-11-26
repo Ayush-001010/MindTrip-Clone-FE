@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import type { IMemoriesChat, IMemoriesGeneratedReel, IMemoryMusicData } from "../../../Interface/DataInterface/IMemoriesData";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import type { IMemoriesChat, IMemoriesGeneratedReel, IMemoriesReelAudioEdit, IMemoryMusicData } from "../../../Interface/DataInterface/IMemoriesData";
 import useMemoriesSocketAction, { isGeneratedReel } from "../../../CustomHooks/useMemoriesSocketAction";
 import type { IMemoriesReelAnalysisBatch } from "../../../Interface/DataInterface/IMemoriesData";
 import type IMemoriesWorkStation from "./IMemoriesWorkStation";
@@ -9,6 +9,7 @@ import useNotification from "../../../customHookWithUI/useNotification";
 import type { INotifyConfig } from "../../../Interface/DataInterface/INotificationConfig";
 import type IMemoriesData from "../../../Interface/DataInterface/IMemoriesData";
 import MakerBox from "./MakerBox/MakerBox";
+import useMemoriesAction from "../../../CustomHooks/useMemoriesAction";
 
 export interface IMemoriesWorkStationContext {
     openDropBox: boolean;
@@ -30,7 +31,10 @@ export interface IMemoriesWorkStationContext {
     isReelGenerating: boolean;
     selectedAudioUrl: string | null;
     setSelectedAudioUrl: React.Dispatch<React.SetStateAction<string | null>>;
+    reelAudioEdit: IMemoriesReelAudioEdit | null;
+    setReelAudioEdit: React.Dispatch<React.SetStateAction<IMemoriesReelAudioEdit | null>>;
     handleReelCreation: (template: "Journey" | "Mistory" | "Key Moment" | "Fast Clip", soundtrack: string, mood: "Happy" | "Fun" | "Relaxing"| "Romantic", pace: "Slow" | "Medium" | "Fast", place: string[], userSuggestion?: string, targetSeconds?: { min: number; max: number }) => void;
+    saveRoomScript: (userId: string, userName: string , place : string, script: IMemoriesGeneratedReel) => Promise<boolean | null>;
 }
 
 const memoriesWorkStationContext = createContext<IMemoriesWorkStationContext | null>(null);
@@ -49,10 +53,21 @@ const MemoriesWorkStation: React.FC<IMemoriesWorkStation> = () => {
         setDropBox(type === "open");
     };
     const {changePlaces , memoryDetails , addMedia , sendCommentToAI , rooms , batchDetails , isAnalyzingCompleted , handleAddRoom, fetchRoomChatData, roomChats, audioFiles, generatedReel, isReelGenerating, setGeneratedReel, handleReelCreation } = useMemoriesSocketAction(setNotifyConfig, changeDropBoxHandler);
+    const { saveRoomScript: persistRoomScript } = useMemoriesAction();
+    const savedRoomReels = useRef(new Map<string, IMemoriesGeneratedReel>());
     const [activtyRoom, setActivtyRoom] = useState("");
     const [selectedAudioUrl, setSelectedAudioUrl] = useState<string | null>(null);
+    const [reelAudioEdit, setReelAudioEdit] = useState<IMemoriesReelAudioEdit | null>(null);
     const [dropBox , setDropBox] = useState(false);
     const [addNewPlace, setAddNewPlace] = useState(false);
+    const saveRoomScript: IMemoriesWorkStationContext["saveRoomScript"] = async (userId, userName, place, script) => {
+        const saved = await persistRoomScript(userId, userName, place, script);
+        if (saved) {
+            if (activtyRoom && memoryDetails) savedRoomReels.current.set(`${memoryDetails.id}:${activtyRoom}`, script);
+            setGeneratedReel(current => current === generatedReel ? script : current);
+        }
+        return saved;
+    };
     const notification = useNotification(
         notifyConfig?.type ?? "alert",
         notifyConfig?.message ?? "",
@@ -74,8 +89,9 @@ const MemoriesWorkStation: React.FC<IMemoriesWorkStation> = () => {
             const room = memoryDetails?.rooms?.find(room => room.name === activtyRoom);
             if (room) {
                 fetchRoomChatData(room.id);
-                if (room.script) {
-                    const reel = { script: room.script };
+                const savedReel = savedRoomReels.current.get(`${memoryDetails?.id}:${activtyRoom}`);
+                if (savedReel || room.script) {
+                    const reel = savedReel ?? { script: room.script };
                     if (isGeneratedReel(reel)) {
                         setGeneratedReel(reel);
                     } else {
@@ -93,7 +109,7 @@ const MemoriesWorkStation: React.FC<IMemoriesWorkStation> = () => {
     },[activtyRoom])
 
     return (
-        <memoriesWorkStationContext.Provider value={{ openDropBox: dropBox, dropBoxHandler: changeDropBoxHandler, changePlaces , memoriesData: memoryDetails , setNotifyConfig , addMedia , sendCommentToAI , rooms , activtyRoom, setActivtyRoom, batchDetails , isAnalyzingCompleted , handleAddRoom, roomChats, audioFiles, generatedReel, isReelGenerating, selectedAudioUrl, setSelectedAudioUrl, handleReelCreation }}>
+        <memoriesWorkStationContext.Provider value={{ openDropBox: dropBox, dropBoxHandler: changeDropBoxHandler, changePlaces , memoriesData: memoryDetails , setNotifyConfig , addMedia , sendCommentToAI , rooms , activtyRoom, setActivtyRoom, batchDetails , isAnalyzingCompleted , handleAddRoom, roomChats, audioFiles, generatedReel, isReelGenerating, selectedAudioUrl, setSelectedAudioUrl, reelAudioEdit, setReelAudioEdit, handleReelCreation, saveRoomScript }}>
             {notification}
             <main className="m-3 sm:m-6">
                 <Header addNewPlace={addNewPlace} setAddNewPlace={setAddNewPlace} />

@@ -9,6 +9,7 @@ import { FaPlay } from "react-icons/fa";
 import PlayerBox from "./PlayerBox/PlayerBox";
 import { getGeneratedReelDurationInFrames } from "./PlayerBox/reelTransitions";
 import useCommonAction from "../../../../../CustomHooks/useCommonAction";
+import MusicEditor from "../ChatBox/Script/MusicEditor";
 
 export const REEL_COMPOSITION_WIDTH = 344;
 export const REEL_COMPOSITION_HEIGHT = 685;
@@ -26,7 +27,7 @@ export interface IStoryBoard {
 }
 
 const ReelBox: React.FC<IReelBox> = () => {
-    const { sendCommentToAI, batchDetails, selectedAudioUrl, generatedReel } = useGetMemoriesWorkStationContext();
+    const { sendCommentToAI, batchDetails, selectedAudioUrl, generatedReel, memoriesData, setNotifyConfig, isAnalyzingCompleted, reelAudioEdit } = useGetMemoriesWorkStationContext();
     const reduceMotion = useReducedMotion();
     const playerRef = useRef<PlayerRef>(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -58,7 +59,6 @@ const ReelBox: React.FC<IReelBox> = () => {
             })
         }
     }, [batchDetails]);
-        console.log("Duration in frames:", generatedReel);
 
 
     useEffect(() => {
@@ -66,6 +66,16 @@ const ReelBox: React.FC<IReelBox> = () => {
         if (!player) return;
 
         const onPlay = () => {
+            if(!memoriesData  || !memoriesData.isTripPhotoAndVideoUpload && !memoriesData.isTripAudioUpload) {
+                player.pause();
+                setNotifyConfig({
+                    type: "error",
+                    message: "Please upload trip photos, videos, and audio before playing the reel.",
+                    duration: 1000,
+                    open: true
+                });
+                return;
+            }
             if (!generatedReel) {
                 sendCommentToAI("Start Genrating Reel...");
             }
@@ -81,7 +91,7 @@ const ReelBox: React.FC<IReelBox> = () => {
             player.removeEventListener("play", onPlay);
             player.removeEventListener("pause", onPause);
         };
-    }, [generatedReel, sendCommentToAI]);
+    }, [generatedReel, memoriesData, sendCommentToAI, setNotifyConfig]);
 
     const sceneSeconds = (scene: IStoryBoardScene): number => {
         // if (scene.type === "video") return Math.max(scene.trimEnd - scene.trimStart, 0.5);
@@ -99,12 +109,12 @@ const ReelBox: React.FC<IReelBox> = () => {
 
     return (
         <motion.section
-            className=" m-4"
+            className="mx-auto my-3 flex w-[calc(100%_-_1.5rem)] min-w-0 max-w-[360px] shrink-0 flex-col items-center gap-2.5 lg:m-4 lg:w-[360px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: reduceMotion ? 0 : 0.5, ease: "easeOut" }}
         >
-            <section className="relative h-[700px] p-2 shadow-md shadow-[#343a40] rounded-4xl ring-1 ring-[#343a40] w-[360px] bg-[#0b090a]">
+            <section className="relative aspect-[360/700] w-full max-w-[260px] p-2 shadow-md shadow-[#343a40] rounded-4xl ring-1 ring-[#343a40] bg-[#0b090a] sm:max-w-[360px]">
                 <section className="relative h-full w-full rounded-4xl bg-[#242423]">
                     <div
                         aria-hidden="true"
@@ -113,12 +123,14 @@ const ReelBox: React.FC<IReelBox> = () => {
                         <span className="h-3.5 w-3.5 rounded-full border border-zinc-700 bg-[#10141b] shadow-[inset_0_0_4px_2px_rgba(70,90,130,0.35)]" />
                     </div>
                     <Player
+                        key={generatedReel ? `${generatedReel.script.audio.src}-${generatedReel.script.audio.startFromSec}-${generatedReel.script.audio.endAtSec}-${generatedReel.script.audio.volume}` : "storyboard"}
                         ref={playerRef}
                         component={PlayerBox}
                         inputProps={{
                             storyBoard,
                             audioUrl: selectedAudioUrl ?? oldFashionPlayAudio,
                             generatedReel,
+                            audioEdit: reelAudioEdit,
                         }}
                         durationInFrames={durationInFrames}
                         fps={generatedReel?.script?.fps || 30}
@@ -143,6 +155,22 @@ const ReelBox: React.FC<IReelBox> = () => {
                     </div>
                 </section>
             </section>
+            {generatedReel && <MusicEditor />}
+            {!isAnalyzingCompleted && !memoriesData?.isAllAnalysisCompleted && memoriesData?.isTripPhotoAndVideoUpload && (
+                <div
+                    role="status"
+                    aria-live="polite"
+                    className="flex w-full max-w-[360px] items-center gap-3 rounded-xl border border-zinc-700 bg-zinc-900/80 px-4 py-3 text-zinc-200 shadow-md shadow-black/30"
+                >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-violet-400/40 bg-violet-500/15 text-violet-300">
+                        <FaPlay aria-hidden="true" className="ml-0.5 h-3.5 w-3.5" />
+                    </span>
+                    <p className="text-sm leading-relaxed">
+                        <span className="block font-semibold text-white">Ready to create your reel?</span>
+                        Click Play to start the analysis.
+                    </p>
+                </div>
+            )}
         </motion.section>
     )
 }
