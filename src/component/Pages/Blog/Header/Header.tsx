@@ -128,7 +128,7 @@ const Header: React.FC<IHeader> = ({ selectedDay }) => {
                         <button
                             onClick={saveAsDraft}
                             disabled={draftStatus === "saving"}
-                            className="min-w-28 rounded-full border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="min-w-28 cursor-pointer rounded-full border border-slate-500/70 px-4 py-1.5 text-sm font-medium text-[#dee2e6] transition-colors hover:border-slate-300/70 disabled:cursor-not-allowed disabled:opacity-60"
                             aria-live="polite"
                         >
                             {draftStatus === "saving"

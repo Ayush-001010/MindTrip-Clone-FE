@@ -87,7 +87,7 @@ const ChatContext = createContext<IChatContext>({
     addCommentOnOpinion: async (_opinionId: string, _comment: string, _parentOpinionCommentId?: string) => {},
     checkInUpdate: async (_id: number, _status: string, _reachWhen?: string) => {},
     showFlightPannel: false,
-   setShowFlightPannel: () => {}
+   setShowFlightPannel: () => {},
     setNotificationConfig: (_: React.SetStateAction<INotifyConfig>) => {}
 });
 
@@ -175,8 +175,6 @@ const Chat : React.FC<IChat> = () => {
     console.log("Final Itinerary:", finalItinerary);
 
     return (
-<!--         <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler ,bookFlightHandler, isTripAdmin , sendNewMessage , groupHubPosts, createActionHandler , createAction , likeOrDislikeGroupHubPost, addCommentOnOpinion , checkInUpdate , tripSuggestionsDate,showFlightPannel, -->
-<!--             setShowFlightPannel }}> -->
         <ChatContext.Provider value={{isSelectedLocation,locationLongitude,locationLatitude,setIsSelectedLocation,setLocationLongitude,setLocationLatitude,destination,setDestination,sendMessageHandler,messages,itineraryPlan,setItineraryPlan,isSelectedItineraryPlan,setIsSelectedItineraryPlan , isLoading, finalItinerary , setTripDate, setTripBudget, addExpense, searchHotelHandler , showHotelInLocationPannel, setShowHotelInLocationPannel, showHotelDetails, setShowHotelDetails , addHotelToWishList, bookHotelHandler , isTripAdmin , sendNewMessage , groupHubPosts, createActionHandler , createAction , likeOrDislikeGroupHubPost, addCommentOnOpinion , checkInUpdate , tripSuggestionsDate,setNotificationConfig,showFlightPannel,
             setShowFlightPannel }}>
             <div className="w-full ">

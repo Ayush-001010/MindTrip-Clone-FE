@@ -40,7 +40,7 @@ const BlogCard: React.FC<IBlogCard> = ({ blogData, following, setFollowing, like
 
         const loadImages = async () => {
             if(typeof profileImages === "string"){
-                setImageURLs([await getImages(profileImages).then(response => typeof response?.data === "string" ? response.data : "").catch(() => "")]);
+                setImageURLs(await Promise.all((profileImages as string).split(",").map((imageKey) => getImages(imageKey))).then(responses => responses.flatMap((response) => (typeof response?.data === "string" ? [response.data] : []))));
                 return;
             }
             const responses = await Promise.all((profileImages ?? []).map((imageKey) => getImages(imageKey)));

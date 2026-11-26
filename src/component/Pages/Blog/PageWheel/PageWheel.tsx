@@ -16,7 +16,6 @@ const normalizeAngle = (angle: number) => ((angle % 360) + 360) % 360;
 const PageWheel: React.FC<IPageWheel> = ({  changeSelectedDay }) => {
     const { blogValue } = useGetBlogContext();
     const boxRef = useRef<HTMLElement | null>(null);
-    const lastRotateAtRef = useRef(0);
     // start at 180deg so the first circle (index 0) begins front-facing on the left instead of tucked away on the right
     const [rotation, setRotation] = useState(180);
     const orbitCenterY = 180;
@@ -24,7 +23,6 @@ const PageWheel: React.FC<IPageWheel> = ({  changeSelectedDay }) => {
     const circleSize = 80;
     const safeCount = Math.min(5, Math.max(1, blogValue?.tripDuration ?? 0));
     const rotationStep = 12;
-    const rotationCooldownMs = 100;
 
     useEffect(() => {
         const element = boxRef.current;
@@ -32,11 +30,6 @@ const PageWheel: React.FC<IPageWheel> = ({  changeSelectedDay }) => {
 
         const handleScroll = (e: WheelEvent) => {
             e.preventDefault();
-
-            // ignore extra wheel ticks that arrive before the previous rotation settles
-            const now = Date.now();
-            if (now - lastRotateAtRef.current < rotationCooldownMs) return;
-            lastRotateAtRef.current = now;
 
             if (e.deltaY > 0) {
                 setRotation((prev) => prev + rotationStep);
@@ -99,7 +92,7 @@ const PageWheel: React.FC<IPageWheel> = ({  changeSelectedDay }) => {
                     {circles.map((circle) => (
                         <section
                             key={circle.key}
-                            className={`pointer-events-auto absolute right-0 flex items-center justify-center rounded-full border border-white/50 text-center transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${circle.className}`}
+                            className={`pointer-events-auto absolute right-0 flex items-center justify-center rounded-full border border-white/50 text-center transition-[transform,opacity] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${circle.className}`}
                             style={{
                                 top: `${orbitCenterY}px`,
                                 width: `${circleSize}px`,

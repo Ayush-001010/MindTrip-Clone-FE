@@ -21,7 +21,7 @@ const Body: React.FC<IBody> = ({ }) => {
         isVisible: false,
         indexNumber: -1
     });
-    const [view, setView] = useState<"map" | "globe" | "animation">("animation");
+    const [view, setView] = useState<"map" | "globe" | "animation">("map");
     const [isHotelModalOpen, setIsHotelModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 

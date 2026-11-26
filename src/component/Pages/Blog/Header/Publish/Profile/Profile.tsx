@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import type IProfile from "./IProfile";
 import ProfileSection from "./ProfileSection/ProfileSection";
@@ -11,13 +12,23 @@ const Profile: React.FC<IProfile> = ({ metaData }) => {
     const [profileName, setProfileName] = useState("");
     const [profileIcon, setProfileIcon] = useState<React.ReactNode>(null);
     const [profileIconType, setProfileIconType] = useState("");
-    const { saveBlog } = useBlogAction();
-    const {blogValue} = useGetBlogContext();
+    const { saveBlog  } = useBlogAction();
+    const {blogValue } = useGetBlogContext();
     const navigate = useNavigate();
 
     const submitHandler =async() => {
-        await saveBlog(blogValue,profileName,profileIconType,images,metaData);
-        navigate("/blog");
+        try {
+            const response = await saveBlog(blogValue, profileName, profileIconType, images, metaData);
+            if (!response.success) {
+                message.error("Could not save your blog. Please try again.");
+                return;
+            }
+            message.success("Blog saved successfully.");
+            navigate("/blog");
+        } catch (error) {
+            console.error("Saving blog failed:", error);
+            message.error("Could not save your blog. Please try again.");
+        }
     };
 
     return (

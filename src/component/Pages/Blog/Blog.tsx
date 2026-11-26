@@ -186,6 +186,13 @@ const Blog: React.FC<IBlog> = () => {
         return responses.flatMap((response) => (typeof response?.data === "string" ? [response.data] : []));
     };
 
+    const getActivityItemOrder = (activity: IBlogActivite) => {
+        const itemOrder = [...(activity.itemOrder ?? [])];
+        if (activity.description && !itemOrder.includes("Notes")) itemOrder.push("Notes");
+        if (activity.tips?.length && !itemOrder.includes("Tips")) itemOrder.push("Tips");
+        return itemOrder;
+    };
+
     // converts the saved blog into the shape the create-mode components already understand
     const prepareBlogForPreview = async (blog: IBlogData): Promise<IBlogData> => {
         const activitiesPerDay: Record<number, number> = {};
@@ -195,15 +202,12 @@ const Blog: React.FC<IBlog> = () => {
         });
 
         const activities = await Promise.all(indexedActivities.map(async (activity) => {
-            const itemOrder: string[] = [];
-            if (activity.description) itemOrder.push("Notes");
-            if (activity.tips && activity.tips.length > 0) itemOrder.push("Tips");
             return {
                 ...activity,
                 tips: activity.tips ?? [],
                 sideActivities: activity.sideActivities ?? [],
                 images: await resolveImageURLs(activity.images),
-                itemOrder,
+                itemOrder: getActivityItemOrder(activity),
             } as IBlogActivite;
         }));
 
@@ -271,7 +275,7 @@ const Blog: React.FC<IBlog> = () => {
                     if (response.success && response.data) {
                         setBlogValue({
                             ...response.data,
-                            activities: (response.data?.activities && response.data?.activities.length > 0) ?  response.data.activities.map((item, index) => ({ ...item , itemOrder : item.itemOrder ?? [] , index : index + 1 })) : [
+                            activities: (response.data?.activities && response.data?.activities.length > 0) ?  response.data.activities.map((item, index) => ({ ...item , itemOrder: getActivityItemOrder(item), index : index + 1 })) : [
                                 {
                                     ...CommonConfig.initialActivityValue,
                                     day: 1,

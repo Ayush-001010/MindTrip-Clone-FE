@@ -32,6 +32,10 @@ const useBlogAction = () => {
         const apiInstance = new APIService();
         const profileImages: string[] = [];
         for (const file of images) {
+            if(typeof file === "string" && (file as string).includes("Blog/")) {
+                profileImages.push(file as string);
+                continue;
+            }
             let { name: fileName = "", type: fileType = "" } = file;
             fileName = "Blog/" + fileName
             const fileUploadResponse = await apiInstance.postRequest("/common/getUploadedFileURL", {
@@ -59,8 +63,10 @@ const useBlogAction = () => {
                     //  Take substring after "Blog/" if needed
                     fileName = (image as string).substring((image as string).indexOf("Blog/"));
                     imageURLs.push(fileName);
+                    activity.images = fileName;
                     return;
                 }
+                fileName = "Blog/" + fileName;
                 const fileUploadResponse = await apiInstance.postRequest("/common/getUploadedFileURL", {
                     contentType: fileType,
                     key: fileName,
